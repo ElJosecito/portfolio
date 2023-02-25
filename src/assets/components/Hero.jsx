@@ -1,13 +1,12 @@
 import React from "react";
-import Josecito from '../source/Josecito.png'
 
 function Hero() {
   return (
     <>
-      <div className="hero min-h-screen bg-base-200">
+      <div className="hero min-h-screen h-fit bg-base-200">
         <div className="hero-content flex-col lg:flex-row-reverse">
           <img
-            src={Josecito}
+            src="https://www.dropbox.com/s/eqmgvvzribux11s/Josecito.png?raw=1"
             className="sm:max-w-md max-w-xs"
           />
           <div className="flex flex-col">
