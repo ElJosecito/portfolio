@@ -9,7 +9,7 @@ function Projects() {
         </h2>
 
         <div className="max-w-7xl w-full h-screen flex flex-col justify-center items-center">
-          <div className="carousel w-full max-w-4xl p-4 space-x-4 bg-neutral rounded-box">
+          <div className="carousel w-full max-w-6xl p-4 space-x-4 md:bg-neutral rounded-box">
             {/*  */}
             <div id="slide1" className="carousel-item relative w-full flex justify-center">
             <div className="card w-96 bg-base-100 shadow-xl">

@@ -1,23 +1,24 @@
 import React from "react";
 
+
 function Skills() {
   return (
     <>
-      <div className="w-full flex flex-col items-center">
+      <div className="w-full flex flex-col items-center mb-10">
         <div className="flex flex-col items-center max-w-7xl w-full h-screen ">
-          <h2 className="text-3xl font-extrabold text-blue-600 m-5 mb-10 mt-20">
+          <h2 className="text-3xl font-extrabold text-blue-600 m-5 mb-10 mt-10">
             Principal Skills
           </h2>
           <div className="flex justify-around w-full">
             {/* HTML */}
             <div className="avatar flex flex-col items-center">
-              <div className="w-16 rounded ">
+              <div className="w-16 h-16 rounded ">
                 <img
                   src="https://www.dropbox.com/s/tyehjv9gei864pe/HTML.png?raw=1"
                   alt=""
                 />
               </div>
-              <h3 className="text-sm font-black font mt-2">HTML</h3>
+              <h3 className="text-sm font-black font mt-4">HTML</h3>
             </div>
             {/* CSS */}
             <div className="avatar flex flex-col items-center">
@@ -27,7 +28,7 @@ function Skills() {
                   alt=""
                 />
               </div>
-              <h3 className="text-sm font-black font mt-2">CSS</h3>
+              <h3 className="text-sm font-black font mt-4">CSS</h3>
             </div>
             {/* Javascript */}
             <div className="avatar flex flex-col items-center">
@@ -38,7 +39,7 @@ function Skills() {
                   className=""
                 />
               </div>
-              <h3 className="text-sm font-black font mt-4">JavaScript</h3>
+              <h3 className="text-sm font-black font mt-6">JavaScript</h3>
             </div>
           </div>
 
@@ -54,7 +55,7 @@ function Skills() {
                   alt=""
                 />
               </div>
-              <h3 className="text-sm font-black font mt-2">BootStrap</h3>
+              <h3 className="text-sm font-black font mt-4">BootStrap</h3>
             </div>
             {/* TailwindCSS */}
             <div className="avatar flex flex-col items-center">
@@ -64,11 +65,11 @@ function Skills() {
                   alt=""
                 />
               </div>
-              <h3 className="text-sm font-black font mt-2">Tailwind</h3>
+              <h3 className="text-sm font-black font mt-4">Tailwind</h3>
             </div>
             {/* Sass */}
             <div className="avatar flex flex-col items-center">
-              <div className="w-14 rounded ">
+              <div className="w-16 rounded">
                 <img
                   src="https://www.dropbox.com/s/p0gm6d9ykoltday/file_type_sass_icon_130182.png?raw=1"
                   alt=""
@@ -79,11 +80,11 @@ function Skills() {
             </div>
             {/* React */}
             <div className="avatar flex flex-col items-center">
-              <div className="w-16 rounded ">
+              <div className="rounded w-16" >
                 <img
                   src="https://www.dropbox.com/s/77nnwv8krqrdtww/react_original_logo_icon_146374.png?raw=1"
                   alt=""
-                  className=""
+                  className="max-w-full"
                 />
               </div>
               <h3 className="text-sm font-black font mt-4">React</h3>
@@ -101,7 +102,7 @@ function Skills() {
                   alt=""
                 />
               </div>
-              <h3 className="text-sm font-black font mt-2">Figma</h3>
+              <h3 className="text-sm font-black font mt-4">Figma</h3>
             </div>
             {/* Git */}
             <div className="avatar flex flex-col items-center">
@@ -111,7 +112,7 @@ function Skills() {
                   alt=""
                 />
               </div>
-              <h3 className="text-sm font-black font mt-2">Git</h3>
+              <h3 className="text-sm font-black font mt-4">Git</h3>
             </div>
             {/* GitHub */}
             <div className="avatar flex flex-col items-center">

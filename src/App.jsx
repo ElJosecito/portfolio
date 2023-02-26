@@ -2,8 +2,14 @@ import "./assets/styles/tailwind.css";
 import Hero from "./assets/components/Hero";
 import Skills from "./assets/components/Skills";
 import Projects from "./assets/components/Projects";
+import Contact from "./assets/components/Contact";
+import Footer from "./assets/components/Footer";
+
+import { Link } from "react-scroll";
 
 function App() {
+
+
   return (
     <>
       {/* <Navbar/> */}
@@ -12,17 +18,23 @@ function App() {
         <div className="drawer-content flex flex-col">
           {/* <!-- Navbar --> */}
           <div className="w-full navbar flex justify-between bg-base-100 fixed z-50">
-            <div className="btn btn-ghost normal-case text-xl">
-              Navbar Title
+            <div className="btn btn-ghost normal-case text-xl font-semibold">
+              Josecito
             </div>
             <div className="flex-none hidden lg:block">
               <ul className="menu menu-horizontal px-1">
                 {/* <!-- Navbar menu content here --> */}
                 <li>
-                  <a>Navbar Item 1</a>
+                  <Link to="hero" spy={true} smooth={true} offset={50} duration={500}>Sobre mi</Link>
                 </li>
                 <li>
-                  <a>Navbar Item 2</a>
+                  <a>Habilidades</a>
+                </li>
+                <li>
+                  <a>Projectos</a>
+                </li>
+                <li>
+                  <a>Contacto</a>
                 </li>
               </ul>
             </div>
@@ -46,26 +58,43 @@ function App() {
             </div>
           </div>
           {/* <!-- Page content here --> */}
-          <Hero />
+          <Hero/>
           <Skills />
           <div className="w-full flex justify-center">
           <div className="flex flex-col justify-center w-full max-w-6xl border-opacity-50">
-            <div className="divider">OR</div>
+            <div className="divider"></div>
           </div>
           </div>
           <Projects />
+          <div className="w-full flex justify-center">
+          <div className="flex flex-col justify-center w-full max-w-6xl border-opacity-50">
+            <div className="divider"></div>
+          </div>
+          </div>
+          <Contact />
+          
+          <Footer/>
           {/* Page content ends here */}
         </div>
         <div className="drawer-side">
           <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
           <ul className="menu p-4 w-80 bg-base-100">
+          <div className="btn btn-ghost normal-case text-start text-xl font-semibold">
+              Josecito
+            </div>
             {/* <!-- Sidebar content here --> */}
-            <li>
-              <a>Sidebar Item 1</a>
-            </li>
-            <li>
-              <a>Sidebar Item 2</a>
-            </li>
+            <li className="mt-20 ">
+                  <a>Sobre mi</a>
+                </li>
+                <li className="mt-5 text-lg font-bold">
+                  <a>Habilidades</a>
+                </li>
+                <li className="mt-5 text-lg font-bold">
+                  <a>Projectos</a>
+                </li>
+                <li className="mt-5 text-lg font-bold">
+                  <a>Contacto</a>
+                </li>
           </ul>
         </div>
       </div>
