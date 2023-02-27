@@ -1,15 +1,17 @@
 import React from "react";
 import { FaInstagram, FaGithub, FaLinkedinIn } from 'react-icons/fa';
+import { HashLink } from "react-router-hash-link";
+
 
 function Footer() {
   return (
     <>
       <footer className="footer footer-center p-10 bg-base-200 text-base-content rounded">
         <div className="grid grid-flow-col gap-4">
-          <a className="link link-hover" href="#aboutme">About me</a>
-          <a className="link link-hover">Contact</a>
-          <a className="link link-hover">Jobs</a>
-          <a className="link link-hover">Skills</a>
+          <HashLink smooth to="#hero" className="link link-hover" >About me</HashLink>
+          <HashLink smooth to="#contact" className="link link-hover">Contact</HashLink>
+          <HashLink smooth to="#projects" className="link link-hover">Jobs</HashLink>
+          <HashLink smooth to="#skills" className="link link-hover">Skills</HashLink>
         </div>
         <div>
           <div className="grid grid-flow-col gap-4">

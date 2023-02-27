@@ -4,6 +4,7 @@ import Skills from "./assets/components/Skills";
 import Projects from "./assets/components/Projects";
 import Contact from "./assets/components/Contact";
 import Footer from "./assets/components/Footer";
+import Loader from "./assets/components/Loader";
 
 import { HashLink} from "react-router-hash-link";
 
@@ -77,6 +78,7 @@ function App() {
           <Contact />
           
           <Footer/>
+          <Loader/>
           {/* Page content ends here */}
         </div>
         <div className="drawer-side">
