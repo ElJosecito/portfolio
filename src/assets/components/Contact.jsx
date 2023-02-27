@@ -7,7 +7,7 @@ function Contact() {
 
   return (
     <>
-      <section className="w-full min-h-screen flex justify-center">
+      <section className="w-full min-h-screen flex justify-center" id="contact">
         <div className="flex flex-col items-center max-w-7xl w-full h-screen">
           <h2 className="text-5xl font-extrabold text-blue-600 md:mt-20">
             Contactame

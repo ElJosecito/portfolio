@@ -5,9 +5,10 @@ import Projects from "./assets/components/Projects";
 import Contact from "./assets/components/Contact";
 import Footer from "./assets/components/Footer";
 
-import { Link } from "react-scroll";
+import { HashLink} from "react-router-hash-link";
 
 function App() {
+
 
 
   return (
@@ -25,16 +26,16 @@ function App() {
               <ul className="menu menu-horizontal px-1">
                 {/* <!-- Navbar menu content here --> */}
                 <li>
-                  <Link to="hero" spy={true} smooth={true} offset={50} duration={500}>Sobre mi</Link>
+                  <HashLink smooth to="#hero">Sobre mi</HashLink>
                 </li>
                 <li>
-                  <a>Habilidades</a>
+                  <HashLink smooth to="#skills">Habilidades</HashLink>
                 </li>
                 <li>
-                  <a>Projectos</a>
+                  <HashLink smooth to="#projects">Projectos</HashLink>
                 </li>
                 <li>
-                  <a>Contacto</a>
+                  <HashLink smooth to="#contact">Contacto</HashLink>
                 </li>
               </ul>
             </div>
@@ -58,8 +59,10 @@ function App() {
             </div>
           </div>
           {/* <!-- Page content here --> */}
-          <Hero/>
-          <Skills />
+            <Hero/>
+          
+            <Skills />
+          
           <div className="w-full flex justify-center">
           <div className="flex flex-col justify-center w-full max-w-6xl border-opacity-50">
             <div className="divider"></div>
@@ -83,18 +86,20 @@ function App() {
               Josecito
             </div>
             {/* <!-- Sidebar content here --> */}
-            <li className="mt-20 ">
-                  <a>Sobre mi</a>
+
+                <li>
+                  <HashLink smooth to="#hero">Sobre mi</HashLink>
                 </li>
-                <li className="mt-5 text-lg font-bold">
-                  <a>Habilidades</a>
+                <li>
+                  <HashLink smooth to="#skills">Habilidades</HashLink>
                 </li>
-                <li className="mt-5 text-lg font-bold">
-                  <a>Projectos</a>
+                <li>
+                  <HashLink smooth to="#projects">Projectos</HashLink>
                 </li>
-                <li className="mt-5 text-lg font-bold">
-                  <a>Contacto</a>
+                <li>
+                  <HashLink smooth to="#contact">Contacto</HashLink>
                 </li>
+              
           </ul>
         </div>
       </div>

@@ -3,8 +3,8 @@ import React from "react";
 function Projects() {
   return (
     <>
-      <section className="w-full min-h-screen h-fit flex flex-col items-center justify-center ">
-        <h2 className="text-3xl font-extrabold text-blue-600 mt-20">
+      <section className="w-full min-h-screen h-fit flex flex-col items-center justify-center " id="projects">
+        <h2 className="text-5xl font-extrabold text-blue-600 mt-20">
           Ultimos Projectos
         </h2>
 
