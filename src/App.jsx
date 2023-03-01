@@ -4,7 +4,7 @@ import SubApp from "./SubApp";
 function App() {
   return (
     <>
-      <SubApp />
+      <SubApp/>
     </>
   );
 }
