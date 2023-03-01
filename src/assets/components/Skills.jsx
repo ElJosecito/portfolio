@@ -7,7 +7,7 @@ function Skills() {
       <div className="w-full flex flex-col items-center mb-10" id="skills">
         <div className="flex flex-col items-center max-w-7xl w-full h-screen ">
           <h2 className="text-5xl font-extrabold text-blue-600 m-5 mb-10 mt-20">
-            Principal Skills
+            Habilidades
           </h2>
           <div className="flex justify-around w-full">
             {/* HTML */}

@@ -5,7 +5,7 @@ function Projects() {
     <>
       <section className="w-full min-h-screen h-fit flex flex-col items-center justify-center " id="projects">
         <h2 className="text-5xl font-extrabold text-blue-600 mt-20">
-          Ultimos Projectos
+          Projectos
         </h2>
 
         <div className="max-w-7xl w-full h-screen flex flex-col justify-center items-center">
