@@ -142,6 +142,11 @@ function Skills() {
 
 
       </div>
+      <div className="w-full flex justify-center mt-10">
+          <div className="flex flex-col justify-center w-full max-w-6xl border-opacity-50">
+            <div className="divider"></div>
+          </div>
+          </div>
     </>
   );
 }

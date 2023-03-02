@@ -1,5 +1,5 @@
-import React,{useEffect, useRef} from "react";
-import { useTypewriter, Cursor } from 'react-simple-typewriter'
+import React from "react";
+import { useTypewriter } from 'react-simple-typewriter'
 
 function Hero() {
   
@@ -30,8 +30,8 @@ function Hero() {
             <br/>
             Tengo experiencia en HTML, CSS y JavaScript, y estoy en constante aprendizaje para mejorar mis habilidades y conocer nuevas tecnologías. Me gusta trabajar en equipo y colaborar con otros para lograr objetivos comunes.
             </p>
-            <a href="https://drive.google.com/file/d/1Vce4lT9KvlGgxFumDKi6_UaXMDtIZ-wI/view" target={'_blank'}>
-            <button className="btn btn-primary bg-sky-700 hover:bg-sky-900 border-none lg:self-start self-center" src="">Resume</button>
+            <a href="https://drive.google.com/file/d/1Vce4lT9KvlGgxFumDKi6_UaXMDtIZ-wI/view" target={'_blank'} className="lg:self-start self-center">
+            <button className="btn btn-primary bg-sky-700 hover:bg-sky-900 border-none lg:self-start self-center">Resume</button>
             </a>          
           </div>
         </div>

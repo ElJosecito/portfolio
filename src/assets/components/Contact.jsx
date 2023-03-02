@@ -7,6 +7,11 @@ function Contact() {
 
   return (
     <>
+      <div className="w-full flex justify-center mt-10">
+        <div className="flex flex-col justify-center w-full max-w-6xl border-opacity-50">
+          <div className="divider"></div>
+        </div>
+      </div>
       <section className="w-full min-h-screen flex justify-center" id="contact">
         <div className="flex flex-col items-center max-w-7xl w-full h-screen">
           <h2 className="text-5xl font-extrabold text-blue-600 md:mt-20">
@@ -15,7 +20,7 @@ function Contact() {
 
           <div className="flex justify-center items-center w-full h-full">
             <form
-            id="formulary"
+              id="formulary"
               ref={form}
               action="submit"
               className="flex flex-col items-center justify-center max-w-2xl w-full h-full m-4"
@@ -32,13 +37,12 @@ function Contact() {
                   .then(
                     (result) => {
                       console.log(result.text);
-                      
                     },
                     (error) => {
                       console.log(error.text);
                     }
                   );
-                  document.getElementById("formulary").reset()
+                document.getElementById("formulary").reset();
               }}
             >
               <input
