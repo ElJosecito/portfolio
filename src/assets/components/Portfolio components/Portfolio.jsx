@@ -1,8 +1,15 @@
 import React from 'react'
+import Card from './Card'
+import Footer from '../Footer'
 
 function Portfolio() {
   return (
-    <div>Portfolio</div>
+    <>
+    <section className='w-full min-h-screen h-screen'>
+      <Card/>
+    </section>
+    <Footer/>
+    </>
   )
 }
 
