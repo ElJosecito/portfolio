@@ -14,11 +14,11 @@ function Portfolio() {
 
   return (
     <>
-    <section className='w-full min-h-screen h-screen'>
+    <section className='w-full min-h-screen h-fit flex items-center'>
 
       {
         project.map((data) =>(
-          <Card key={data.id} img={data.image} title={data.title} description={data.description} github={data.github} demo={data.demo} tec={data.technologies}/>
+          <Card key={data.id} img={data.image} title={data.title} description={data.description} github={data.github} demo={data.demo} tec={data.technologies} alt={data.alt}/>
         ))
       }
     </section>

@@ -1,12 +1,12 @@
 import React from "react";
 
-function Card({img, title, description, github, demo, tec} = data) {
+function Card({img, title, description, github, demo, tec, alt} = data) {
   return (
     <div className="card w-80 sm:w-96 bg-base-100 shadow-xl">
       <figure>
         <img
           src={img}
-          alt={title}
+          alt={alt}
         />
       </figure>
       <div className="card-body">
