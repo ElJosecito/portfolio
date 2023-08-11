@@ -2,19 +2,19 @@ import React from "react";
 import { useRef } from "react";
 import emailjs from "@emailjs/browser";
 
+//AOS
+import Aos from "aos";
+import "aos/dist/aos.css";
+
 function Contact() {
   const form = useRef();
 
   return (
     <>
-      <div className="w-full flex justify-center mt-10">
-        <div className="flex flex-col justify-center w-full max-w-6xl border-opacity-50">
-          <div className="divider"></div>
-        </div>
-      </div>
-      <section className="w-full min-h-screen flex justify-center" id="contact">
+
+      <section className="w-full min-h-screen flex justify-center bg-[#023047] pt-20" id="contact">
         <div className="flex flex-col items-center max-w-7xl w-full h-screen">
-          <h2 className="text-5xl font-extrabold text-blue-600 md:mt-20">
+          <h2 className="text-5xl font-extrabold font-frank text-[#ffb703] md:mt-20 " >
             Contactame
           </h2>
 
@@ -48,24 +48,24 @@ function Contact() {
               <input
                 type="text"
                 placeholder="Nombre"
-                className="input input-bordered border-blue-600 focus-visible:outline-none w-full max-w-lg"
+                className="focus:outline-none focus:bg-white focus:bg-opacity-5 transition-all duration-150 bg-transparent border-b-4 border-[#ffb703] w-full max-w-lg p-2 text-nusar text-white"
                 name="client_name"
               />
               <input
                 type="email"
                 placeholder="Email"
-                className="input input-bordered border-blue-600 focus-visible:outline-none w-full max-w-lg mt-10"
+                className=" focus:outline-none focus:bg-white focus:bg-opacity-5 transition-all duration-150 bg-transparent border-b-4 border-[#ffb703] w-full max-w-lg p-2 text-nusar text-white mt-10"
                 name="client_email"
               />
 
               <textarea
-                className="textarea border-blue-600 focus-visible:outline-none w-full max-w-lg h-52 mt-10"
+                className="focus:outline-none focus:bg-white focus:bg-opacity-5 transition-all duration-150 bg-transparent border-b-4 border-[#ffb703] w-full max-w-lg p-2 text-nusar text-white  h-52 mt-10"
                 placeholder="Mensaje"
                 name="message"
               ></textarea>
               <input
                 type="submit"
-                className="btn btn-primary bg-sky-700 hover:bg-sky-900 border-none self-end mt-7 md:mr-20"
+                className="bg-[#ffb703] w-24 py-2 rounded-lg text-[#023047] font-semibold self-end mt-7 md:mr-20"
               />
             </form>
           </div>

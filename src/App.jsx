@@ -1,15 +1,20 @@
 import "./assets/styles/tailwind.css";
-import SubApp from "./SubApp";
-import {Route, Routes} from "react-router-dom"
+import Router from "./Router";
+import { Route, Routes } from "react-router-dom";
 import Portfolio from "./assets/components/Portfolio components/Portfolio";
+import { useEffect } from "react";
+
+
 
 function App() {
   return (
     <>
-      <Routes>
-        <Route path="/" element={<SubApp/>}></Route>
-        <Route path="portafolio" element={<Portfolio/>}></Route>
-      </Routes>
+        <Routes>
+          <>
+            <Route path="/" element={<Router/>}></Route>
+            <Route path="portafolio" element={<Portfolio/>}></Route>
+          </>
+        </Routes>
     </>
   );
 }

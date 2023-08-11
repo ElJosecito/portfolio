@@ -1,0 +1,57 @@
+
+
+
+
+//Nusar
+@font-face {
+    font-family: "nusar";
+    src: url("../fonts/NUSAR/NUSAR.ttf");
+}
+
+
+
+
+
+//Frank
+@font-face {
+  font-family: "frank";
+  src: url('../fonts/Frank/Frank-Black.ttf');
+}
+
+
+
+
+
+.font-nusar {
+  font-family: "nusar";
+}
+
+
+
+
+.font-frank {
+  font-family: "frank";
+}
+
+
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: none;
+    scrollbar-color: #ffffff2b #023047;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #023047;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #ffffff34;
+    border-radius: 6px;
+    border: 2px solid #023047;
+  }

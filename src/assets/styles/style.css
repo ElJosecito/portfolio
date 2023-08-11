@@ -1,1 +1,37 @@
-/*# sourceMappingURL=style.css.map */
+@font-face {
+  font-family: "nusar";
+  src: url("../fonts/NUSAR/NUSAR.ttf");
+}
+@font-face {
+  font-family: "frank";
+  src: url("../fonts/Frank/Frank-Black.ttf");
+}
+.font-nusar {
+  font-family: "nusar";
+}
+
+.font-frank {
+  font-family: "frank";
+}
+
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+* {
+  scrollbar-width: none;
+  scrollbar-color: rgba(255, 255, 255, 0.168627451) #023047;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #023047;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2039215686);
+  border-radius: 6px;
+  border: 2px solid #023047;
+}/*# sourceMappingURL=style.css.map */
