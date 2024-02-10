@@ -6,7 +6,7 @@ import emailjs from "@emailjs/browser";
 import Aos from "aos";
 import "aos/dist/aos.css";
 
-function Contact() {
+function Contact({lenguaje}) {
   const form = useRef();
 
   return (
@@ -15,7 +15,7 @@ function Contact() {
       <section className="w-full min-h-screen flex justify-center bg-[#023047] pt-20" id="contact">
         <div className="flex flex-col items-center max-w-7xl w-full h-screen">
           <h2 className="text-5xl font-extrabold font-frank text-[#ffb703] md:mt-20 " >
-            Contactame
+            {lenguaje.contact.title}
           </h2>
 
           <div className="flex justify-center items-center w-full h-full">
@@ -47,26 +47,28 @@ function Contact() {
             >
               <input
                 type="text"
-                placeholder="Nombre"
+                placeholder={lenguaje.contact.name}
                 className="focus:outline-none focus:bg-white focus:bg-opacity-5 transition-all duration-150 bg-transparent border-b-4 border-[#ffb703] w-full max-w-lg p-2 text-nusar text-white"
                 name="client_name"
               />
               <input
                 type="email"
-                placeholder="Email"
+                placeholder={lenguaje.contact.email}
                 className=" focus:outline-none focus:bg-white focus:bg-opacity-5 transition-all duration-150 bg-transparent border-b-4 border-[#ffb703] w-full max-w-lg p-2 text-nusar text-white mt-10"
                 name="client_email"
               />
 
               <textarea
                 className="focus:outline-none focus:bg-white focus:bg-opacity-5 transition-all duration-150 bg-transparent border-b-4 border-[#ffb703] w-full max-w-lg p-2 text-nusar text-white  h-52 mt-10"
-                placeholder="Mensaje"
+                placeholder={lenguaje.contact.message}
                 name="message"
               ></textarea>
-              <input
+              <button
                 type="submit"
                 className="bg-[#ffb703] w-24 py-2 rounded-lg text-[#023047] font-semibold self-end mt-7 md:mr-20"
-              />
+              >
+                {lenguaje.contact.btn}
+              </button>
             </form>
           </div>
         </div>
