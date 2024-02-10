@@ -315,12 +315,12 @@ function Hero({ lenguaje }) {
             </div>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-start">
             <a href="/portafolio">
             <button
             
             className="self-start text-base tracking-[0.4rem] font-frank my-5 text-center md:text-start mx-4 text-[#ffb703] bg-[#023047]  p-2 px-4 rounded-full hover:bg-[#ffb703] hover:text-[#023047] transition-all duration-200"
-            data-aos="fade-left"
+            data-aos="fade-right"
             data-aos-duration="500"
           >
             {lenguaje.projects.more}
