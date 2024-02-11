@@ -3,7 +3,7 @@ import React from "react";
 function Card({ id, img, title, github, demo, tec, alt, lenguaje }) {
 
   const handleUrl = (id) => {
-    window.location.href = `/project/${id}`;
+    window.location.href = `#/project/${id}`;
   }
 
   return (
