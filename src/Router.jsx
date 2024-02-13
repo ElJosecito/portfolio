@@ -85,7 +85,7 @@ function Router() {
                       src="https://previews.dropbox.com/p/thumb/ACLE77hUwHk0cU32Q5XXQCG_SzrLwUJs7UOnbjszgQ9htpZLlXEtVddby6DnVzn6H6q0o_u5dvKkViRCid96F9XdAfz9warz5uZMOwE7BYK6BCpppI9vZqoEg8nFos89s2C3B3iltp58visp-JCwbKRbUGxZ6Ci08Z924OGJgY1B7HkyVoR_ENXYqLQr6ty2Dq2Zz0cI_z8rgnC9gvYM-nfb9t3wTT4IOb_GmdmQ0zdIKKQvVxZYJqrW1ZNFEH0Z7BFOdpJ__BaMG1efYcddq3RdHMkSXBlZY0HkDoFPHhdM2vaWqyNPbHdf14U5Mv4rSAJscTb-J1SJVnURmx40jw62/p.png"
                       className="w-6 h-6"
                       alt=""
-                      />
+                    />
                   )}
                 </button>
               </li>
@@ -127,7 +127,10 @@ function Router() {
             </>
           }
         ></Route>
-        <Route path="portafolio" element={<Portfolio lenguaje={lenguaje}/>}></Route>
+        <Route
+          path="portafolio"
+          element={<Portfolio lenguaje={lenguaje} />}
+        ></Route>
         <Route path="project/:id" element={<ProjectPage />}></Route>
         <Route path="*" element={<h1>404</h1>}></Route>
       </Routes>
@@ -159,7 +162,10 @@ function Router() {
               {lenguaje.header.projects}
             </HashLink>
           </li>
-          <li className="font-frank text-4xl text-[#ffb703] onClick={handlenav}">
+          <li
+            className="font-frank text-4xl text-[#ffb703]"
+            onClick={handlenav}
+          >
             <HashLink smooth to="#contact">
               {lenguaje.header.contact}
             </HashLink>
