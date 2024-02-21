@@ -11,18 +11,14 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "@emailjs/browser": "^3.10.0",
-    "@fortawesome/fontawesome-svg-core": "^6.4.2",
-    "@fortawesome/free-brands-svg-icons": "^6.4.2",
-    "@fortawesome/free-regular-svg-icons": "^6.4.2",
-    "@fortawesome/free-solid-svg-icons": "^6.4.2",
-    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@uidotdev/usehooks": "^2.4.1",
     "aos": "^2.3.4",
+    "framer-motion": "^11.0.5",
     "gh-pages": "^5.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1",
     "react-router-dom": "^6.9.0",
-    "react-router-hash-link": "^2.4.3",
     "react-simple-typewriter": "^5.0.1"
   },
   "devDependencies": {
