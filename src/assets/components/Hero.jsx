@@ -5,6 +5,8 @@ import { useTypewriter } from "react-simple-typewriter";
 
 //import images
 import josecito from "../images/Josecito.png";
+import mapsDark from "../images/mapsDark.png";
+import mapsLight from "../images/mapsLight.png";
 
 //framer motion
 import { motion } from "framer-motion";
@@ -18,6 +20,7 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 
 //animated counter
 import { AnimatedCounter } from "./DynamicComponents/AnimatedCounter";
+
 
 function Hero() {
   const [ text ] = useTypewriter({
@@ -129,17 +132,17 @@ function Hero() {
             >
               <img
                 className="absolute w-full h-full object-cover z-[1]"
-                src={josecito}
+                src={document.querySelector("html").classList.contains("dark") ? mapsDark : mapsLight}
                 alt="Location"
                 title="Location"
               />
               <img
-                className="w-11 z-[2]"
+                className="w-28 z-[2]"
                 src={josecito}
                 alt="memoji"
                 title="memoji"
               />
-              <div className="w-24 h-24 bg-[#98d0ff] absolute z-[1] rounded-full bg-opacity-30 border-2 border-white animate__animated animate__pulse animate__infinite infinite animate__fast" />
+              <div className="w-24 h-24 bg-[#98d0ff] absolute z-[1] rounded-full bg-opacity-30 border-2 border-white animate-pulseandping" />
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -147,7 +150,7 @@ function Hero() {
                 className="w-full h-10 backdrop-blur-sm absolute left-0 bottom-0 z-[2] flex items-center justify-center text-left text-opacity-70"
               >
                 <span className="text-xs font-medium">
-                  From La Romana, DO 🇲🇽
+                  From La Romana, DO 🇩🇴
                 </span>
               </motion.div>
             </motion.div>

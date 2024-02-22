@@ -5,10 +5,19 @@ import { FaBars, FaMoon, FaLanguage, FaSun } from "react-icons/fa";
 
 function Header() {
   const [theme, setTheme] = useState(() => {
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      return "dark";
+    if (!localStorage.getItem("theme")) {
+      if (
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+      ) {
+        localStorage.setItem("theme", "dark");
+        return "dark";
+      } else {
+        localStorage.setItem("theme", "light");
+        return "light";
+      }
     } else {
-      return "light";
+      return localStorage.getItem("theme");
     }
   });
 
@@ -18,13 +27,14 @@ function Header() {
     } else {
       document.querySelector("html").classList.remove("dark");
     }
-  
   }, [theme]);
 
   const handleTheme = () => {
     if (theme === "light") {
+      localStorage.setItem("theme", "dark");
       setTheme("dark");
     } else {
+      localStorage.setItem("theme", "light");
       setTheme("light");
     }
   };
@@ -65,9 +75,9 @@ function Header() {
         <div className="flex justify-end md:ml-10">
           {theme === "light" ? (
             <FaSun
-            onClick={() => handleTheme()}
-            className="cursor-pointer mx-5 w-[20px] h-6 text-yellow-500"
-          />
+              onClick={() => handleTheme()}
+              className="cursor-pointer mx-5 w-[20px] h-6 text-yellow-500"
+            />
           ) : (
             <FaMoon
               onClick={() => handleTheme()}
