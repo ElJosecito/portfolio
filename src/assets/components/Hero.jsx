@@ -21,9 +21,14 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 //animated counter
 import { AnimatedCounter } from "./DynamicComponents/AnimatedCounter";
 
+//import Components
+import InfinityScroll from "./DynamicComponents/InfinityScroll";
+
+//projects
+import MockupExample from "../images/MockupExample.png";
 
 function Hero() {
-  const [ text ] = useTypewriter({
+  const [text] = useTypewriter({
     words: ["Desarrollador Web", "Front-End", "Back-End", "Full-Stack"],
     loop: true,
   });
@@ -38,9 +43,9 @@ function Hero() {
 
   return (
     <>
-      <section className="w-full min-h-screen h-screen max-h-fit flex justify-center bg-noon dark:bg-back-dark-grey">
+      <section className="w-full max-h-fit flex flex-col items-center bg-noon dark:bg-back-dark-grey">
         <div className="w-full max-w-screen-xl max-h-fit pt-20 px-5">
-          <section className="w-full grid auto-rows-[192px] grid-cols-6 gap-4">
+          <div className="w-full grid auto-rows-[192px] grid-cols-6 gap-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -132,7 +137,11 @@ function Hero() {
             >
               <img
                 className="absolute w-full h-full object-cover z-[1]"
-                src={document.querySelector("html").classList.contains("dark") ? mapsDark : mapsLight}
+                src={
+                  document.querySelector("html").classList.contains("dark")
+                    ? mapsDark
+                    : mapsLight
+                }
                 alt="Location"
                 title="Location"
               />
@@ -150,11 +159,73 @@ function Hero() {
                 className="w-full h-10 backdrop-blur-sm absolute left-0 bottom-0 z-[2] flex items-center justify-center text-left text-opacity-70"
               >
                 <span className="text-xs font-medium">
-                  From La Romana, DO 🇩🇴
+                  From La Romana, DO, 🇩🇴
                 </span>
               </motion.div>
             </motion.div>
-          </section>
+          </div>
+        </div>
+        <div className="w-full max-w-screen-xl max-h-fit p-5">
+          <div className="mt-10 mb-10 w-full text-center dark:text-moonlit">
+            <h2 className="text-3xl font-bold">Skills</h2>
+            <p className="text-base opacity-70">
+              Technologies that I have experience with
+            </p>
+          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: isMobile ? 0.15 : 0.3, duration: 0.4 }}
+            viewport={{ once: true }}
+            className=" max-w-screen-xl max-h-fit flex items-center justify-center  py-10 overflow-hidden dark:bg-dark-grey bg-moonlit rounded-2xl shadow-lg"
+          >
+            <InfinityScroll />
+          </motion.div>
+          {/* See more btn */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.4 }}
+            viewport={{ once: true }}
+            className="w-full flex justify-end mt-10"
+          >
+            <a
+              href="#"
+              className="flex items-center gap-2 font-medium bg-moonlit text-dark-grey px-4 py-2 rounded-lg active:scale-[1.1] transition-transform duration-300 shadow-md"
+            >
+              See all
+            </a>
+          </motion.div>
+        </div>
+
+        <div className="w-full max-w-screen-xl max-h-fit p-5">
+          <div className="mt-10 mb-10 w-full text-center dark:text-moonlit">
+            <h2 className="text-3xl font-bold">Experience</h2>
+            <p className="text-base opacity-70">I Have worked with:</p>
+          </div>
+        </div>
+
+        <div className="w-full max-w-screen-xl max-h-fit p-5">
+          <div className="mt-10 mb-10 w-full text-center dark:text-moonlit">
+            <h2 className="text-3xl font-bold">Projects</h2>
+            <p className="text-base opacity-70">
+              I have worked on projects like:
+            </p>
+          </div>
+
+          <div className="w-full flex items-center justify-center gap-10">
+            <div class="relative">
+              <img
+                class="w-full h-full object-cover rounded-3xl shadow-lg"
+                src={MockupExample}
+                alt="Mockup Example"
+                title="Mockup Example"
+              />
+              <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-white text-2xl font-bold">
+                Tu texto aquí
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </>

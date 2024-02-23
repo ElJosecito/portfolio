@@ -1,9 +1,17 @@
-import React from "react";
+import React,{
+  useEffect,
+  useState
+} from "react";
 import { FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 //import icons
 
 function Footer() {
+  const [year, setYear] = useState(0);
+  useEffect(() => {
+    const date = new Date();
+    setYear(date.getFullYear());
+  }, []);
   return (
     <>
       <footer className="footer footer-center p-10 bg-base-200 text-base-content bg-[#212121] flex flex-col items-center">
@@ -26,7 +34,7 @@ function Footer() {
           </div>
         </div>
         <div className="text-white opacity-20">
-          <p>Copyright © 2023 - All right reserved by Jose Martinez</p>
+          <p>Copyright © {year} - All right reserved by Jose Martinez</p>
         </div>
       </footer>
     </>
