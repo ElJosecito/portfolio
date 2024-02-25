@@ -4,8 +4,11 @@ import Hero from "../assets/components/Hero";
 import { Route, Routes } from "react-router-dom";
 import Header from "../assets/components/layout/Header";
 import Footer from "../assets/components/layout/Footer";
-function Router() {
 
+//import languajes
+import { English } from "../shared/utils/Languajes/English";
+
+function Router() {
 
   return (
     <>
@@ -16,7 +19,7 @@ function Router() {
           path="/"
           element={
             <>
-              <Hero />
+              <Hero languaje={English}/>
             </>
           }
         ></Route>
