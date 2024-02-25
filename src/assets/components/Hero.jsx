@@ -46,7 +46,7 @@ function Hero({ languaje }) {
 
   return (
     <>
-      <section className="w-full max-h-fit flex flex-col items-center bg-noon dark:bg-back-dark-grey">
+      <section className="w-full min-h-fit h-fit pb-10 flex flex-col items-center bg-noon dark:bg-back-dark-grey">
         <div className="w-full max-w-screen-xl max-h-fit pt-20 px-5">
           <div className="w-full grid auto-rows-[192px] grid-cols-6 gap-4">
             <motion.div
@@ -169,6 +169,8 @@ function Hero({ languaje }) {
             </motion.div>
           </div>
         </div>
+
+        {/* Skills */}
         <div className="w-full max-w-screen-xl max-h-fit p-5">
           <div className="mt-10 mb-10 w-full text-center dark:text-moonlit">
             <h2 className="text-3xl font-bold">{languaje.skills.title}</h2>
@@ -202,6 +204,7 @@ function Hero({ languaje }) {
           </motion.div>
         </div>
 
+        {/* experience */}
         <div className="w-full max-w-screen-xl max-h-fit p-5">
           <div className="mt-10 mb-10 w-full text-center dark:text-moonlit">
             <h2 className="text-3xl font-bold">Experience</h2>
@@ -209,7 +212,8 @@ function Hero({ languaje }) {
           </div>
         </div>
 
-        <div className="w-full max-w-screen-xl max-h-fit p-5">
+        {/* projects */}
+        <div className="w-full max-w-screen-xl p-5 pb-10">
           <div className="mt-10 mb-10 w-full text-center dark:text-moonlit">
             <h2 className="text-3xl font-bold">{languaje.projects.title}</h2>
             <p className="text-base opacity-70">
@@ -217,13 +221,13 @@ function Hero({ languaje }) {
             </p>
           </div>
 
-          <div className="w-full flex items-center justify-center gap-10">
+          <div className="grid grid-cols-6 grid-rows-2 gap-5">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: isMobile ? 0.15 : 0.3, duration: 0.4 }}
               viewport={{ once: true }}
-              className="lg:w-full bg-moonlit dark:bg-dark-grey rounded-3xl flex flex-col lg:items-start overflow-hidden p-5 shadow-md"
+              className="w-full col-span-6 bg-moonlit dark:bg-dark-grey rounded-3xl flex flex-col items-center lg:items-start overflow-hidden p-5 shadow-md"
             >
               <div className="w-full flex justify-end mb-3 lg:mb-0">
                 <a
@@ -259,7 +263,7 @@ function Hero({ languaje }) {
                     <h3 className="text-5xl font-bold my-5">
                       {languaje.projects.projects[0].name}
                     </h3>
-                    <p className="text-base font-medium opacity-70 ml-3 lg:pr-20 my-5">
+                    <p className="text-sm lg:text-base font-medium opacity-70 lg:ml-3 lg:pr-20 my-5">
                       {languaje.projects.projects[0].description}
                     </p>
                   </div>
@@ -277,7 +281,140 @@ function Hero({ languaje }) {
                             title={item}
                           />
                         </div>
+                        <span className="font-bold hidden lg:flex">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </motion.div>
 
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.4 }}
+              viewport={{ once: true }}
+              className=" col-span-6 md:col-span-3 bg-moonlit dark:bg-dark-grey rounded-3xl flex flex-col items-center lg:items-start overflow-hidden p-5 shadow-md"
+            >
+              <div className="w-full flex justify-end mb-3 lg:mb-0">
+                <a
+                  href={languaje.projects.projects[0].urls[1].url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className=" gap-2 font-medium text-red-600 border border-red-600 hover:scale-110 px-4 py-1 mr-4 rounded-lg transition-transform duration-300 shadow-md"
+                >
+                  {languaje.projects.projects[0].urls[1].name}
+                </a>
+
+                <a
+                  className="flex items-center font-medium bg-noon text-dark-grey px-3 py-1 rounded-lg  gap-2 hover:scale-110 transition-transform duration-300 shadow-md"
+                  href={languaje.projects.projects[0].urls[0].url}
+                  target="_blank"
+                  rel="noreferrer"
+                  title={languaje.projects.projects[0].urls[0].name}
+                >
+                  <FaGithub />
+                  <span className="hidden lg:flex">GitHub</span>
+                </a>
+              </div>
+              <div className="w-full h-full min-h-80 max-w-lg lg:max-w-full lg:flex ">
+                <img
+                  className="max-w-lg w-full object-cover"
+                  src={languaje.projects.projects[0].image}
+                  alt={languaje.projects.projects[0].name}
+                  title={languaje.projects.projects[0].name}
+                />
+
+                <div className="pl-5 lg:pt-8 dark:text-moonlit flex flex-col">
+                  <div>
+                    <h3 className="text-5xl font-bold my-5">
+                      {languaje.projects.projects[0].name}
+                    </h3>
+                    <p className="text-sm lg:text-base font-medium opacity-70 lg:ml-3 lg:pr-20 my-5">
+                      {languaje.projects.projects[0].description}
+                    </p>
+                  </div>
+                  <ul className="mt-auto flex my-6">
+                    {languaje.projects.projects[0].tech.map((item, index) => (
+                      <li
+                        key={index}
+                        className="flex h-10 items-center self-end font-medium dark:bg-back-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
+                      >
+                        <div className="w-7 lg:mr-3 flex justify-center items-center">
+                          <img
+                            className="w-full h-full"
+                            src={DevTools.find((dev) => dev.name === item).icon}
+                            alt={item}
+                            title={item}
+                          />
+                        </div>
+                        <span className="font-bold hidden lg:flex">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.4 }}
+              viewport={{ once: true }}
+              className="col-span-6 md:col-span-3 bg-moonlit dark:bg-dark-grey rounded-3xl flex flex-col items-center lg:items-start overflow-hidden p-5 shadow-md"
+            >
+              <div className="w-full flex justify-end mb-3 lg:mb-0">
+                <a
+                  href={languaje.projects.projects[0].urls[1].url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className=" gap-2 font-medium text-red-600 border border-red-600 hover:scale-110 px-4 py-1 mr-4 rounded-lg transition-transform duration-300 shadow-md"
+                >
+                  {languaje.projects.projects[0].urls[1].name}
+                </a>
+
+                <a
+                  className="flex items-center font-medium bg-noon text-dark-grey px-3 py-1 rounded-lg  gap-2 hover:scale-110 transition-transform duration-300 shadow-md"
+                  href={languaje.projects.projects[0].urls[0].url}
+                  target="_blank"
+                  rel="noreferrer"
+                  title={languaje.projects.projects[0].urls[0].name}
+                >
+                  <FaGithub />
+                  <span className="hidden lg:flex">GitHub</span>
+                </a>
+              </div>
+              <div className="w-full h-full min-h-80 max-w-lg lg:max-w-full lg:flex ">
+                <img
+                  className="max-w-lg w-full object-cover"
+                  src={languaje.projects.projects[0].image}
+                  alt={languaje.projects.projects[0].name}
+                  title={languaje.projects.projects[0].name}
+                />
+
+                <div className="pl-5 lg:pt-8 dark:text-moonlit flex flex-col">
+                  <div>
+                    <h3 className="text-5xl font-bold my-5">
+                      {languaje.projects.projects[0].name}
+                    </h3>
+                    <p className="text-sm lg:text-base font-medium opacity-70 lg:ml-3 lg:pr-20 my-5">
+                      {languaje.projects.projects[0].description}
+                    </p>
+                  </div>
+                  <ul className="mt-auto flex my-6">
+                    {languaje.projects.projects[0].tech.map((item, index) => (
+                      <li
+                        key={index}
+                        className="flex h-10 items-center self-end font-medium dark:bg-back-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
+                      >
+                        <div className="w-7 lg:mr-3 flex justify-center items-center">
+                          <img
+                            className="w-full h-full"
+                            src={DevTools.find((dev) => dev.name === item).icon}
+                            alt={item}
+                            title={item}
+                          />
+                        </div>
                         <span className="font-bold hidden lg:flex">{item}</span>
                       </li>
                     ))}
