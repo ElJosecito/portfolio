@@ -227,7 +227,7 @@ function Hero({ languaje }) {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: isMobile ? 0.15 : 0.3, duration: 0.4 }}
               viewport={{ once: true }}
-              className="w-full col-span-6 bg-moonlit dark:bg-dark-grey rounded-3xl flex flex-col items-center lg:items-start overflow-hidden p-5 shadow-md"
+              className="w-full col-span-6 row-span-2 bg-moonlit dark:bg-dark-grey rounded-3xl flex flex-col items-center lg:items-start overflow-hidden p-5 shadow-md"
             >
               <div className="w-full flex justify-end mb-3 lg:mb-0">
                 <a
@@ -250,9 +250,9 @@ function Hero({ languaje }) {
                   <span className="hidden lg:flex">GitHub</span>
                 </a>
               </div>
-              <div className="w-full h-full min-h-80 max-w-lg lg:max-w-full lg:flex ">
+              <div className="w-full h-full  lg:flex ">
                 <img
-                  className="max-w-lg w-full object-cover"
+                  className=" w-full lg:max-w-lg object-cover"
                   src={languaje.projects.projects[0].image}
                   alt={languaje.projects.projects[0].name}
                   title={languaje.projects.projects[0].name}
@@ -263,7 +263,7 @@ function Hero({ languaje }) {
                     <h3 className="text-5xl font-bold my-5">
                       {languaje.projects.projects[0].name}
                     </h3>
-                    <p className="text-sm lg:text-base font-medium opacity-70 lg:ml-3 lg:pr-20 my-5">
+                    <p className="text-sm lg:text-base font-medium opacity-70 lg:ml-1 lg:pr-20 my-5">
                       {languaje.projects.projects[0].description}
                     </p>
                   </div>
@@ -294,9 +294,9 @@ function Hero({ languaje }) {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.4 }}
               viewport={{ once: true }}
-              className=" col-span-6 md:col-span-3 bg-moonlit dark:bg-dark-grey rounded-3xl flex flex-col items-center lg:items-start overflow-hidden p-5 shadow-md"
+              className=" col-span-6 md:col-span-3 bg-moonlit dark:bg-dark-grey rounded-3xl flex flex-col items-center overflow-hidden p-5 shadow-md"
             >
-              <div className="w-full flex justify-end mb-3 lg:mb-0">
+              <div className="w-full flex justify-end mb-3">
                 <a
                   href={languaje.projects.projects[0].urls[1].url}
                   target="_blank"
@@ -307,19 +307,18 @@ function Hero({ languaje }) {
                 </a>
 
                 <a
-                  className="flex items-center font-medium bg-noon text-dark-grey px-3 py-1 rounded-lg  gap-2 hover:scale-110 transition-transform duration-300 shadow-md"
+                  className="flex items-center font-medium bg-noon text-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md"
                   href={languaje.projects.projects[0].urls[0].url}
                   target="_blank"
                   rel="noreferrer"
                   title={languaje.projects.projects[0].urls[0].name}
                 >
                   <FaGithub />
-                  <span className="hidden lg:flex">GitHub</span>
                 </a>
               </div>
-              <div className="w-full h-full min-h-80 max-w-lg lg:max-w-full lg:flex ">
+              <div className="w-full h-full ">
                 <img
-                  className="max-w-lg w-full object-cover"
+                  className=" w-full object-cover"
                   src={languaje.projects.projects[0].image}
                   alt={languaje.projects.projects[0].name}
                   title={languaje.projects.projects[0].name}
@@ -330,7 +329,7 @@ function Hero({ languaje }) {
                     <h3 className="text-5xl font-bold my-5">
                       {languaje.projects.projects[0].name}
                     </h3>
-                    <p className="text-sm lg:text-base font-medium opacity-70 lg:ml-3 lg:pr-20 my-5">
+                    <p className="text-sm lg:text-base font-normal opacity-70 my-5">
                       {languaje.projects.projects[0].description}
                     </p>
                   </div>
@@ -340,7 +339,7 @@ function Hero({ languaje }) {
                         key={index}
                         className="flex h-10 items-center self-end font-medium dark:bg-back-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
                       >
-                        <div className="w-7 lg:mr-3 flex justify-center items-center">
+                        <div className="w-7  flex justify-center items-center">
                           <img
                             className="w-full h-full"
                             src={DevTools.find((dev) => dev.name === item).icon}
@@ -348,7 +347,6 @@ function Hero({ languaje }) {
                             title={item}
                           />
                         </div>
-                        <span className="font-bold hidden lg:flex">{item}</span>
                       </li>
                     ))}
                   </ul>
@@ -359,11 +357,11 @@ function Hero({ languaje }) {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.4 }}
+              transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.6 }}
               viewport={{ once: true }}
-              className="col-span-6 md:col-span-3 bg-moonlit dark:bg-dark-grey rounded-3xl flex flex-col items-center lg:items-start overflow-hidden p-5 shadow-md"
+              className=" col-span-6 md:col-span-3 bg-moonlit dark:bg-dark-grey rounded-3xl flex flex-col items-center overflow-hidden p-5 shadow-md"
             >
-              <div className="w-full flex justify-end mb-3 lg:mb-0">
+              <div className="w-full flex justify-end mb-3">
                 <a
                   href={languaje.projects.projects[0].urls[1].url}
                   target="_blank"
@@ -374,19 +372,18 @@ function Hero({ languaje }) {
                 </a>
 
                 <a
-                  className="flex items-center font-medium bg-noon text-dark-grey px-3 py-1 rounded-lg  gap-2 hover:scale-110 transition-transform duration-300 shadow-md"
+                  className="flex items-center font-medium bg-noon text-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md"
                   href={languaje.projects.projects[0].urls[0].url}
                   target="_blank"
                   rel="noreferrer"
                   title={languaje.projects.projects[0].urls[0].name}
                 >
                   <FaGithub />
-                  <span className="hidden lg:flex">GitHub</span>
                 </a>
               </div>
-              <div className="w-full h-full min-h-80 max-w-lg lg:max-w-full lg:flex ">
+              <div className="w-full h-full ">
                 <img
-                  className="max-w-lg w-full object-cover"
+                  className=" w-full object-cover"
                   src={languaje.projects.projects[0].image}
                   alt={languaje.projects.projects[0].name}
                   title={languaje.projects.projects[0].name}
@@ -397,7 +394,7 @@ function Hero({ languaje }) {
                     <h3 className="text-5xl font-bold my-5">
                       {languaje.projects.projects[0].name}
                     </h3>
-                    <p className="text-sm lg:text-base font-medium opacity-70 lg:ml-3 lg:pr-20 my-5">
+                    <p className="text-sm lg:text-base font-normal opacity-70 my-5">
                       {languaje.projects.projects[0].description}
                     </p>
                   </div>
@@ -407,7 +404,7 @@ function Hero({ languaje }) {
                         key={index}
                         className="flex h-10 items-center self-end font-medium dark:bg-back-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
                       >
-                        <div className="w-7 lg:mr-3 flex justify-center items-center">
+                        <div className="w-7  flex justify-center items-center">
                           <img
                             className="w-full h-full"
                             src={DevTools.find((dev) => dev.name === item).icon}
@@ -415,7 +412,6 @@ function Hero({ languaje }) {
                             title={item}
                           />
                         </div>
-                        <span className="font-bold hidden lg:flex">{item}</span>
                       </li>
                     ))}
                   </ul>
