@@ -1,50 +1,50 @@
 import { v4 as uuid } from "uuid";
 
-export const English = {
+export const Spanish = {
   header: {
-    home: "Home",
-    expecience: "Experience",
-    about: "About",
-    projects: "Projects",
-    contact: "Contact",
+    home: "Inicio",
+    experience: "Experiencia",
+    about: "Acerca de",
+    projects: "Proyectos",
+    contact: "Contacto",
   },
   hero: {
     name: "Jose Miguel Martinez Florimon",
-    subtitle: ["Web Developer", "Front-End", "Back-End", "Full-Stack"],
+    subtitle: ["Desarrollador Web", "Front-End", "Back-End", "Full-Stack"],
   },
   about: {
-    title: "About me",
+    title: "Acerca de mí",
     description:
-      "Web developer with experience in designing, developing and maintaining front-end web applications.",
+      "Desarrollador web con experiencia en diseño, desarrollo y mantenimiento de aplicaciones web front-end.",
   },
   experience: {
-    title: "Experience",
-    description: "years of experience",
+    title: "Experiencia",
+    description: "años de experiencia",
   },
   country: {
-    title: "Country",
-    description: "From La Romana, DO, 🇩🇴",
+    title: "País",
+    description: "Desde La Romana, DO, 🇩🇴",
   },
   skills: {
-    title: "Skills",
-    description: "Technologies that I have experience with.",
-    skillsBtn: "See all",
+    title: "Habilidades",
+    description: "Tecnologías con las que tengo experiencia.",
+    skillsBtn: "Ver todas",
   },
 
   experience: {
-    title: "Experience",
-    description: "My work experience.",
+    title: "Experiencia",
+    description: "Mi experiencia laboral.",
   },
   projects: {
-    title: "Projects",
-    description: "Some of my main projects.",
+    title: "Proyectos",
+    description: "Algunos de mis proyectos principales.",
     projects: [
       {
         id: uuid(),
         name: "Gestipol",
         image: "../../../../src/assets/images/gestipolMuckup.webp",
         description:
-          "Gestipol is an app that allows political candidates to manage the status of their voters in order to have clearer information about the process during the campaign.",
+          "Gestipol es una aplicación que permite a los candidatos políticos gestionar el estado de sus votantes para tener una información más clara sobre el proceso durante la campaña.",
         tech: ["React", "Node.js", "Tailwind CSS", "MongoDB"],
         urls: [
           {
@@ -54,7 +54,7 @@ export const English = {
           },
           {
             id: uuid(),
-            name: "Live",
+            name: "En Vivo",
             url: "",
           },
         ],
@@ -64,7 +64,7 @@ export const English = {
         name: "Gestipol",
         image: "../../../../src/assets/images/BankLandingMuckup.webp",
         description:
-          "Gestipol is an app that allows political candidates to manage the status of their voters in order to have clearer information about the process during the campaign.",
+          "Gestipol es una aplicación que permite a los candidatos políticos gestionar el estado de sus votantes para tener una información más clara sobre el proceso durante la campaña.",
         tech: ["React", "Node.js", "Tailwind CSS", "MongoDB"],
         urls: [
           {
@@ -74,7 +74,7 @@ export const English = {
           },
           {
             id: uuid(),
-            name: "Live",
+            name: "En Vivo",
             url: "",
           },
         ],
@@ -84,7 +84,7 @@ export const English = {
         name: "Gestipol",
         image: "../../../../src/assets/images/countryAppMuckup.webp",
         description:
-          "Gestipol is an app that allows political candidates to manage the status of their voters in order to have clearer information about the process during the campaign.",
+          "Gestipol es una aplicación que permite a los candidatos políticos gestionar el estado de sus votantes para tener una información más clara sobre el proceso durante la campaña.",
         tech: ["React", "Node.js", "Tailwind CSS", "MongoDB"],
         urls: [
           {
@@ -94,7 +94,7 @@ export const English = {
           },
           {
             id: uuid(),
-            name: "Live",
+            name: "En Vivo",
             url: "",
           },
         ],
@@ -104,7 +104,7 @@ export const English = {
         name: "Gestipol",
         image: "../../../../src/assets/images/StatslandingMuckup.webp",
         description:
-          "Gestipol is an app that allows political candidates to manage the status of their voters in order to have clearer information about the process during the campaign.",
+          "Gestipol es una aplicación que permite a los candidatos políticos gestionar el estado de sus votantes para tener una información más clara sobre el proceso durante la campaña.",
         tech: ["React", "Node.js", "Tailwind CSS", "MongoDB"],
         urls: [
           {
@@ -114,7 +114,7 @@ export const English = {
           },
           {
             id: uuid(),
-            name: "Live",
+            name: "En Vivo",
             url: "",
           },
         ],

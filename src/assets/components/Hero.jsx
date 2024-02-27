@@ -24,9 +24,6 @@ import { AnimatedCounter } from "./DynamicComponents/AnimatedCounter";
 //import Components
 import InfinityScroll from "./DynamicComponents/InfinityScroll";
 
-//projects
-import GestipolMuckUp from "../images/GestipolMockup.png";
-
 //devTools
 import { DevTools } from "../../shared/utils/Global-Utils";
 
@@ -205,12 +202,12 @@ function Hero({ languaje }) {
         </div>
 
         {/* experience */}
-        <div className="w-full max-w-screen-xl max-h-fit p-5">
+        {/* <div className="w-full max-w-screen-xl max-h-fit p-5">
           <div className="mt-10 mb-10 w-full text-center dark:text-moonlit">
             <h2 className="text-3xl font-bold">Experience</h2>
             <p className="text-base opacity-70">I Have worked with:</p>
           </div>
-        </div>
+        </div> */}
 
         {/* projects */}
         <div className="w-full max-w-screen-xl p-5 pb-10">
@@ -252,7 +249,7 @@ function Hero({ languaje }) {
               </div>
               <div className="w-full h-full  lg:flex ">
                 <img
-                  className=" w-full lg:max-w-lg object-cover"
+                  className=" w-full lg:max-w-lg object-cover hover:cursor-pointer hover:scale-105 transition-transform duration-300  lg:mr-5"
                   src={languaje.projects.projects[0].image}
                   alt={languaje.projects.projects[0].name}
                   title={languaje.projects.projects[0].name}
@@ -271,7 +268,7 @@ function Hero({ languaje }) {
                     {languaje.projects.projects[0].tech.map((item, index) => (
                       <li
                         key={index}
-                        className="flex h-10 items-center self-end font-medium dark:bg-back-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
+                        className="cursor-pointer flex h-10 items-center self-end font-medium dark:bg-back-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
                       >
                         <div className="w-7 lg:mr-3 flex justify-center items-center">
                           <img
@@ -318,26 +315,26 @@ function Hero({ languaje }) {
               </div>
               <div className="w-full h-full ">
                 <img
-                  className=" w-full object-cover"
-                  src={languaje.projects.projects[0].image}
-                  alt={languaje.projects.projects[0].name}
-                  title={languaje.projects.projects[0].name}
+                  className=" w-full object-cover hover:cursor-pointer hover:scale-105 transition-transform duration-300 lg:mr-5"
+                  src={languaje.projects.projects[1].image}
+                  alt={languaje.projects.projects[1].name}
+                  title={languaje.projects.projects[1].name}
                 />
 
                 <div className="pl-5 lg:pt-8 dark:text-moonlit flex flex-col">
                   <div>
                     <h3 className="text-5xl font-bold my-5">
-                      {languaje.projects.projects[0].name}
+                      {languaje.projects.projects[1].name}
                     </h3>
                     <p className="text-sm lg:text-base font-normal opacity-70 my-5">
-                      {languaje.projects.projects[0].description}
+                      {languaje.projects.projects[1].description}
                     </p>
                   </div>
                   <ul className="mt-auto flex my-6">
-                    {languaje.projects.projects[0].tech.map((item, index) => (
+                    {languaje.projects.projects[1].tech.map((item, index) => (
                       <li
                         key={index}
-                        className="flex h-10 items-center self-end font-medium dark:bg-back-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
+                        className="cursor-pointer flex h-10 items-center self-end font-medium dark:bg-back-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
                       >
                         <div className="w-7  flex justify-center items-center">
                           <img
@@ -383,26 +380,26 @@ function Hero({ languaje }) {
               </div>
               <div className="w-full h-full ">
                 <img
-                  className=" w-full object-cover"
-                  src={languaje.projects.projects[0].image}
-                  alt={languaje.projects.projects[0].name}
-                  title={languaje.projects.projects[0].name}
+                  className=" w-full object-cover hover:cursor-pointer hover:scale-105 transition-transform duration-300 lg:mr-5"
+                  src={languaje.projects.projects[2].image}
+                  alt={languaje.projects.projects[2].name}
+                  title={languaje.projects.projects[2].name}
                 />
 
                 <div className="pl-5 lg:pt-8 dark:text-moonlit flex flex-col">
                   <div>
                     <h3 className="text-5xl font-bold my-5">
-                      {languaje.projects.projects[0].name}
+                      {languaje.projects.projects[2].name}
                     </h3>
                     <p className="text-sm lg:text-base font-normal opacity-70 my-5">
-                      {languaje.projects.projects[0].description}
+                      {languaje.projects.projects[2].description}
                     </p>
                   </div>
                   <ul className="mt-auto flex my-6">
-                    {languaje.projects.projects[0].tech.map((item, index) => (
+                    {languaje.projects.projects[2].tech.map((item, index) => (
                       <li
                         key={index}
-                        className="flex h-10 items-center self-end font-medium dark:bg-back-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
+                        className="cursor-pointer flex h-10 items-center self-end font-medium dark:bg-back-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
                       >
                         <div className="w-7  flex justify-center items-center">
                           <img
@@ -420,6 +417,8 @@ function Hero({ languaje }) {
             </motion.div>
           </div>
         </div>
+
+        {/* contact */}
       </section>
     </>
   );
