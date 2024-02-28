@@ -6,7 +6,10 @@ import { FaBars, FaMoon, FaLanguage, FaSun } from "react-icons/fa";
 //motion framer
 import { motion } from "framer-motion";
 
-function Header({onDatos}) {
+//react router
+import { Link } from "react-router-dom";
+
+function Header({ onDatos }) {
   //theme
   const [theme, setTheme] = useState(() => {
     if (!localStorage.getItem("theme")) {
@@ -62,11 +65,18 @@ function Header({onDatos}) {
     }
   };
 
+  const handleScroll = (sectionId) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <header className="w-full absolute flex justify-center pt-5">
       <div className="flex shadow-md dark:bg-dark-grey bg-moonlit py-2 px-10 rounded-full">
-        <ul className=" items-center dark:text-moonlit font-inter font-bold text-sm hidden md:flex">
-          <a href="">
+        <ul className="items-center dark:text-moonlit font-inter font-bold text-sm hidden md:flex">
+          <a href="/#home">
             <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
               Inicio
             </li>
@@ -76,7 +86,7 @@ function Header({onDatos}) {
               Experiencia
             </li>
           </a>
-          <a href="">
+          <a  className="cursor-pointer" onClick={() => handleScroll("projects")}>
             <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
               Proyectos
             </li>

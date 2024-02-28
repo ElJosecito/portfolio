@@ -35,6 +35,12 @@ function Router() {
           element={
             <>
               <Hero languaje={languaje}/>
+              <section className="container mx-auto" id="prueba">
+                <h1 className="text-4xl font-bold text-center my-8">
+                  {languaje.title}
+                </h1>
+                <p className="text-xl text-center">{languaje.description}</p>
+              </section>
             </>
           }
         ></Route>

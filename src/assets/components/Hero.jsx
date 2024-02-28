@@ -44,7 +44,7 @@ function Hero({ languaje }) {
   return (
     <>
       <section className="w-full min-h-fit h-fit pb-10 flex flex-col items-center bg-noon dark:bg-back-dark-grey">
-        <div className="w-full max-w-screen-xl max-h-fit pt-20 px-5">
+        <div className="w-full max-w-screen-xl max-h-fit pt-20 px-5" id="home">
           <div className="w-full grid auto-rows-[192px] grid-cols-6 gap-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -210,7 +210,7 @@ function Hero({ languaje }) {
         </div> */}
 
         {/* projects */}
-        <div className="w-full max-w-screen-xl p-5 pb-10">
+        <section className="w-full max-w-screen-xl p-5 pb-10" id="projects">
           <div className="mt-10 mb-10 w-full text-center dark:text-moonlit">
             <h2 className="text-3xl font-bold">{languaje.projects.title}</h2>
             <p className="text-base opacity-70">
@@ -416,7 +416,7 @@ function Hero({ languaje }) {
               </div>
             </motion.div>
           </div>
-        </div>
+        </section>
 
         {/* contact */}
       </section>
