@@ -22,7 +22,7 @@ export const English = {
       "I love to challenge myself and explore new technologies to create innovative and efficient solutions. As a developer, I stand out for my ability to design, develop, and maintain complete and engaging web applications, which not only meet client requirements but also provide an interactive and satisfying experience for the end user.",
       "I am a proactive, adaptable professional committed to the team's success. I enjoy working collaboratively, bringing my skills and knowledge to effectively and creatively achieve established goals.",
       "I am excited to continue growing and learning in this exciting world of web development and technology!",
-    ],    
+    ],
   },
   experience: {
     title: "Experience",
@@ -47,82 +47,62 @@ export const English = {
     description: "Some of my main projects.",
     projects: [
       {
-        id: uuid(),
+        id: "uuid()",
         name: "Gestipol",
         image: "../../../../src/assets/images/gestipolMuckup.webp",
         description:
-          "Gestipol is an app that allows political candidates to manage the status of their voters in order to have clearer information about the process during the campaign.",
+          "Gestipol is an application that allows political candidates to manage the status of their voters to have clearer information about the process during the campaign.",
         tech: ["React", "Node.js", "Tailwind CSS", "MongoDB"],
         urls: [
           {
-            id: uuid(),
+            id: "uuid()",
             name: "Github",
-            url: "",
+            url: "https://github.com/ElJosecito/crm-frontend",
           },
           {
-            id: uuid(),
+            id: "uuid()",
             name: "Live",
-            url: "",
+            url: "https://gestipol.onrender.com/home",
           },
         ],
       },
       {
-        id: uuid(),
-        name: "Gestipol",
+        id: "uuid()",
+        name: "Bank Landing Page",
         image: "../../../../src/assets/images/BankLandingMuckup.webp",
         description:
-          "Gestipol is an app that allows political candidates to manage the status of their voters in order to have clearer information about the process during the campaign.",
-        tech: ["React", "Node.js", "Tailwind CSS", "MongoDB"],
+          "This is a landing page for a fictional bank, which was created in order to practice and improve my web development skills. The page is fully responsive and was inspired by a design from frontend mentor.",
+        tech: ["React", "Tailwind CSS", "SASS", "Vite"],
         urls: [
           {
-            id: uuid(),
+            id: "uuid()",
             name: "Github",
-            url: "",
+            url: "https://github.com/ElJosecito/bank-Landing",
           },
           {
-            id: uuid(),
+            id: "uuid()",
             name: "Live",
-            url: "",
+            url: "https://vermillion-kashata-e30b59.netlify.app/",
           },
         ],
       },
       {
-        id: uuid(),
-        name: "Gestipol",
+        id: "uuid()",
+        name: "Flags App",
         image: "../../../../src/assets/images/countryAppMuckup.webp",
         description:
-          "Gestipol is an app that allows political candidates to manage the status of their voters in order to have clearer information about the process during the campaign.",
-        tech: ["React", "Node.js", "Tailwind CSS", "MongoDB"],
+          "Flags App is a web application that allows users to search for and view information about countries around the world. The application was created in order to practice and improve my web development skills. Inspired by a design from frontend mentor.",
+        tech: ["React", "Tailwind CSS", "SASS", "Vite"],
         urls: [
           {
-            id: uuid(),
+            id: "uuid()",
             name: "Github",
-            url: "",
+            url: "https://github.com/ElJosecito/country-app",
           },
           {
-            id: uuid(),
+            id: "uuid()",
             name: "Live",
-            url: "",
-          },
-        ],
-      },
-      {
-        id: uuid(),
-        name: "Gestipol",
-        image: "../../../../src/assets/images/StatslandingMuckup.webp",
-        description:
-          "Gestipol is an app that allows political candidates to manage the status of their voters in order to have clearer information about the process during the campaign.",
-        tech: ["React", "Node.js", "Tailwind CSS", "MongoDB"],
-        urls: [
-          {
-            id: uuid(),
-            name: "Github",
-            url: "",
-          },
-          {
-            id: uuid(),
-            name: "Live",
-            url: "",
+            url: "https://guileless-daffodil-25c071.netlify.app/",
           },
         ],
       },

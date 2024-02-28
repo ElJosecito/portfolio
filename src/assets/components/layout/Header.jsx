@@ -74,7 +74,7 @@ function Header({ onDatos, languaje }) {
   };
 
   return (
-    <header className="w-full fixed z-50 flex justify-center pt-5">
+    <header className="w-full fixed z-50 flex justify-center pt-2">
       <div className="flex shadow-md dark:bg-dark-grey bg-moonlit py-2 px-10 rounded-full">
         <ul className="items-center dark:text-moonlit font-inter font-bold text-sm hidden md:flex">
           <a className="cursor-pointer" onClick={() => handleScroll("home")}>
