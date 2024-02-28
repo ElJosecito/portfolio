@@ -310,20 +310,20 @@ function Hero({ languaje }) {
             >
               <div className="w-full flex justify-end mb-3">
                 <a
-                  href={languaje.projects.projects[0].urls[1].url}
+                  href={languaje.projects.projects[1].urls[1].url}
                   target="_blank"
                   rel="noreferrer"
                   className=" gap-2 font-medium text-red-600 border border-red-600 hover:scale-110 px-4 py-1 mr-4 rounded-lg transition-transform duration-300 shadow-md"
                 >
-                  {languaje.projects.projects[0].urls[1].name}
+                  {languaje.projects.projects[1].urls[1].name}
                 </a>
 
                 <a
                   className="flex items-center font-medium bg-noon text-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md"
-                  href={languaje.projects.projects[0].urls[0].url}
+                  href={languaje.projects.projects[1].urls[0].url}
                   target="_blank"
                   rel="noreferrer"
-                  title={languaje.projects.projects[0].urls[0].name}
+                  title={languaje.projects.projects[1].urls[0].name}
                 >
                   <FaGithub />
                 </a>
@@ -375,20 +375,20 @@ function Hero({ languaje }) {
             >
               <div className="w-full flex justify-end mb-3">
                 <a
-                  href={languaje.projects.projects[0].urls[1].url}
+                  href={languaje.projects.projects[2].urls[1].url}
                   target="_blank"
                   rel="noreferrer"
                   className=" gap-2 font-medium text-red-600 border border-red-600 hover:scale-110 px-4 py-1 mr-4 rounded-lg transition-transform duration-300 shadow-md"
                 >
-                  {languaje.projects.projects[0].urls[1].name}
+                  {languaje.projects.projects[2].urls[1].name}
                 </a>
 
                 <a
                   className="flex items-center font-medium bg-noon text-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md"
-                  href={languaje.projects.projects[0].urls[0].url}
+                  href={languaje.projects.projects[2].urls[0].url}
                   target="_blank"
                   rel="noreferrer"
-                  title={languaje.projects.projects[0].urls[0].name}
+                  title={languaje.projects.projects[2].urls[0].name}
                 >
                   <FaGithub />
                 </a>
