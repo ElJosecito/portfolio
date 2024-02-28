@@ -28,7 +28,7 @@ function Router() {
   return (
     <>
       {/* <!-- Page content here --> */}
-      <Header onDatos={handleLanguaje} />
+      <Header onDatos={handleLanguaje} languaje={languaje} />
       <Routes>
         <Route
           path="/"

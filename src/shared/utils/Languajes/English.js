@@ -14,8 +14,15 @@ export const English = {
   },
   about: {
     title: "About me",
+    subtitle: "About me and contact ways.",
     description:
       "Web developer with experience in designing, developing and maintaining front-end web applications.",
+    paragraphs: [
+      "I am passionate about technology and web development. With solid experience in the Full Stack field, I have specialized in the exciting MERN ecosystem (MongoDB, Express.js, React.js, and Node.js).",
+      "I love to challenge myself and explore new technologies to create innovative and efficient solutions. As a developer, I stand out for my ability to design, develop, and maintain complete and engaging web applications, which not only meet client requirements but also provide an interactive and satisfying experience for the end user.",
+      "I am a proactive, adaptable professional committed to the team's success. I enjoy working collaboratively, bringing my skills and knowledge to effectively and creatively achieve established goals.",
+      "I am excited to continue growing and learning in this exciting world of web development and technology!",
+    ],    
   },
   experience: {
     title: "Experience",

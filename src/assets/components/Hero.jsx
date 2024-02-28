@@ -12,8 +12,9 @@ import mapsLight from "../images/mapsLight.png";
 import { motion } from "framer-motion";
 
 //icons
-import { FaGithub, FaLinkedin } from "react-icons/fa";
-import { MdAlternateEmail, MdAutoGraph } from "react-icons/md";
+import { FaGithub, FaLinkedin, FaCopy } from "react-icons/fa";
+import { MdAlternateEmail, MdAutoGraph, MdOutlineEmail } from "react-icons/md";
+import { CiPaperplane } from "react-icons/ci";
 
 //import media query
 import { useMediaQuery } from "@uidotdev/usehooks";
@@ -33,6 +34,8 @@ function Hero({ languaje }) {
     loop: true,
   });
 
+  const [copied, setCopied] = useState(false);
+  const email = "josemartinezflorimon@gmail.com";
   const [isMobile, setIsMobile] = useState(false);
   const mobile = useMediaQuery("only screen and (max-width : 768px)");
 
@@ -41,10 +44,23 @@ function Hero({ languaje }) {
     setIsMobile(mobile);
   }, []);
 
+  const copyToClipboard = () => {
+    const el = document.createElement("textarea");
+    el.value = email;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand("copy");
+    document.body.removeChild(el);
+    setCopied(true);
+  };
+
   return (
     <>
-      <section className="w-full min-h-fit h-fit pb-10 flex flex-col items-center bg-noon dark:bg-back-dark-grey">
-        <div className="w-full max-w-screen-xl max-h-fit pt-20 px-5" id="home">
+      <main className="w-full min-h-fit h-fit pb-10 flex flex-col items-center bg-noon dark:bg-back-dark-grey">
+        <section
+          className="w-full max-w-screen-xl max-h-fit pt-20 px-5"
+          id="home"
+        >
           <div className="w-full grid auto-rows-[192px] grid-cols-6 gap-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -165,10 +181,10 @@ function Hero({ languaje }) {
               </motion.div>
             </motion.div>
           </div>
-        </div>
+        </section>
 
         {/* Skills */}
-        <div className="w-full max-w-screen-xl max-h-fit p-5">
+        <section className="w-full max-w-screen-xl max-h-fit p-5">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -196,7 +212,7 @@ function Hero({ languaje }) {
               {languaje.skills.skillsBtn}
             </a>
           </motion.div>
-        </div>
+        </section>
 
         {/* experience */}
         {/* <div className="w-full max-w-screen-xl max-h-fit p-5">
@@ -208,11 +224,11 @@ function Hero({ languaje }) {
 
         {/* projects */}
         <section className="w-full max-w-screen-xl p-5 pb-10" id="projects">
-          <div className="mb-10 w-full pl-3 dark:text-moonlit">
+          <div className="mb-10 text-center w-full pl-3 dark:text-moonlit">
             <h2 className="text-5xl font-bold my-3">
               {languaje.projects.title}
             </h2>
-            <p className="text-lg opacity-70 pl-2">
+            <p className="text-lg opacity-70">
               {languaje.projects.description}
             </p>
           </div>
@@ -418,38 +434,28 @@ function Hero({ languaje }) {
         </section>
 
         {/* contact */}
-        <section className="w-full max-w-screen-xl p-5" id="contact">
-          <div className="w-full mb-10 dark:text-moonlit">
-            <h2 className="text-5xl font-bold my-3">contacto</h2>
-            <p className="text-lg opacity-70">description</p>
+        <section className="w-full max-w-screen-xl p-5" id="about">
+          <div className="w-full text-center mb-10 dark:text-moonlit">
+            <h2 className="text-5xl font-bold my-3">{languaje.about.title}</h2>
+            <p className="text-lg opacity-70">
+              {languaje.about.subtitle}
+            </p>
           </div>
           <div className="w-full flex flex-col items-center justify-center gap-5">
-            <div className="w-full flex flex-col items-center justify-center gap-5">
-              <input
-                className="w-full p-3 rounded-lg dark:bg-dark-grey"
-                type="text"
-                placeholder="Nombre"
-              />
-              <input
-                className="w-full p-3 rounded-lg dark:bg-dark-grey"
-                type="text"
-                placeholder="Email"
-              />
-              <textarea
-                className="w-full p-3 rounded-lg dark:bg-dark-grey"
-                name=""
-                id=""
-                cols="30"
-                rows="10"
-                placeholder="Mensaje"
-              ></textarea>
-              <button className="w-full p-3 rounded-lg bg-moonlit dark:bg-dark-grey text-white">
-                Enviar
-              </button>
+            <div className="flex flex-col gap-5 dark:text-moonlit">
+              <h2 className="text-3xl font-bold">Jose Martinez</h2>
+
+              {
+                languaje.about.paragraphs.map((item, index) => (
+                  <p key={index} className="opacity-75 text-lg">
+                    {item}
+                  </p>
+                ))
+              }
             </div>
-            <div className="w-full flex flex-col items-center justify-center gap-5">
-              <h3 className="text-3xl font-bold">Otras formas de contacto</h3>
-              <div className="flex gap-5">
+
+            <div className="w-full flex flex-col justify-center gap-5 mt-5">
+              <div className="flex gap-3">
                 <a
                   href="
                   mailto:"
@@ -473,12 +479,61 @@ function Hero({ languaje }) {
                   <span className="hidden lg:flex">GitHub</span>
                 </a>
               </div>
+              {/* email */}
+
+              <div className="flex justify-between w-fit">
+                <div className="w-full p-3 rounded-lg bg-moonlit dark:bg-dark-grey">
+                  <p
+                    id="email"
+                    className="text-base dark:text-moonlit opacity-70"
+                  >
+                    josemartinezflorimon@gmail.com
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    copyToClipboard();
+                    setTimeout(() => {
+                      setCopied(false);
+                    }, 3000);
+                  }}
+                  className=" flex justify-center items-center mx-2 w-16 rounded-lg bg-moonlit dark:bg-dark-grey text-white"
+                >
+                  <FaCopy className="w-5 h-5 opacity-70 text-back-dark-grey dark:text-moonlit" />
+                </button>
+              </div>
             </div>
           </div>
         </section>
-      </section>
+      </main>
     </>
   );
 }
 
 export default Hero;
+
+{
+  /* <div className="w-full flex flex-col items-center justify-center gap-5">
+              <input
+                className="w-full p-3 rounded-lg dark:bg-dark-grey"
+                type="text"
+                placeholder="Nombre"
+              />
+              <input
+                className="w-full p-3 rounded-lg dark:bg-dark-grey"
+                type="text"
+                placeholder="Email"
+              />
+              <textarea
+                className="w-full p-3 rounded-lg dark:bg-dark-grey"
+                name=""
+                id=""
+                cols="30"
+                rows="10"
+                placeholder="Mensaje"
+              ></textarea>
+              <button className="w-full p-3 rounded-lg bg-moonlit dark:bg-dark-grey text-white">
+                Enviar
+              </button>
+            </div> */
+}

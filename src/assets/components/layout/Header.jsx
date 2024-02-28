@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 //import icons
 import { FaBars, FaMoon, FaLanguage, FaSun } from "react-icons/fa";
+import { IoLanguageOutline } from "react-icons/io5";
 
 //motion framer
 import { motion } from "framer-motion";
@@ -9,7 +10,7 @@ import { motion } from "framer-motion";
 //react router
 import { Link } from "react-router-dom";
 
-function Header({ onDatos }) {
+function Header({ onDatos, languaje }) {
   //theme
   const [theme, setTheme] = useState(() => {
     if (!localStorage.getItem("theme")) {
@@ -78,7 +79,7 @@ function Header({ onDatos }) {
         <ul className="items-center dark:text-moonlit font-inter font-bold text-sm hidden md:flex">
           <a className="cursor-pointer" onClick={() => handleScroll("home")}>
             <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
-              Inicio
+              {languaje.header.home}
             </li>
           </a>
           {/* <a href="">
@@ -88,19 +89,19 @@ function Header({ onDatos }) {
           </a> */}
           <a  className="cursor-pointer" onClick={() => handleScroll("projects")}>
             <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
-              Proyectos
+              {languaje.header.projects}
             </li>
           </a>
-          <a className="cursor-pointer" onClick={() => handleScroll("contact")}>
+          <a className="cursor-pointer" onClick={() => handleScroll("about")}>
             <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
-              Contacto
+              {languaje.header.about}
             </li>
           </a>
         </ul>
         <div className="flex md:hidden">
           <FaBars className="w-6 h-6 dark:text-white" />
         </div>
-        <div className="flex justify-end md:ml-10">
+        <div className="flex justify-between items-center">
           {theme === "light" ? (
             <FaSun
               onClick={() => handleTheme()}
@@ -114,8 +115,8 @@ function Header({ onDatos }) {
           )}
           {/* dropdown */}
           <div className="relative">
-            <FaLanguage
-              className="cursor-pointer mx-5 w-[20px] h-6 dark:text-moonlit"
+            <IoLanguageOutline
+              className="cursor-pointer w-10 dark:text-moonlit"
               onClick={() => handleDropdown()}
             />
             <motion.div

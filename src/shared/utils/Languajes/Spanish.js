@@ -13,9 +13,16 @@ export const Spanish = {
     subtitle: ["Desarrollador Web", "Front-End", "Back-End", "Full-Stack"],
   },
   about: {
-    title: "Acerca de mí",
+    title: "Sobre mí",
+    subtitle: "Acercade de mi y formas de contacto.",
     description:
       "Desarrollador web con experiencia en diseño, desarrollo y mantenimiento de aplicaciones web front-end.",
+    paragraphs: [
+      "Soy un apasionado de la tecnología y el desarrollo web. Con una sólida experiencia en el ámbito Full Stack, me he especializado en el emocionante ecosistema MERN (MongoDB, Express.js, React.js y Node.js).",
+      "Me encanta desafiarme a mí mismo y explorar nuevas tecnologías para crear soluciones innovadoras y eficientes. Como desarrollador, me destaco por mi capacidad para diseñar, desarrollar y mantener aplicaciones web completas y atractivas, que no solo cumplan con los requisitos del cliente, sino que también ofrezcan una experiencia interactiva y satisfactoria para el usuario final.",
+      "Soy un profesional proactivo, adaptable y comprometido con el éxito del equipo. Me gusta trabajar en colaboración, aportando mis habilidades y conocimientos para alcanzar los objetivos establecidos con eficacia y creatividad.",
+      "¡Estoy emocionado de seguir creciendo y aprendiendo en este apasionante mundo del desarrollo web y la tecnología!",
+    ],
   },
   experience: {
     title: "Experiencia",
