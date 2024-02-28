@@ -49,7 +49,7 @@ export const English = {
       {
         id: "uuid()",
         name: "Gestipol",
-        image: "../../../../src/assets/images/gestipolMuckup.webp",
+        image: "https://i.imgur.com/Y1WgyYI.png",
         description:
           "Gestipol is an application that allows political candidates to manage the status of their voters to have clearer information about the process during the campaign.",
         tech: ["React", "Node.js", "Tailwind CSS", "MongoDB"],
@@ -69,7 +69,7 @@ export const English = {
       {
         id: "uuid()",
         name: "Bank Landing Page",
-        image: "../../../../src/assets/images/BankLandingMuckup.webp",
+        image: "https://i.imgur.com/LbmEbD2.png",
         description:
           "This is a landing page for a fictional bank, which was created in order to practice and improve my web development skills. The page is fully responsive and was inspired by a design from frontend mentor.",
         tech: ["React", "Tailwind CSS", "SASS", "Vite"],
@@ -89,7 +89,7 @@ export const English = {
       {
         id: "uuid()",
         name: "Flags App",
-        image: "../../../../src/assets/images/countryAppMuckup.webp",
+        image: "https://i.imgur.com/clPtB70.png",
         description:
           "Flags App is a web application that allows users to search for and view information about countries around the world. The application was created in order to practice and improve my web development skills. Inspired by a design from frontend mentor.",
         tech: ["React", "Tailwind CSS", "SASS", "Vite"],
