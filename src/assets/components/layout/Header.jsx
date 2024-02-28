@@ -73,30 +73,25 @@ function Header({ onDatos }) {
   };
 
   return (
-    <header className="w-full absolute flex justify-center pt-5">
+    <header className="w-full fixed z-50 flex justify-center pt-5">
       <div className="flex shadow-md dark:bg-dark-grey bg-moonlit py-2 px-10 rounded-full">
         <ul className="items-center dark:text-moonlit font-inter font-bold text-sm hidden md:flex">
-          <a href="/#home">
+          <a className="cursor-pointer" onClick={() => handleScroll("home")}>
             <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
               Inicio
             </li>
           </a>
-          <a href="">
+          {/* <a href="">
             <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
               Experiencia
             </li>
-          </a>
+          </a> */}
           <a  className="cursor-pointer" onClick={() => handleScroll("projects")}>
             <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
               Proyectos
             </li>
           </a>
-          <a href="">
-            <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
-              Sobre mi
-            </li>
-          </a>
-          <a href="">
+          <a className="cursor-pointer" onClick={() => handleScroll("contact")}>
             <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
               Contacto
             </li>

@@ -169,19 +169,16 @@ function Hero({ languaje }) {
 
         {/* Skills */}
         <div className="w-full max-w-screen-xl max-h-fit p-5">
-          <div className="mt-10 mb-10 w-full text-center dark:text-moonlit">
-            <h2 className="text-3xl font-bold">{languaje.skills.title}</h2>
-            <p className="text-base opacity-70">
-              {languaje.skills.description}
-            </p>
-          </div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: isMobile ? 0.15 : 0.3, duration: 0.4 }}
             viewport={{ once: true }}
-            className=" max-w-screen-xl max-h-fit flex items-center justify-center  py-10 overflow-hidden dark:bg-dark-grey bg-moonlit rounded-2xl shadow-lg"
+            className=" max-w-screen-xl max-h-fit flex flex-col items-center justify-center  py-10 overflow-hidden dark:bg-dark-grey bg-moonlit rounded-2xl shadow-lg"
           >
+            {/* <div className=" w-full  dark:text-moonlit">
+              <h2 className="text-3xl font-bold">{languaje.skills.title}</h2>
+            </div> */}
             <InfinityScroll />
           </motion.div>
           {/* See more btn */}
@@ -190,7 +187,7 @@ function Hero({ languaje }) {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.4 }}
             viewport={{ once: true }}
-            className="w-full flex justify-end mt-10"
+            className="w-full flex justify-end mt-7"
           >
             <a
               href="#"
@@ -211,9 +208,11 @@ function Hero({ languaje }) {
 
         {/* projects */}
         <section className="w-full max-w-screen-xl p-5 pb-10" id="projects">
-          <div className="mt-10 mb-10 w-full text-center dark:text-moonlit">
-            <h2 className="text-3xl font-bold">{languaje.projects.title}</h2>
-            <p className="text-base opacity-70">
+          <div className="mb-10 w-full pl-3 dark:text-moonlit">
+            <h2 className="text-5xl font-bold my-3">
+              {languaje.projects.title}
+            </h2>
+            <p className="text-lg opacity-70 pl-2">
               {languaje.projects.description}
             </p>
           </div>
@@ -247,7 +246,7 @@ function Hero({ languaje }) {
                   <span className="hidden lg:flex">GitHub</span>
                 </a>
               </div>
-              <div className="w-full h-full  lg:flex ">
+              <div className="w-full h-full lg:flex ">
                 <img
                   className=" w-full lg:max-w-lg object-cover hover:cursor-pointer hover:scale-105 transition-transform duration-300  lg:mr-5"
                   src={languaje.projects.projects[0].image}
@@ -419,6 +418,64 @@ function Hero({ languaje }) {
         </section>
 
         {/* contact */}
+        <section className="w-full max-w-screen-xl p-5" id="contact">
+          <div className="w-full mb-10 dark:text-moonlit">
+            <h2 className="text-5xl font-bold my-3">contacto</h2>
+            <p className="text-lg opacity-70">description</p>
+          </div>
+          <div className="w-full flex flex-col items-center justify-center gap-5">
+            <div className="w-full flex flex-col items-center justify-center gap-5">
+              <input
+                className="w-full p-3 rounded-lg dark:bg-dark-grey"
+                type="text"
+                placeholder="Nombre"
+              />
+              <input
+                className="w-full p-3 rounded-lg dark:bg-dark-grey"
+                type="text"
+                placeholder="Email"
+              />
+              <textarea
+                className="w-full p-3 rounded-lg dark:bg-dark-grey"
+                name=""
+                id=""
+                cols="30"
+                rows="10"
+                placeholder="Mensaje"
+              ></textarea>
+              <button className="w-full p-3 rounded-lg bg-moonlit dark:bg-dark-grey text-white">
+                Enviar
+              </button>
+            </div>
+            <div className="w-full flex flex-col items-center justify-center gap-5">
+              <h3 className="text-3xl font-bold">Otras formas de contacto</h3>
+              <div className="flex gap-5">
+                <a
+                  href="
+                  mailto:"
+                  className="flex items-center font-medium bg-moonlit text-dark-grey px-4 py-2 rounded-lg  gap-2 active:scale-[1.1] transition-transform duration-300"
+                >
+                  <MdAlternateEmail />
+                  <span className="hidden lg:flex">Email</span>
+                </a>
+                <a
+                  href=""
+                  className="flex items-center font-medium bg-moonlit text-dark-grey px-4 py-2 rounded-lg  gap-2 active:scale-[1.1] transition-transform duration-300"
+                >
+                  <FaLinkedin />
+                  <span className="hidden lg:flex">LinkedIn</span>
+                </a>
+                <a
+                  href=""
+                  className="flex items-center font-medium bg-moonlit text-dark-grey px-4 py-2 rounded-lg  gap-2 active:scale-[1.1] transition-transform duration-300"
+                >
+                  <FaGithub />
+                  <span className="hidden lg:flex">GitHub</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
       </section>
     </>
   );
