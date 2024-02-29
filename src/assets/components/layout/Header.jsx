@@ -70,8 +70,8 @@ function Header({ onDatos, languaje }) {
   };
 
   //handle dropdown
-  const handleDropdown = () => {
-    const dropdown = document.querySelector(".dropdown");
+  const handleDropdown = (className) => {
+    const dropdown = document.querySelector(className);
     dropdown.classList.toggle("hidden");
   };
 
@@ -80,11 +80,11 @@ function Header({ onDatos, languaje }) {
     if (lang === "es") {
       localStorage.setItem("languaje", "es");
       onDatos("es");
-      handleDropdown();
+      handleDropdown(".dropdown");
     } else {
       localStorage.setItem("languaje", "en");
       onDatos("en");
-      handleDropdown();
+      handleDropdown(".dropdown");
     }
   };
 
@@ -109,7 +109,10 @@ function Header({ onDatos, languaje }) {
               Experiencia
             </li>
           </a> */}
-          <a  className="cursor-pointer" onClick={() => handleScroll("projects")}>
+          <a
+            className="cursor-pointer"
+            onClick={() => handleScroll("projects")}
+          >
             <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
               {languaje.header.projects}
             </li>
@@ -121,9 +124,49 @@ function Header({ onDatos, languaje }) {
           </a>
         </ul>
         <div className="flex md:hidden">
-          <FaBars className="w-6 h-6 dark:text-white" />
+          <FaBars
+            className="w-6 h-6 dark:text-white"
+            onClick={() => handleDropdown(".nav-dropdown")}
+          />
+          {/* nav Dropdown */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="nav-dropdown absolute top-10 left-5 w-40 h-40 mt-5 bg-white dark:bg-moonlit rounded-lg shadow-md z-10 hidden"
+          >
+            <ul className="flex flex-col items-center justify-center h-full">
+              <li
+                onClick={() => {
+                  handleScroll("home");
+                  handleDropdown(".nav-dropdown");
+                }}
+                className="cursor-pointer my-2"
+              >
+                Home
+              </li>
+              <li
+                onClick={() => {
+                  handleScroll("projects");
+                  handleDropdown(".nav-dropdown");
+                }}
+                className="cursor-pointer my-2"
+              >
+                Proyectos
+              </li>
+              <li
+                onClick={() => {
+                  handleScroll("about");
+                  handleDropdown(".nav-dropdown");
+                }}
+                className="cursor-pointer my-2"
+              >
+                Sobre mi
+              </li>
+            </ul>
+          </motion.div>
         </div>
-        <div className="flex justify-between items-center">
+        <div className="flex items-center">
           {theme === "light" ? (
             <FaSun
               onClick={() => handleTheme()}
@@ -138,8 +181,8 @@ function Header({ onDatos, languaje }) {
           {/* dropdown */}
           <div className="relative">
             <IoLanguageOutline
-              className="cursor-pointer w-10 dark:text-moonlit"
-              onClick={() => handleDropdown()}
+              className="cursor-pointer lg:w-10 dark:text-moonlit"
+              onClick={() => handleDropdown(".dropdown")}
             />
             <motion.div
               initial={{ opacity: 0, y: 20 }}
