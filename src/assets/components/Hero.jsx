@@ -458,7 +458,7 @@ function Hero({ languaje }) {
             <h2 className="text-5xl font-bold my-3">{languaje.about.title}</h2>
             <p className="text-lg opacity-70">{languaje.about.subtitle}</p>
           </div>
-          <div className="grid lg:grid-cols-2 grid-rows-2 lg:grid-rows-1 gap-10">
+          <div className="grid lg:grid-cols-2 lg:grid-rows-1 gap-10">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -476,7 +476,7 @@ function Hero({ languaje }) {
                 ))}
               </div>
 
-              <div className="w-full flex flex-col justify-center gap-5 mt-5">
+              <div className="w-full flex flex-col justify-center gap-5">
                 <div className="flex gap-3">
                   <a
                     href="
@@ -532,18 +532,18 @@ function Hero({ languaje }) {
                   className="w-fit   flex items-center font-medium bg-moonlit text-dark-grey px-4 py-2 rounded-lg  gap-2 active:scale-[1.1] transition-transform duration-300"
                 >
                   <IoMdDownload />
-                  <span className="hidden lg:flex">Download CV</span>
+                  <span className="">Download CV</span>
                 </a>
 
               </div>
             </motion.div>
-            <div className="col-span-1 flex lg:p-10 lg:pr-0">
+            <div className="col-span-1 flex justify-end lg:pt-16">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: isMobile ? 0.2 : 0.45, duration: 0.3 }}
                 viewport={{ once: true }}
-                className="w-full rounded-3xl bg-white dark:bg-dark-grey dark:text-white overflow-hidden border-2 border-transparent xl:col-span-1 flex items-center justify-center relative"
+                className="w-full h-[30rem] rounded-3xl bg-white dark:bg-dark-grey dark:text-white overflow-hidden border-2 border-transparent xl:col-span-1 flex items-center justify-center relative"
               >
                 <img
                   className="absolute w-full h-full object-cover z-[1]"
