@@ -13,8 +13,8 @@ import { motion } from "framer-motion";
 
 //icons
 import { FaGithub, FaLinkedin, FaCopy } from "react-icons/fa";
-import { MdAlternateEmail, MdAutoGraph, MdOutlineEmail } from "react-icons/md";
-import { CiPaperplane } from "react-icons/ci";
+import { MdAlternateEmail, MdAutoGraph } from "react-icons/md";
+import { CiPaperplane, CiLocationArrow1  } from "react-icons/ci";
 
 //import media query
 import { useMediaQuery } from "@uidotdev/usehooks";
@@ -437,71 +437,106 @@ function Hero({ languaje }) {
         <section className="w-full max-w-screen-xl p-5" id="about">
           <div className="w-full text-center mb-10 dark:text-moonlit">
             <h2 className="text-5xl font-bold my-3">{languaje.about.title}</h2>
-            <p className="text-lg opacity-70">
-              {languaje.about.subtitle}
-            </p>
+            <p className="text-lg opacity-70">{languaje.about.subtitle}</p>
           </div>
-          <div className="w-full flex flex-col items-center justify-center gap-5">
-            <div className="flex flex-col gap-5 dark:text-moonlit">
-              <h2 className="text-3xl font-bold">Jose Martinez</h2>
+          <div className="grid lg:grid-cols-2 grid-rows-2 lg:grid-rows-1 gap-10 ">
+            <div className="col-span-1 flex flex-col items-center justify-center gap-5">
+              <div className="flex flex-col gap-5 dark:text-moonlit">
+                <h2 className="text-3xl font-bold">Jose Martinez</h2>
 
-              {
-                languaje.about.paragraphs.map((item, index) => (
+                {languaje.about.paragraphs.map((item, index) => (
                   <p key={index} className="opacity-75 text-lg">
                     {item}
                   </p>
-                ))
-              }
-            </div>
+                ))}
+              </div>
 
-            <div className="w-full flex flex-col justify-center gap-5 mt-5">
-              <div className="flex gap-3">
-                <a
-                  href="
+              <div className="w-full flex flex-col justify-center gap-5 mt-5">
+                <div className="flex gap-3">
+                  <a
+                    href="
                   mailto:"
-                  className="flex items-center font-medium bg-moonlit text-dark-grey px-4 py-2 rounded-lg  gap-2 active:scale-[1.1] transition-transform duration-300"
-                >
-                  <MdAlternateEmail />
-                  <span className="hidden lg:flex">Email</span>
-                </a>
-                <a
-                  href=""
-                  className="flex items-center font-medium bg-moonlit text-dark-grey px-4 py-2 rounded-lg  gap-2 active:scale-[1.1] transition-transform duration-300"
-                >
-                  <FaLinkedin />
-                  <span className="hidden lg:flex">LinkedIn</span>
-                </a>
-                <a
-                  href=""
-                  className="flex items-center font-medium bg-moonlit text-dark-grey px-4 py-2 rounded-lg  gap-2 active:scale-[1.1] transition-transform duration-300"
-                >
-                  <FaGithub />
-                  <span className="hidden lg:flex">GitHub</span>
-                </a>
-              </div>
-              {/* email */}
-
-              <div className="flex justify-between w-fit">
-                <div className="w-full p-3 rounded-lg bg-moonlit dark:bg-dark-grey">
-                  <p
-                    id="email"
-                    className="text-base dark:text-moonlit opacity-70"
+                    className="flex items-center font-medium bg-moonlit text-dark-grey px-4 py-2 rounded-lg  gap-2 active:scale-[1.1] transition-transform duration-300"
                   >
-                    josemartinezflorimon@gmail.com
-                  </p>
+                    <MdAlternateEmail />
+                    <span className="hidden lg:flex">Email</span>
+                  </a>
+                  <a
+                    href=""
+                    className="flex items-center font-medium bg-moonlit text-dark-grey px-4 py-2 rounded-lg  gap-2 active:scale-[1.1] transition-transform duration-300"
+                  >
+                    <FaLinkedin />
+                    <span className="hidden lg:flex">LinkedIn</span>
+                  </a>
+                  <a
+                    href=""
+                    className="flex items-center font-medium bg-moonlit text-dark-grey px-4 py-2 rounded-lg  gap-2 active:scale-[1.1] transition-transform duration-300"
+                  >
+                    <FaGithub />
+                    <span className="hidden lg:flex">GitHub</span>
+                  </a>
                 </div>
-                <button
-                  onClick={() => {
-                    copyToClipboard();
-                    setTimeout(() => {
-                      setCopied(false);
-                    }, 3000);
-                  }}
-                  className=" flex justify-center items-center mx-2 w-16 rounded-lg bg-moonlit dark:bg-dark-grey text-white"
-                >
-                  <FaCopy className="w-5 h-5 opacity-70 text-back-dark-grey dark:text-moonlit" />
-                </button>
+                {/* email */}
+
+                <div className="flex justify-between w-fit">
+                  <div className="w-full p-3 rounded-lg bg-moonlit dark:bg-dark-grey">
+                    <p
+                      id="email"
+                      className="text-base dark:text-moonlit opacity-70"
+                    >
+                      josemartinezflorimon@gmail.com
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      copyToClipboard();
+                      setTimeout(() => {
+                        setCopied(false);
+                      }, 3000);
+                    }}
+                    className=" flex justify-center items-center mx-2 w-16 rounded-lg bg-moonlit dark:bg-dark-grey text-white"
+                  >
+                    <FaCopy className="w-5 h-5 opacity-70 text-back-dark-grey dark:text-moonlit" />
+                  </button>
+                </div>
               </div>
+            </div>
+            <div className="col-span-1 flex lg:p-10 lg:pr-0">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.3 }}
+                viewport={{ once: true }}
+                className="w-full rounded-3xl bg-white dark:bg-dark-grey dark:text-white overflow-hidden border-2 border-transparent xl:col-span-1 flex items-center justify-center relative"
+              >
+                <img
+                  className="absolute w-full h-full object-cover z-[1]"
+                  src={
+                    document.querySelector("html").classList.contains("dark")
+                      ? mapsDark
+                      : mapsLight
+                  }
+                  alt="Location"
+                  title="Location"
+                />
+                <img
+                  className="w-28 z-10"
+                  src={josecito}
+                  alt={languaje.hero.name}
+                  title={languaje.hero.name}
+                />
+                <div className="w-24 h-24 bg-[#98d0ff] absolute z-[1] rounded-full bg-opacity-30 border-2 border-white animate-pulseandping" />
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="w-full h-10 backdrop-blur-sm absolute left-0 bottom-0 z-[2] flex items-center justify-center text-left text-opacity-70"
+                >
+                  <span className="text-xs font-medium">
+                    {languaje.country.description}
+                  </span>
+                </motion.div>
+              </motion.div>
             </div>
           </div>
         </section>
