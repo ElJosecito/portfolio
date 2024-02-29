@@ -18,32 +18,44 @@ function Footer() {
   };
   return (
     <>
-      <footer className="footer footer-center p-10 bg-base-200 text-base-content bg-[#212121] flex flex-col items-center">
-        <div className="flex justify-between text-white opacity-30">
-          <a onClick={() => handleScroll("home")} className="link link-hover mx-3 cursor-pointer">
+      <footer className="footer footer-center p-10 bg-base-200 text-base-content bg-moonlit dark:bg-dark-grey flex flex-col items-center">
+        <div className="flex justify-between dark:text-moonlit dark:opacity-30 opacity-50">
+          <a
+            onClick={() => handleScroll("home")}
+            className="link link-hover mx-3 cursor-pointer"
+          >
             Home
           </a>
-          <a  onClick={() => handleScroll("about")} className="link link-hover mx-3 cursor-pointer">
+          <a
+            onClick={() => handleScroll("about")}
+            className="link link-hover mx-3 cursor-pointer"
+          >
             About me
           </a>
-          <a  onClick={() => handleScroll("projects")} className="link link-hover mx-3 cursor-pointer">
+          <a
+            onClick={() => handleScroll("projects")}
+            className="link link-hover mx-3 cursor-pointer"
+          >
             Proyectos
           </a>
         </div>
-        <div className="flex my-5 text-white opacity-20">
+        <div className="flex my-5 dark:text-moonlit dark:opacity-20 opacity-50">
           <div className="grid grid-flow-col gap-4">
-            <a href="https://www.instagram.com/josecito.png/">
+            <a href="https://www.instagram.com/josecito.png/" target="_blank">
               <FaInstagram className="w-6 h-6" />
             </a>
-            <a href="https://www.linkedin.com/in/jose-martinez-b93768244/">
+            <a
+              href="https://www.linkedin.com/in/jose-martinez-b93768244/"
+              target="_blank"
+            >
               <FaLinkedin className="w-6 h-6" />
             </a>
-            <a href="https://github.com/ElJosecito">
+            <a href="https://github.com/ElJosecito" target="_blank">
               <FaGithub className="h-6 w-6" />
             </a>
           </div>
         </div>
-        <div className="text-white opacity-20">
+        <div className="dark:text-moonlit dark:opacity-20 opacity-50">
           <p>Copyright © {year} - All right reserved by Jose Martinez</p>
         </div>
       </footer>
