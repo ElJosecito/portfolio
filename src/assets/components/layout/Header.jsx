@@ -38,6 +38,26 @@ function Header({ onDatos, languaje }) {
     }
   }, [theme]);
 
+  useEffect(() => {
+    if (!localStorage.getItem("languaje")) {
+      const navlang = navigator.language;
+      console.log(navlang);
+      if (navlang === "e-ES" || navlang === "es") {
+        localStorage.setItem("languaje", "es");
+        onDatos("es");
+      } else {
+        localStorage.setItem("languaje", "en");
+        onDatos("en");
+      }
+    } else {
+      if (localStorage.getItem("languaje") === "es") {
+        onDatos("es");
+      } else {
+        onDatos("en");
+      }
+    }
+  }, []);
+
   //handle theme
   const handleTheme = () => {
     if (theme === "light") {
@@ -56,11 +76,13 @@ function Header({ onDatos, languaje }) {
   };
 
   //handle languaje
-  const handleLanguaje = (languaje) => {
-    if (languaje === "es") {
+  const handleLanguaje = (lang) => {
+    if (lang === "es") {
+      localStorage.setItem("languaje", "es");
       onDatos("es");
       handleDropdown();
     } else {
+      localStorage.setItem("languaje", "en");
       onDatos("en");
       handleDropdown();
     }

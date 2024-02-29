@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import Hero from "../assets/components/Hero";
 
 import { Route, Routes } from "react-router-dom";
@@ -10,20 +10,16 @@ import { English } from "../shared/utils/Languajes/English";
 import { Spanish } from "../shared/utils/Languajes/Spanish";
 
 function Router() {
-
   const [languaje, setLanguaje] = useState(English);
 
   //handle children languaje
   const handleLanguaje = (languaje) => {
     if (languaje === "es") {
-      console.log("es");
       setLanguaje(Spanish);
     } else {
-      console.log("en");
       setLanguaje(English);
     }
   };
-  
 
   return (
     <>
@@ -34,7 +30,7 @@ function Router() {
           path="/"
           element={
             <>
-              <Hero languaje={languaje}/>
+              <Hero languaje={languaje} />
             </>
           }
         ></Route>

@@ -1,6 +1,7 @@
 import { v4 as uuid } from "uuid";
 
 export const English = {
+  languaje: "English",
   header: {
     home: "Home",
     expecience: "Experience",

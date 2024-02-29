@@ -14,7 +14,7 @@ import { motion } from "framer-motion";
 //icons
 import { FaGithub, FaLinkedin, FaCopy } from "react-icons/fa";
 import { MdAlternateEmail, MdAutoGraph } from "react-icons/md";
-import { CiPaperplane, CiLocationArrow1  } from "react-icons/ci";
+import { IoMdDownload } from "react-icons/io";
 
 //import media query
 import { useMediaQuery } from "@uidotdev/usehooks";
@@ -28,10 +28,14 @@ import InfinityScroll from "./DynamicComponents/InfinityScroll";
 //devTools
 import { DevTools } from "../../shared/utils/Global-Utils";
 
+//hot toast
+import toast, { Toaster } from "react-hot-toast";
+
 function Hero({ languaje }) {
   const [text] = useTypewriter({
     words: languaje.hero.subtitle,
     loop: true,
+    delaySpeed: 500,
   });
 
   const [copied, setCopied] = useState(false);
@@ -46,17 +50,32 @@ function Hero({ languaje }) {
 
   const copyToClipboard = () => {
     const el = document.createElement("textarea");
+
     el.value = email;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand("copy");
-    document.body.removeChild(el);
-    setCopied(true);
+    if (!copied) {
+      document.body.appendChild(el);
+      el.select();
+      el.setSelectionRange(0, 99999);
+    
+      document.execCommand("copy");
+      document.body.removeChild(el);
+      setCopied(true);
+      toast.success("Email Copiado", {
+        duration: 3000,
+        position: "bottom-right",
+      });
+    } else {
+      toast.error("Email ya copiado", {
+        duration: 3000,
+        position: "bottom-right",
+      });
+    }
   };
 
   return (
     <>
       <main className="w-full min-h-fit h-fit pb-10 flex flex-col items-center bg-noon dark:bg-back-dark-grey">
+        {/* hero */}
         <section
           className="w-full max-w-screen-xl max-h-fit pt-20 px-5"
           id="home"
@@ -439,8 +458,14 @@ function Hero({ languaje }) {
             <h2 className="text-5xl font-bold my-3">{languaje.about.title}</h2>
             <p className="text-lg opacity-70">{languaje.about.subtitle}</p>
           </div>
-          <div className="grid lg:grid-cols-2 grid-rows-2 lg:grid-rows-1 gap-10 ">
-            <div className="col-span-1 flex flex-col items-center justify-center gap-5">
+          <div className="grid lg:grid-cols-2 grid-rows-2 lg:grid-rows-1 gap-10">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.3 }}
+              viewport={{ once: true }}
+              className="col-span-1 flex flex-col items-center justify-center gap-5"
+            >
               <div className="flex flex-col gap-5 dark:text-moonlit">
                 <h2 className="text-3xl font-bold">Jose Martinez</h2>
 
@@ -490,22 +515,33 @@ function Hero({ languaje }) {
                   <button
                     onClick={() => {
                       copyToClipboard();
-                      setTimeout(() => {
-                        setCopied(false);
-                      }, 3000);
                     }}
                     className=" flex justify-center items-center mx-2 w-16 rounded-lg bg-moonlit dark:bg-dark-grey text-white"
                   >
                     <FaCopy className="w-5 h-5 opacity-70 text-back-dark-grey dark:text-moonlit" />
                   </button>
                 </div>
+                {/* cv button download */}
+                <a
+                  href={
+                    languaje.languaje === "Español" 
+                      ? "https://drive.google.com/file/d/13RE8zqcHDTbQdHVaYjD4yAi87AqwZjNO/view?usp=sharing"
+                      : "https://drive.google.com/file/d/181YCYI8vOIHw6PrdW-t5jCcTiydkff_Z/view?usp=sharing"
+                  }
+                  target="_blank"
+                  className="w-fit   flex items-center font-medium bg-moonlit text-dark-grey px-4 py-2 rounded-lg  gap-2 active:scale-[1.1] transition-transform duration-300"
+                >
+                  <IoMdDownload />
+                  <span className="hidden lg:flex">Download CV</span>
+                </a>
+
               </div>
-            </div>
+            </motion.div>
             <div className="col-span-1 flex lg:p-10 lg:pr-0">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.3 }}
+                transition={{ delay: isMobile ? 0.2 : 0.45, duration: 0.3 }}
                 viewport={{ once: true }}
                 className="w-full rounded-3xl bg-white dark:bg-dark-grey dark:text-white overflow-hidden border-2 border-transparent xl:col-span-1 flex items-center justify-center relative"
               >
@@ -541,34 +577,9 @@ function Hero({ languaje }) {
           </div>
         </section>
       </main>
+      <Toaster />
     </>
   );
 }
 
 export default Hero;
-
-{
-  /* <div className="w-full flex flex-col items-center justify-center gap-5">
-              <input
-                className="w-full p-3 rounded-lg dark:bg-dark-grey"
-                type="text"
-                placeholder="Nombre"
-              />
-              <input
-                className="w-full p-3 rounded-lg dark:bg-dark-grey"
-                type="text"
-                placeholder="Email"
-              />
-              <textarea
-                className="w-full p-3 rounded-lg dark:bg-dark-grey"
-                name=""
-                id=""
-                cols="30"
-                rows="10"
-                placeholder="Mensaje"
-              ></textarea>
-              <button className="w-full p-3 rounded-lg bg-moonlit dark:bg-dark-grey text-white">
-                Enviar
-              </button>
-            </div> */
-}
