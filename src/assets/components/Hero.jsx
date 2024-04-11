@@ -157,7 +157,7 @@ function Hero({ languaje }) {
             >
               <p className="text-7xl z-[1] font-bold flex items-center gap-1">
                 <span>+</span>
-                <AnimatedCounter from={0} to={2} />
+                <AnimatedCounter from={0} to={4} />
               </p>
               <p className="text-sm font-semibold max-w-fit opacity-70 z-[1]">
                 {languaje.experience.description}
