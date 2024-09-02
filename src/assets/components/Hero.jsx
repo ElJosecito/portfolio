@@ -245,7 +245,7 @@ function Hero({ languaje }) {
             <p className="text-lg opacity-70">{languaje.experience.description}</p>
           </div>
 
-          <div className="w-full max-w-screen-xl px-20 pb-20 pt-10">
+          <div className="w-full max-w-screen-xl lg:px-20 pb-20 pt-10">
             {languaje.experience.experiences.map((item, index) => (
               <ExperienceCard
                 key={index}
