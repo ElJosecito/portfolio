@@ -25,10 +25,6 @@ export const English = {
       "I am excited to continue growing and learning in this exciting world of web development and technology!",
     ],
   },
-  experience: {
-    title: "Experience",
-    description: "years of experience",
-  },
   country: {
     title: "Country",
     description: "From La Romana, DO, 🇩🇴",
@@ -38,10 +34,37 @@ export const English = {
     description: "Technologies that I have experience with.",
     skillsBtn: "See all",
   },
-
   experience: {
     title: "Experience",
     description: "My work experience.",
+    experiences: [
+      {
+        id: uuid(),
+        date: "Currently...",
+        title: "Freelancer",
+        company: "Freelancer",
+        description:
+          "As a freelance developer, I have successfully delivered custom applications to various clients, ensuring their specific needs were met, from creating websites to implementing complete web applications. I have worked closely with clients to ensure their goals are met and their expectations exceeded. My focus on quality and customer satisfaction has resulted in a high rate of retention and recommendation.",
+        link: "https://www.linkedin.com/in/jose-martinez-dev/",
+      },
+      {
+        id: uuid(),
+        date: "March 2024 - September 2024",
+        title: "Junior Data Analyst",
+        company: "La Romana, DO",
+        description:
+          "In my role as a data entry specialist, I meticulously entered individual information into a centralized database to facilitate the marketing team's communication. Ensuring accuracy in sensitive data, while preventing duplicates, was paramount. Collaborating closely with the marketing team, I kept information up to date to support their strategies, meeting high quality standards and consistently meeting deadlines.",
+      },
+      {
+        id: uuid(),
+        date: "Currently...",
+        title: "Fullstack Developer",
+        company: "Freelancer",
+        description:
+          "As a full-stack developer, I have designed, developed, and maintained web applications from start to finish, ensuring that they meet client requirements and provide an engaging user experience. I have experience working with the MERN stack (MongoDB, Express.js, React.js, and Node.js) to create dynamic and responsive web applications that deliver value to clients and users.",
+        link: "https://www.linkedin.com/in/jose-martinez-dev/",
+      },
+    ],
   },
   projects: {
     title: "Projects",

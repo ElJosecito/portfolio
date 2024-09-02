@@ -24,6 +24,7 @@ import { AnimatedCounter } from "./DynamicComponents/AnimatedCounter";
 
 //import Components
 import InfinityScroll from "./DynamicComponents/InfinityScroll";
+import ExperienceCard from "./cards/ExperienceCard";
 
 //devTools
 import { DevTools } from "../../shared/utils/Global-Utils";
@@ -56,7 +57,7 @@ function Hero({ languaje }) {
       document.body.appendChild(el);
       el.select();
       el.setSelectionRange(0, 99999);
-    
+
       document.execCommand("copy");
       document.body.removeChild(el);
       setCopied(true);
@@ -71,10 +72,13 @@ function Hero({ languaje }) {
       });
     }
   };
-
+<div class="relative h-full w-full bg-neutral-900"></div>
   return (
     <>
-      <main className="w-full min-h-fit h-fit pb-10 flex flex-col items-center bg-noon dark:bg-back-dark-grey">
+      <main className="w-full min-h-fit h-fit pb-10 flex flex-col items-center bg-noon dark:bg-slate-950">
+      <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+      <div className="absolute inset-0 bg-fuchsia-300 bg-[size:20px_20px] opacity-20 blur-[100px]"></div>
+      
         {/* hero */}
         <section
           className="w-full max-w-screen-xl max-h-fit pt-20 px-5"
@@ -86,7 +90,7 @@ function Hero({ languaje }) {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.4 }}
               viewport={{ once: true }}
-              className="row-span-2 col-span-6 rounded-3xl bg-moonlit relative flex flex-col overflow-hidden gap-10 justify-end p-6 dark:bg-dark-grey text-white xl:col-span-4 lg:items-end sm:flex-row lg:p-10"
+              className="row-span-2 col-span-6 rounded-3xl relative flex flex-col overflow-hidden gap-10 justify-end p-6 text-white xl:col-span-4 lg:items-end sm:flex-row lg:p-10 dark:bg-[#372D48] bg-[#EFE0F4]"
             >
               <div className="absolute bg-gradient-to-t from-dusky-alt to-transparent top-0 left-0 bottom-0 right-0 z-[2]" />
               <img
@@ -139,7 +143,7 @@ function Hero({ languaje }) {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.3 }}
               viewport={{ once: true }}
-              className="row-span-1 col-span-6 rounded-3xl bg-white relative flex flex-col overflow-hidden border-2 border-transparent gap-2 p-7 dark:bg-dark-grey dark:text-white xl:col-span-2 lg:p-10"
+              className="row-span-1 col-span-6 rounded-3xl dark:bg-[#372D48] bg-[#EFE0F4] shadow-lg relative flex flex-col overflow-hidden border-2 border-transparent gap-2 p-7  dark:text-white xl:col-span-2 lg:p-10"
             >
               <h2 className="text-2xl font-bold z-[1]">
                 {languaje.about.title}
@@ -153,7 +157,7 @@ function Hero({ languaje }) {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: isMobile ? 0.15 : 0.3, duration: 0.3 }}
               viewport={{ once: true }}
-              className="row-span-1 col-span-3 rounded-3xl bg-white relative flex flex-col overflow-hidden border-2 border-transparent gap-2 items-center justify-center dark:bg-dark-grey dark:text-white xl:col-span-1"
+              className="row-span-1 col-span-3 rounded-3xl dark:bg-[#372D48] bg-[#EFE0F4] shadow-lg relative flex flex-col overflow-hidden border-2 border-transparent gap-2 items-center justify-center  dark:text-white xl:col-span-1"
             >
               <p className="text-7xl z-[1] font-bold flex items-center gap-1">
                 <span>+</span>
@@ -169,7 +173,7 @@ function Hero({ languaje }) {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.3 }}
               viewport={{ once: true }}
-              className="row-span-1 col-span-3 rounded-3xl bg-white dark:bg-dark-grey dark:text-white overflow-hidden border-2 border-transparent xl:col-span-1 flex items-center justify-center relative"
+              className="row-span-1 col-span-3 rounded-3xl dark:bg-[#372D48] bg-[#EFE0F4] shadow-lg dark:text-white overflow-hidden border-2 border-transparent xl:col-span-1 flex items-center justify-center relative"
             >
               <img
                 className="absolute w-full h-full object-cover z-[1]"
@@ -204,20 +208,21 @@ function Hero({ languaje }) {
 
         {/* Skills */}
         <section className="w-full max-w-screen-xl max-h-fit p-5">
+
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: isMobile ? 0.15 : 0.3, duration: 0.4 }}
-            viewport={{ once: true }}
-            className=" max-w-screen-xl max-h-fit flex flex-col items-center justify-center  py-10 overflow-hidden dark:bg-dark-grey bg-moonlit rounded-2xl shadow-lg"
-          >
-            {/* <div className=" w-full  dark:text-moonlit">
-              <h2 className="text-3xl font-bold">{languaje.skills.title}</h2>
-            </div> */}
-            <InfinityScroll />
-          </motion.div>
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25, duration: 0.3 }}
+              viewport={{ once: true }}
+              className="flex flex-col items-center justify-center rounded-3xl dark:bg-[#372D48] bg-[#EFE0F4] shadow-lg relative overflow-hidden dark:text-white py-10"
+            >
+              <div className='absolute right-0 w-28 h-full bg-gradient-to-l dark:from-[#372D48] from-[#EFE0F4] to-transparent dark:from-raisin-black dark:to-transparent z-[1]' />
+              <div className='absolute left-0 w-28 h-full bg-gradient-to-r dark:from-[#372D48] from-[#EFE0F4] to-transparent dark:from-raisin-black dark:to-transparent z-[1]' />
+              <InfinityScroll />
+            </motion.div>
+          
           {/* See more btn */}
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.4 }}
@@ -230,16 +235,31 @@ function Hero({ languaje }) {
             >
               {languaje.skills.skillsBtn}
             </a>
-          </motion.div>
+          </motion.div> */}
         </section>
 
         {/* experience */}
-        {/* <div className="w-full max-w-screen-xl max-h-fit p-5">
+        <senction className="w-full max-w-screen-xl max-h-fit p-5 flex flex-col items-center">
           <div className="mt-10 mb-10 w-full text-center dark:text-moonlit">
-            <h2 className="text-3xl font-bold">Experience</h2>
-            <p className="text-base opacity-70">I Have worked with:</p>
+            <h2 className="text-5xl font-bold my-3">{languaje.experience.title}</h2>
+            <p className="text-lg opacity-70">{languaje.experience.description}</p>
           </div>
-        </div> */}
+
+          <div className="w-full max-w-screen-xl px-20 pb-20 pt-10">
+            {languaje.experience.experiences.map((item, index) => (
+              <ExperienceCard
+                key={index}
+                title={item.title}
+                company={item.company}
+                description={item.description}
+                link={item.link}
+                date={item.date}
+              />
+            ))}
+          </div>
+
+
+        </senction>
 
         {/* projects */}
         <section className="w-full max-w-screen-xl p-5 pb-10" id="projects">
@@ -258,7 +278,7 @@ function Hero({ languaje }) {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: isMobile ? 0.15 : 0.3, duration: 0.4 }}
               viewport={{ once: true }}
-              className="w-full col-span-6 row-span-2 bg-moonlit dark:bg-dark-grey rounded-3xl flex flex-col items-center lg:items-start overflow-hidden p-5 shadow-md"
+              className="w-full col-span-6 row-span-2 dark:bg-[#372D48] bg-[#EFE0F4] rounded-3xl flex flex-col items-center lg:items-start overflow-hidden p-5 shadow-md"
             >
               <div className="w-full flex justify-end mb-3 lg:mb-0">
                 <a
@@ -325,7 +345,7 @@ function Hero({ languaje }) {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.4 }}
               viewport={{ once: true }}
-              className=" col-span-6 md:col-span-3 bg-moonlit dark:bg-dark-grey rounded-3xl flex flex-col items-center overflow-hidden p-5 shadow-md"
+              className=" col-span-6 md:col-span-3 dark:bg-[#372D48] bg-[#EFE0F4] rounded-3xl flex flex-col items-center overflow-hidden p-5 shadow-md"
             >
               <div className="w-full flex justify-end mb-3">
                 <a
@@ -390,7 +410,7 @@ function Hero({ languaje }) {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.6 }}
               viewport={{ once: true }}
-              className=" col-span-6 md:col-span-3 bg-moonlit dark:bg-dark-grey rounded-3xl flex flex-col items-center overflow-hidden p-5 shadow-md"
+              className=" col-span-6 md:col-span-3 dark:bg-[#372D48] bg-[#EFE0F4] rounded-3xl flex flex-col items-center overflow-hidden p-5 shadow-md"
             >
               <div className="w-full flex justify-end mb-3">
                 <a
@@ -504,7 +524,7 @@ function Hero({ languaje }) {
                 {/* email */}
 
                 <div className="flex justify-between w-fit">
-                  <div className="w-full p-3 rounded-lg bg-moonlit dark:bg-dark-grey">
+                  <div className="w-full p-3 rounded-lg dark:bg-[#372D48] bg-[#EFE0F4]">
                     <p
                       id="email"
                       className="text-base dark:text-moonlit opacity-70"
@@ -516,7 +536,7 @@ function Hero({ languaje }) {
                     onClick={() => {
                       copyToClipboard();
                     }}
-                    className=" flex justify-center items-center mx-2 w-16 rounded-lg bg-moonlit dark:bg-dark-grey text-white"
+                    className=" flex justify-center items-center mx-2 w-16 rounded-lg dark:bg-[#372D48] bg-[#EFE0F4] text-white"
                   >
                     <FaCopy className="w-5 h-5 opacity-70 text-back-dark-grey dark:text-moonlit" />
                   </button>
@@ -524,7 +544,7 @@ function Hero({ languaje }) {
                 {/* cv button download */}
                 <a
                   href={
-                    languaje.languaje === "Español" 
+                    languaje.languaje === "Español"
                       ? "https://drive.google.com/file/d/13RE8zqcHDTbQdHVaYjD4yAi87AqwZjNO/view?usp=sharing"
                       : "https://drive.google.com/file/d/181YCYI8vOIHw6PrdW-t5jCcTiydkff_Z/view?usp=sharing"
                   }

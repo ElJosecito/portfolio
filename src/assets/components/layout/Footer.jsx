@@ -19,7 +19,7 @@ function Footer() {
   };
   return (
     <>
-      <footer className="footer footer-center p-10 bg-base-200 text-base-content bg-moonlit dark:bg-dark-grey flex flex-col items-center">
+      <footer className="footer footer-center p-10 bg-base-200 text-base-content dark:bg-[#372D48] bg-[#EFE0F4] flex flex-col items-center">
         <div className="flex justify-between dark:text-moonlit dark:opacity-30 opacity-50">
           <a
             onClick={() => handleScroll("home")}
@@ -46,7 +46,7 @@ function Footer() {
               <FaInstagram className="w-6 h-6" />
             </a>
             <a
-              href="https://www.linkedin.com/in/jose-martinez-b93768244/"
+              href="https://www.linkedin.com/in/jose-martinez-dev/"
               target="_blank"
             >
               <FaLinkedin className="w-6 h-6" />

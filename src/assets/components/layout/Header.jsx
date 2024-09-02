@@ -97,7 +97,7 @@ function Header({ onDatos, languaje }) {
 
   return (
     <header className="w-full fixed z-50 flex justify-center pt-2">
-      <div className="flex shadow-md dark:bg-dark-grey bg-moonlit py-2 px-10 rounded-full">
+      <div className="flex shadow-md dark:bg-[#372D48] bg-[#EFE0F4] py-2 px-10 rounded-full">
         <ul className="items-center dark:text-moonlit font-inter font-bold text-sm hidden md:flex">
           <a className="cursor-pointer" onClick={() => handleScroll("home")}>
             <li className="mx-4 transform hover:scale-150 transition-transform duration-200">

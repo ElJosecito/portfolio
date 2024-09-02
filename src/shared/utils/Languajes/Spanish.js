@@ -25,10 +25,6 @@ export const Spanish = {
       "¡Estoy emocionado de seguir creciendo y aprendiendo en este apasionante mundo del desarrollo web y la tecnología!",
     ],
   },
-  experience: {
-    title: "Experiencia",
-    description: "años de experiencia",
-  },
   country: {
     title: "País",
     description: "Desde La Romana, DO, 🇩🇴",
@@ -42,6 +38,30 @@ export const Spanish = {
   experience: {
     title: "Experiencia",
     description: "Mi experiencia laboral.",
+    experiences: [
+      {
+        id: uuid(),
+        date: "Actualmente...",
+        title: "Freelancer",
+        company: "Freelancer",
+        description:"Como desarrollador freelance, he entregado con éxito aplicaciones personalizadas a varios clientes, asegurando que sus necesidades específicas fueran satisfechas, desde la creación de sitios web hasta la implementación de aplicaciones web completas. He trabajado en estrecha colaboración con los clientes para garantizar que sus objetivos se cumplan y que sus expectativas se superen. Mi enfoque en la calidad y la satisfacción del cliente ha resultado en una alta tasa de retención y recomendación.",
+        link: "https://www.linkedin.com/in/jose-martinez-dev/",
+      },
+      {
+        id: uuid(),
+        date: "Marzo 2024 - Septiembre 2024",
+        title: "Analista de datos Junior",
+        company: "La Romana, DO",
+        description:"En mi rol como especialista en entrada de datos, ingresé meticulosamente la información individual en una base de datos centralizada para facilitar la comunicación del equipo de marketing. Asegurar la precisión en los datos sensibles, mientras prevenía duplicados, fue primordial. Colaborando estrechamente con el equipo de marketing, mantuve información actualizada para apoyar sus estrategias, cumpliendo con altos estándares de calidad y cumpliendo plazos consistentemente."
+      },
+      {
+        id: uuid(),
+        date: "Actualmente...",
+        title: "Fullstack Developer",
+        company: "JGI Solutions and Marketing",
+        description:"Como Desarrollador Fullstack en JGI and Marketing Solutions, trabajo de cerca con los equipos de frontend y backend para asegurar el rendimiento óptimo de los tickets de los proyectos actuales. En este entorno dinámico, contribuyo activamente al diseño y desarrollo de aplicaciones web.",
+      },
+    ]
   },
   projects: {
     title: "Proyectos",

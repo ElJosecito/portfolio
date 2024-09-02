@@ -5,7 +5,7 @@ const InfinityScroll = () => {
 
   return (
     <div
-      className="w-full inline-flex flex-nowrap overflow-hidden"
+      className="w-full inline-flex flex-nowrap overflow-hidden "
       onMouseEnter={()=>{
         document.querySelectorAll('.animate-infinite-scroll').forEach((el) => {
           el.style.animationPlayState = 'paused';
