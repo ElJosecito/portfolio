@@ -322,7 +322,7 @@ function Hero({ languaje }) {
                     {languaje.projects.projects[0].tech.map((item, index) => (
                       <li
                         key={index}
-                        className="cursor-pointer flex h-10 items-center self-end font-medium dark:bg-back-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
+                        className="cursor-pointer flex h-10 items-center self-end font-medium bg-[#6a4279]  text-white dark:bg-[#020617] px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
                       >
                         <div className="w-7 lg:mr-3 flex justify-center items-center">
                           <img
@@ -388,7 +388,7 @@ function Hero({ languaje }) {
                     {languaje.projects.projects[1].tech.map((item, index) => (
                       <li
                         key={index}
-                        className="cursor-pointer flex h-10 items-center self-end font-medium dark:bg-back-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
+                        className="cursor-pointer flex h-10 items-center self-end font-medium bg-[#6a4279] dark:bg-[#020617] px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
                       >
                         <div className="w-7  flex justify-center items-center">
                           <img
@@ -453,7 +453,7 @@ function Hero({ languaje }) {
                     {languaje.projects.projects[2].tech.map((item, index) => (
                       <li
                         key={index}
-                        className="cursor-pointer flex h-10 items-center self-end font-medium dark:bg-back-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
+                        className="cursor-pointer flex h-10 items-center self-end font-medium bg-[#6a4279] dark:bg-[#020617] px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
                       >
                         <div className="w-7  flex justify-center items-center">
                           <img
