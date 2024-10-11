@@ -69,6 +69,7 @@ export const English = {
   projects: {
     title: "Projects",
     description: "Some of my main projects.",
+    projectsBtn: "See all",
     projects: [
       {
         id: "uuid()",
@@ -109,6 +110,45 @@ export const English = {
             url: "https://vermillion-kashata-e30b59.netlify.app/",
           },
         ],
+      },
+      {
+        id: uuid(),
+        name: "Dental Clinic Web",
+        image: "https://imgur.com/u6wEWGK.png",
+        description: "Dental Clinic Web is a landing page that allows the client to have more information about the dental clinic they will visit and its doctors. The website was developed to provide information in a convenient and easy way. Inspired by a personal design.",
+        tech: ["React", "Tailwind CSS", "Vite"],
+        urls: [
+          {
+            id: uuid(),
+            name: "Github",
+            url: "https://github.com/ElJosecito/vdc-web"
+          },
+          {
+            id: uuid(),
+            name: "Live",
+            url: "https://vdc-web.netlify.app/"
+          }
+        ]
+      },
+      
+      {
+        id: uuid(),
+        name: "Multisemar Web",
+        image: "https://imgur.com/jEVndxk.png",
+        description: "Multisemar Web is a landing page that allows the client to have more information about the company and its services. The website was developed to provide information in a convenient and easy way. Inspired by a personal design.",
+        tech: ["React", "Tailwind CSS", "Next.js"],
+        urls: [
+          {
+            id: uuid(),
+            name: "Github",
+            url: "https://github.com/ElJosecito/multisemar-web"
+          },
+          {
+            id: uuid(),
+            name: "Live",
+            url: "https://landingmultisemar.netlify.app/"
+          }
+        ]
       },
       {
         id: "uuid()",

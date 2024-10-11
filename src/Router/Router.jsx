@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Hero from "../assets/components/Hero";
+import ProjectsPage from "../assets/components/pages/ProjectsPage";
 
 import { Route, Routes } from "react-router-dom";
 import Header from "../assets/components/layout/Header";
@@ -34,6 +35,7 @@ function Router() {
             </>
           }
         ></Route>
+        <Route path="/all-projects" element={<ProjectsPage languaje={languaje} />}></Route>
         <Route path="*" element={<h1>404</h1>}></Route>
       </Routes>
       <Footer />

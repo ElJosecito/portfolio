@@ -32,6 +32,9 @@ import { DevTools } from "../../shared/utils/Global-Utils";
 //hot toast
 import toast, { Toaster } from "react-hot-toast";
 
+//link
+import { Link } from "react-router-dom";
+
 function Hero({ languaje }) {
   const [text] = useTypewriter({
     words: languaje.hero.subtitle,
@@ -72,7 +75,7 @@ function Hero({ languaje }) {
       });
     }
   };
-<div class="relative h-full w-full bg-neutral-900"></div>
+{/* <div class="relative h-full w-full bg-neutral-900"></div> */}
   return (
     <>
       <main className="w-full min-h-fit h-fit pb-10 flex flex-col items-center bg-noon dark:bg-slate-950">
@@ -239,7 +242,7 @@ function Hero({ languaje }) {
         </section>
 
         {/* experience */}
-        <senction className="w-full max-w-screen-xl max-h-fit p-5 flex flex-col items-center">
+        <section className="w-full max-w-screen-xl max-h-fit p-5 flex flex-col items-center">
           <div className="mt-10 mb-10 w-full text-center dark:text-moonlit">
             <h2 className="text-5xl font-bold my-3">{languaje.experience.title}</h2>
             <p className="text-lg opacity-70">{languaje.experience.description}</p>
@@ -259,7 +262,7 @@ function Hero({ languaje }) {
           </div>
 
 
-        </senction>
+        </section>
 
         {/* projects */}
         <section className="w-full max-w-screen-xl p-5 pb-10" id="projects">
@@ -470,6 +473,20 @@ function Hero({ languaje }) {
               </div>
             </motion.div>
           </div>
+
+          {/* See more btn */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.4 }}
+            viewport={{ once: true }}
+            className="w-full flex justify-end mt-7"
+          >
+            <Link to="/all-projects" className="flex items-center gap-2 font-medium bg-moonlit text-dark-grey px-4 py-2 rounded-lg active:scale-[1.1] transition-transform duration-300 shadow-md">
+            
+              {languaje.projects.projectsBtn}
+            </Link>
+          </motion.div>
         </section>
 
         {/* contact */}

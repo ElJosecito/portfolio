@@ -66,6 +66,7 @@ export const Spanish = {
   projects: {
     title: "Proyectos",
     description: "Algunos de mis proyectos principales.",
+    projectsBtn: "Ver todos",
     projects: [
       {
         id: uuid(),
@@ -107,6 +108,48 @@ export const Spanish = {
           },
         ],
       },
+      {
+        id: uuid(),
+        name: "Dental Clinic Web",
+        image: "https://imgur.com/u6wEWGK.png",
+        description:
+          "Dental Clinic Web es una landing page que permite al cliente tener mas informacion sobre la clinica dental que visitara y de sus doctores. La web fue desarrollada con el fin de brindar informacion de manera comoda y facil. Inspirada en un diseño personal.",
+        tech: ["React", "Tailwind CSS", "Vite"],
+        urls: [
+          {
+            id: uuid(),
+            name: "Github",
+            url: "https://github.com/ElJosecito/vdc-web",
+          },
+          {
+            id: uuid(),
+            name: "En Vivo",
+            url: "https://vdc-web.netlify.app/",
+          },
+        ],
+      },
+
+      {
+        id: uuid(),
+        name: "Multisemar Web",
+        image: "https://imgur.com/jEVndxk.png",
+        description:
+          "Multisemar Web es una landing page que permite al cliente tener mas informacion sobre la empresa y sus servicios. La web fue desarrollada con el fin de brindar informacion de manera comoda y facil. Inspirada en un diseño personal.",
+        tech: ["React", "Tailwind CSS", "Next.js"],
+        urls: [
+          {
+            id: uuid(),
+            name: "Github",
+            url: "https://github.com/ElJosecito/multisemar-web",
+          },
+          {
+            id: uuid(),
+            name: "En Vivo",
+            url: "https://landingmultisemar.netlify.app/",
+          },
+        ],
+      },
+
       {
         id: uuid(),
         name: "Flags App",
