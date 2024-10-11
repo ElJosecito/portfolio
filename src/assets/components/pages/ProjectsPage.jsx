@@ -7,14 +7,13 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 
 
 function ProjectsPage({ languaje }) {
-
-
     const [isMobile, setIsMobile] = useState(false);
     const mobile = useMediaQuery("only screen and (max-width : 768px)");
 
     useEffect(() => {
         document.title = "Projectos || ElJosecito";
         setIsMobile(mobile);
+        window.scrollTo(0, 0);
     }, []);
 
     return (

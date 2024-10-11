@@ -242,7 +242,7 @@ function Hero({ languaje }) {
         </section>
 
         {/* experience */}
-        <section className="w-full max-w-screen-xl max-h-fit p-5 flex flex-col items-center">
+        <section className="w-full max-w-screen-xl max-h-fit p-5 flex flex-col items-center" id="experience">
           <div className="mt-10 mb-10 w-full text-center dark:text-moonlit">
             <h2 className="text-5xl font-bold my-3">{languaje.experience.title}</h2>
             <p className="text-lg opacity-70">{languaje.experience.description}</p>
@@ -483,7 +483,6 @@ function Hero({ languaje }) {
             className="w-full flex justify-end mt-7"
           >
             <Link to="/all-projects" className="flex items-center gap-2 font-medium bg-moonlit text-dark-grey px-4 py-2 rounded-lg active:scale-[1.1] transition-transform duration-300 shadow-md">
-            
               {languaje.projects.projectsBtn}
             </Link>
           </motion.div>

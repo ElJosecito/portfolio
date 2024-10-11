@@ -99,16 +99,19 @@ function Header({ onDatos, languaje }) {
     <header className="w-full fixed z-50 flex justify-center pt-2">
       <div className="flex shadow-md dark:bg-[#372D48] bg-[#EFE0F4] py-2 px-10 rounded-full">
         <ul className="items-center dark:text-moonlit font-inter font-bold text-sm hidden md:flex">
-          <a className="cursor-pointer" onClick={() => handleScroll("home")}>
+          <a className="cursor-pointer" href="#/" onClick={()=>{
+            handleScroll("home")
+          }}>
             <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
               {languaje.header.home}
             </li>
           </a>
-          {/* <a href="">
+          <a className="cursor-pointer"
+            onClick={() => handleScroll("experience")}>
             <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
-              Experiencia
+              {languaje.experience.title}
             </li>
-          </a> */}
+          </a>
           <a
             className="cursor-pointer"
             onClick={() => handleScroll("projects")}
