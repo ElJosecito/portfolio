@@ -21,11 +21,11 @@ export const DevTools = [
 		name: 'TypeScript',
 		icon: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg',
 	},
-	{
-		id: uuid(),
-		name: 'SASS',
-		icon: 'https://www.svgrepo.com/show/374061/sass.svg',
-	},
+	// {
+	// 	id: uuid(),
+	// 	name: 'SASS',
+	// 	icon: 'https://www.svgrepo.com/show/374061/sass.svg',
+	// },
 	{
 		id: uuid(),
 		name: 'React',
@@ -50,7 +50,7 @@ export const DevTools = [
 	{
 		id: uuid(),
 		name: 'Tailwind CSS',
-		icon: 'https://tailwindcss.com/_next/static/media/tailwindcss-mark.3c5441fc7a190fb1800d4a5c7f07ba4b1345a9c8.svg',
+		icon: 'https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg',
 	},
 	// {
 	// 	id: uuid(),
@@ -77,6 +77,11 @@ export const DevTools = [
 		name: 'MySQL',
 		icon: 'https://www.svgrepo.com/show/306453/mysql.svg',
 		className: 'dark:invert opacity-70',
+	},
+	{
+		id: uuid(),
+		name: 'Supabase',
+		icon: 'https://www.vectorlogo.zone/logos/supabase/supabase-icon.svg',
 	},
 ]
 
