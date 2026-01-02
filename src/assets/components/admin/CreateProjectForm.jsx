@@ -7,28 +7,36 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 
-function CreateProjectForm() {
+function CreateProjectForm({ initialData = null, onSuccess }) {
     const [loading, setLoading] = useState(false);
     const [technologies, setTechnologies] = useState([]);
     const [imageFile, setImageFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
+    const [imagePreview, setImagePreview] = useState(initialData?.image_url || null);
 
     const [formData, setFormData] = useState({
-        title: '',
-        description: '',
-        project_type: 'web',
-        is_featured: false,
-        featured_size: null,
-        featured_order: null,
-        live_url: '',
-        github_url: '',
-        selected_technologies: []
+        title: initialData?.title || '',
+        title_en: initialData?.title_en || '',
+        description: initialData?.description || '',
+        description_en: initialData?.description_en || '',
+        project_type: initialData?.project_type || 'web',
+        is_featured: initialData?.is_featured || false,
+        featured_size: initialData?.featured_size || null,
+        featured_order: initialData?.featured_order || null,
+        live_url: initialData?.urls?.find(u => u.name === 'Live Demo')?.url || '',
+        github_url: initialData?.urls?.find(u => u.name === 'GitHub')?.url || '',
+        selected_technologies: [] // We'll populate this in useEffect
     });
 
-    // Fetch technologies on mount
+    // Fetch technologies and setup initial data
     useEffect(() => {
-        fetchTechnologies();
-    }, []);
+        const init = async () => {
+            await fetchTechnologies();
+            if (initialData) {
+                await fetchProjectTechnologies();
+            }
+        };
+        init();
+    }, [initialData]);
 
     const fetchTechnologies = async () => {
         try {
@@ -42,6 +50,23 @@ function CreateProjectForm() {
         } catch (error) {
             console.error('Error fetching technologies:', error);
             toast.error('Error al cargar tecnologías');
+        }
+    };
+
+    const fetchProjectTechnologies = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('project_technologies')
+                .select('technology_id')
+                .eq('project_id', initialData.id);
+
+            if (error) throw error;
+            setFormData(prev => ({
+                ...prev,
+                selected_technologies: data.map(pt => pt.technology_id)
+            }));
+        } catch (error) {
+            console.error('Error fetching project technologies:', error);
         }
     };
 
@@ -86,12 +111,16 @@ function CreateProjectForm() {
             if (!formData.description.trim()) {
                 throw new Error('La descripción es requerida');
             }
-            if (!imageFile) {
+            if (!imageFile && !initialData) { // Image required only on create or if changed
                 throw new Error('La imagen es requerida');
             }
 
-            // Upload image
-            const { url: imageUrl } = await uploadImage(imageFile);
+            // Upload image if new file selected
+            let imageUrl = initialData?.image_url;
+            if (imageFile) {
+                const { url } = await uploadImage(imageFile);
+                imageUrl = url;
+            }
 
             // Prepare URLs array
             const urls = [];
@@ -102,28 +131,67 @@ function CreateProjectForm() {
                 urls.push({ name: 'Live Demo', url: formData.live_url });
             }
 
-            // Create project
-            const { data: project, error: projectError } = await supabase
-                .from('projects')
-                .insert([{
-                    title: formData.title,
-                    description: formData.description,
-                    image_url: imageUrl,
-                    project_type: formData.project_type,
-                    is_featured: formData.is_featured,
-                    featured_size: formData.is_featured ? formData.featured_size : null,
-                    featured_order: formData.is_featured ? parseInt(formData.featured_order) || null : null,
-                    urls: urls
-                }])
-                .select()
-                .single();
+            let projectId;
 
-            if (projectError) throw projectError;
+            if (initialData) {
+                // Update existing project
+                const { error: updateError } = await supabase
+                    .from('projects')
+                    .update({
+                        title: formData.title,
+                        title_en: formData.title_en,
+                        description: formData.description,
+                        description_en: formData.description_en,
+                        image_url: imageUrl,
+                        project_type: formData.project_type,
+                        is_featured: formData.is_featured,
+                        featured_size: formData.is_featured ? formData.featured_size : null,
+                        featured_order: formData.is_featured ? parseInt(formData.featured_order) || null : null,
+                        urls: urls
+                    })
+                    .eq('id', initialData.id);
 
-            // Link technologies
+                if (updateError) throw updateError;
+                projectId = initialData.id;
+                toast.success('Proyecto actualizado exitosamente!');
+            } else {
+                // Create new project
+                const { data: project, error: insertError } = await supabase
+                    .from('projects')
+                    .insert([{
+                        title: formData.title,
+                        title_en: formData.title_en,
+                        description: formData.description,
+                        description_en: formData.description_en,
+                        image_url: imageUrl,
+                        project_type: formData.project_type,
+                        is_featured: formData.is_featured,
+                        featured_size: formData.is_featured ? formData.featured_size : null,
+                        featured_order: formData.is_featured ? parseInt(formData.featured_order) || null : null,
+                        urls: urls
+                    }])
+                    .select()
+                    .single();
+
+                if (insertError) throw insertError;
+                projectId = project.id;
+                toast.success('Proyecto creado exitosamente!');
+            }
+
+            // Update technologies
+            // First delete existing links
+            if (initialData) {
+                const { error: deleteTechError } = await supabase
+                    .from('project_technologies')
+                    .delete()
+                    .eq('project_id', projectId);
+                if (deleteTechError) throw deleteTechError;
+            }
+
+            // Insert new links
             if (formData.selected_technologies.length > 0) {
                 const techLinks = formData.selected_technologies.map(techId => ({
-                    project_id: project.id,
+                    project_id: projectId,
                     technology_id: techId
                 }));
 
@@ -134,26 +202,30 @@ function CreateProjectForm() {
                 if (techError) throw techError;
             }
 
-            toast.success('Proyecto creado exitosamente!');
+            if (onSuccess) onSuccess();
 
-            // Reset form
-            setFormData({
-                title: '',
-                description: '',
-                project_type: 'web',
-                is_featured: false,
-                featured_size: null,
-                featured_order: null,
-                live_url: '',
-                github_url: '',
-                selected_technologies: []
-            });
-            setImageFile(null);
-            setImagePreview(null);
+            // Only reset if creating
+            if (!initialData) {
+                setFormData({
+                    title: '',
+                    title_en: '',
+                    description: '',
+                    description_en: '',
+                    project_type: 'web',
+                    is_featured: false,
+                    featured_size: null,
+                    featured_order: null,
+                    live_url: '',
+                    github_url: '',
+                    selected_technologies: []
+                });
+                setImageFile(null);
+                setImagePreview(null);
+            }
 
         } catch (error) {
-            console.error('Error creating project:', error);
-            toast.error(error.message || 'Error al crear proyecto');
+            console.error('Error saving project:', error);
+            toast.error(error.message || 'Error al guardar proyecto');
         } finally {
             setLoading(false);
         }
@@ -162,8 +234,12 @@ function CreateProjectForm() {
     return (
         <Card className="max-w-4xl mx-auto">
             <CardHeader>
-                <CardTitle>Crear Nuevo Proyecto</CardTitle>
-                <CardDescription>Completa el formulario para agregar un nuevo proyecto a tu portafolio</CardDescription>
+                <CardTitle>{initialData ? 'Editar Proyecto' : 'Crear Nuevo Proyecto'}</CardTitle>
+                <CardDescription>
+                    {initialData
+                        ? 'Modifica los detalles del proyecto existente'
+                        : 'Completa el formulario para agregar un nuevo proyecto a tu portafolio'}
+                </CardDescription>
             </CardHeader>
             <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -204,8 +280,23 @@ function CreateProjectForm() {
                     </div>
 
                     {/* Description */}
+
+
+                    {/* Title (English) */}
                     <div className="space-y-2">
-                        <Label htmlFor="description">Descripción *</Label>
+                        <Label htmlFor="title_en">Título (Inglés)</Label>
+                        <Input
+                            id="title_en"
+                            name="title_en"
+                            value={formData.title_en}
+                            onChange={handleInputChange}
+                            placeholder="Project Name"
+                        />
+                    </div>
+
+                    {/* Description */}
+                    <div className="space-y-2">
+                        <Label htmlFor="description">Descripción (Español) *</Label>
                         <textarea
                             id="description"
                             name="description"
@@ -215,6 +306,20 @@ function CreateProjectForm() {
                             rows={4}
                             className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                             required
+                        />
+                    </div>
+
+                    {/* Description (English) */}
+                    <div className="space-y-2">
+                        <Label htmlFor="description_en">Descripción (Inglés)</Label>
+                        <textarea
+                            id="description_en"
+                            name="description_en"
+                            value={formData.description_en}
+                            onChange={handleInputChange}
+                            placeholder="Describe your project..."
+                            rows={4}
+                            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                         />
                     </div>
 
@@ -341,34 +446,22 @@ function CreateProjectForm() {
                             type="button"
                             variant="outline"
                             onClick={() => {
-                                setFormData({
-                                    title: '',
-                                    description: '',
-                                    project_type: 'web',
-                                    is_featured: false,
-                                    featured_size: null,
-                                    featured_order: null,
-                                    live_url: '',
-                                    github_url: '',
-                                    selected_technologies: []
-                                });
-                                setImageFile(null);
-                                setImagePreview(null);
+                                if (onSuccess) onSuccess();
                             }}
                         >
-                            Limpiar
+                            Cancelar
                         </Button>
                         <Button
                             type="submit"
                             disabled={loading}
                             className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
                         >
-                            {loading ? 'Creando...' : 'Crear Proyecto'}
+                            {loading ? 'Guardando...' : (initialData ? 'Actualizar Proyecto' : 'Crear Proyecto')}
                         </Button>
                     </div>
                 </form>
             </CardContent>
-        </Card>
+        </Card >
     );
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../../shared/supabaseClient';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +18,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 function AdminLogin() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        navigate('/admin');
+      }
+    };
+    checkSession();
+  }, [navigate]);
 
   const form = useForm({
     defaultValues: {
