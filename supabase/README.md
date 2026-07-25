@@ -7,8 +7,9 @@ Esta tabla almacena todos los proyectos (web y móviles) del portfolio.
 ### Campos principales:
 
 - **id**: UUID único generado automáticamente
-- **title**: Título del proyecto
-- **description**: Descripción detallada
+- **title**: Título del proyecto (español, obligatorio)
+- **description**: Descripción detallada (español, obligatoria)
+- **title_en** / **description_en**: traducción al inglés, opcional. Si está vacía, el front cae al español
 - **image_url**: URL de la imagen de portada
 - **project_type**: Tipo de proyecto (`web` o `mobile`)
 - **is_featured**: Booleano para marcar proyectos destacados en la página principal
@@ -65,5 +66,16 @@ ORDER BY created_at DESC;
 
 ### Seguridad (RLS):
 
-- ✅ Lectura pública (cualquiera puede ver proyectos)
+Las tres tablas (`projects`, `technologies`, `project_technologies`) tienen RLS habilitado:
+
+- ✅ Lectura pública
 - 🔒 Escritura solo para usuarios autenticados (admin)
+
+Esto no es opcional: sin RLS, los roles `anon` y `authenticated` tienen `GRANT ALL` sobre
+el schema `public` por defecto, y la anon key viaja en el bundle del front. Cualquier tabla
+nueva en `public` necesita `ENABLE ROW LEVEL SECURITY` + sus policies.
+
+### Storage:
+
+Bucket `project-images`, público, límite de 15MB (el front valida además tipo de imagen y
+5MB antes de subir). Policies: lectura pública, escritura/borrado solo autenticados.
