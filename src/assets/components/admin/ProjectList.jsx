@@ -2,27 +2,41 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../shared/supabaseClient';
 import { deleteImage } from '../../../shared/utils/uploadImage';
 import toast from 'react-hot-toast';
-import { Button } from '@/components/ui/button';
+
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Badge,
+  ConfirmDialog,
+  Menu,
+  MenuTrigger,
+  MenuList,
+  MenuItem,
+  MenuLabel,
+  MenuSeparator,
+  Panel,
+  Table,
+  THead,
+  TBody,
+  TR,
+  TH,
+  TD,
+  TEmpty,
+} from '../../../shared/ui';
+
+function DotsIcon() {
+    return (
+        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="5" r="1.75" />
+            <circle cx="12" cy="12" r="1.75" />
+            <circle cx="12" cy="19" r="1.75" />
+        </svg>
+    );
+}
 
 function ProjectList({ onEdit }) {
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [pendingDelete, setPendingDelete] = useState(null);
+    const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
         fetchProjects();
@@ -45,105 +59,117 @@ function ProjectList({ onEdit }) {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (!window.confirm('¿Estás seguro de que deseas eliminar este proyecto?')) return;
+    const handleDelete = async () => {
+        if (!pendingDelete) return;
+        setDeleting(true);
 
         try {
-            // Delete image from storage first
-            const projectToDelete = projects.find(p => p.id === id);
-            if (projectToDelete?.image_url) {
+            // La imagen se borra primero, pero su fallo no aborta nada: dejar el
+            // proyecto vivo por un archivo huérfano es peor que el archivo.
+            if (pendingDelete.image_url) {
                 try {
-                    // Extract filename from URL
-                    const imageName = projectToDelete.image_url.split('/').pop();
+                    const imageName = pendingDelete.image_url.split('/').pop();
                     await deleteImage(imageName);
                 } catch (imgError) {
                     console.error('Error deleting image from storage:', imgError);
-                    // Continue with project deletion even if image deletion fails
                 }
             }
 
             const { error } = await supabase
                 .from('projects')
                 .delete()
-                .eq('id', id);
+                .eq('id', pendingDelete.id);
 
             if (error) throw error;
 
             toast.success('Proyecto eliminado');
-            setProjects(projects.filter(p => p.id !== id));
+            setProjects((prev) => prev.filter((p) => p.id !== pendingDelete.id));
+            setPendingDelete(null);
         } catch (error) {
             console.error('Error deleting project:', error);
             toast.error('Error al eliminar proyecto');
+        } finally {
+            setDeleting(false);
         }
     };
 
-    if (loading) {
-        return <div className="p-4 text-center">Cargando proyectos...</div>;
-    }
-
     return (
-        <div className="rounded-md border bg-white dark:bg-slate-950">
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="w-[100px]">Imagen</TableHead>
-                        <TableHead>Título</TableHead>
-                        <TableHead>Tipo</TableHead>
-                        <TableHead>Destacado</TableHead>
-                        <TableHead className="text-right">Acciones</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {projects.length === 0 ? (
-                        <TableRow>
-                            <TableCell colSpan={5} className="text-center h-24">
-                                No hay proyectos creados.
-                            </TableCell>
-                        </TableRow>
-                    ) : (
-                        projects.map((project) => (
-                            <TableRow key={project.id}>
-                                <TableCell>
-                                    <img
-                                        src={project.image_url}
-                                        alt={project.title}
-                                        className="w-12 h-12 rounded object-cover"
-                                    />
-                                </TableCell>
-                                <TableCell className="font-medium">{project.title}</TableCell>
-                                <TableCell>{project.project_type}</TableCell>
-                                <TableCell>{project.is_featured ? 'Sí' : 'No'}</TableCell>
-                                <TableCell className="text-right">
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                                <span className="sr-only">Abrir menú</span>
-                                                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                                                </svg>
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                                            <DropdownMenuItem onClick={() => onEdit(project)}>
-                                                Editar
-                                            </DropdownMenuItem>
-                                            <DropdownMenuSeparator />
-                                            <DropdownMenuItem
-                                                onClick={() => handleDelete(project.id)}
-                                                className="text-red-600 focus:text-red-700 focus:bg-red-50"
-                                            >
-                                                Eliminar
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </TableCell>
-                            </TableRow>
-                        ))
-                    )}
-                </TableBody>
-            </Table>
-        </div>
+        <>
+            <Panel className="overflow-hidden">
+                <Table>
+                    <THead>
+                        <TR>
+                            <TH className="w-20">Imagen</TH>
+                            <TH>Título</TH>
+                            <TH>Tipo</TH>
+                            <TH>Destacado</TH>
+                            <TH className="text-right">Acciones</TH>
+                        </TR>
+                    </THead>
+                    <TBody>
+                        {loading ? (
+                            <TEmpty colSpan={5}>Cargando proyectos…</TEmpty>
+                        ) : projects.length === 0 ? (
+                            <TEmpty colSpan={5}>Todavía no hay proyectos creados.</TEmpty>
+                        ) : (
+                            projects.map((project) => (
+                                <TR key={project.id}>
+                                    <TD>
+                                        <img
+                                            src={project.image_url}
+                                            alt=""
+                                            className="h-12 w-12 rounded-lg object-cover"
+                                        />
+                                    </TD>
+                                    <TD className="font-medium">{project.title}</TD>
+                                    <TD>
+                                        <Badge tone="muted">{project.project_type}</Badge>
+                                    </TD>
+                                    <TD>
+                                        {project.is_featured ? (
+                                            <Badge tone="volt">
+                                                {project.featured_size === 'large' ? 'Grande' : 'Pequeño'}
+                                                {project.featured_order ? ` · ${project.featured_order}` : ''}
+                                            </Badge>
+                                        ) : (
+                                            <span className="text-plum-400">—</span>
+                                        )}
+                                    </TD>
+                                    <TD className="text-right">
+                                        <Menu>
+                                            <MenuTrigger label={`Acciones de ${project.title}`}>
+                                                <DotsIcon />
+                                            </MenuTrigger>
+                                            <MenuList>
+                                                <MenuLabel>Acciones</MenuLabel>
+                                                <MenuItem onSelect={() => onEdit(project)}>Editar</MenuItem>
+                                                <MenuSeparator />
+                                                <MenuItem danger onSelect={() => setPendingDelete(project)}>
+                                                    Eliminar
+                                                </MenuItem>
+                                            </MenuList>
+                                        </Menu>
+                                    </TD>
+                                </TR>
+                            ))
+                        )}
+                    </TBody>
+                </Table>
+            </Panel>
+
+            <ConfirmDialog
+                open={Boolean(pendingDelete)}
+                onClose={() => setPendingDelete(null)}
+                onConfirm={handleDelete}
+                loading={deleting}
+                title="Eliminar proyecto"
+                description={
+                    pendingDelete
+                        ? `Se va a eliminar "${pendingDelete.title}" y su imagen. No se puede deshacer.`
+                        : undefined
+                }
+            />
+        </>
     );
 }
 
