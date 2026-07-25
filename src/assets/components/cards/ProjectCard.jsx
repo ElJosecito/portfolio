@@ -62,7 +62,7 @@ function ProjectCard({ project, languaje, variant = "small", className = "", del
 
         <div className="pl-5 lg:pt-8 dark:text-moonlit flex flex-col">
           <div>
-            <h3 className="text-5xl font-bold my-5">{name}</h3>
+            <h3 className="font-display text-5xl font-bold my-5">{name}</h3>
             <p
               className={`text-sm lg:text-base opacity-70 my-5 ${isLarge ? "font-medium lg:ml-1 lg:pr-20" : "font-normal"}`}
             >

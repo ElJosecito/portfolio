@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+// Las fuentes se cargan desde index.html con preconnect, no acá: un @import de
+// CSS obliga al navegador a descargar esta hoja antes de siquiera pedirlas.
 
 * {
   -webkit-font-smoothing: antialiased;

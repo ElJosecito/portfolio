@@ -65,4 +65,13 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Titulares de página y de sección en Syne. Los h3 no entran acá a propósito:
+     algunos son nombres de proyecto (que sí quieren display, y lo piden con la
+     clase) y otros son puestos de trabajo dentro de la timeline, que se leen
+     mejor en Inter. */
+  h1,
+  h2 {
+    @apply font-display;
+  }
 }
