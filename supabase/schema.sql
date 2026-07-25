@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS projects (
   title VARCHAR(255) NOT NULL,
   description TEXT NOT NULL,
   image_url TEXT NOT NULL,
-  project_type VARCHAR(20) NOT NULL CHECK (project_type IN ('web', 'mobile')),
+  -- Array y no un enum excluyente: un proyecto puede ser web y mobile a la vez.
+  platforms TEXT[] NOT NULL DEFAULT '{web}',
   is_featured BOOLEAN DEFAULT FALSE,
   featured_size VARCHAR(20) CHECK (featured_size IN ('large', 'small', NULL)),
   featured_order INTEGER,
@@ -32,6 +33,12 @@ CREATE TABLE IF NOT EXISTS projects (
 -- Traducciones al inglés (el contenido base va en español)
 ALTER TABLE projects ADD COLUMN IF NOT EXISTS title_en TEXT;
 ALTER TABLE projects ADD COLUMN IF NOT EXISTS description_en TEXT;
+
+ALTER TABLE projects DROP CONSTRAINT IF EXISTS projects_platforms_valid;
+ALTER TABLE projects ADD CONSTRAINT projects_platforms_valid CHECK (
+  platforms <@ ARRAY['web', 'mobile']::text[]
+  AND COALESCE(array_length(platforms, 1), 0) >= 1
+);
 
 -- Tabla intermedia para la relación many-to-many entre proyectos y tecnologías
 CREATE TABLE IF NOT EXISTS project_technologies (
@@ -49,7 +56,7 @@ COMMENT ON COLUMN technologies.icon_url IS 'URL del icono de la tecnología';
 COMMENT ON COLUMN technologies.class_name IS 'Clases CSS opcionales para el icono (ej: dark:invert)';
 
 COMMENT ON TABLE projects IS 'Tabla para almacenar proyectos web y móviles';
-COMMENT ON COLUMN projects.project_type IS 'Tipo de proyecto: web o mobile';
+COMMENT ON COLUMN projects.platforms IS 'Plataformas del proyecto: {web}, {mobile} o {web,mobile}. Reemplaza a project_type.';
 COMMENT ON COLUMN projects.is_featured IS 'Si el proyecto aparece en la página principal';
 COMMENT ON COLUMN projects.featured_size IS 'Tamaño en featured: large (1 card grande) o small (2 cards pequeños)';
 COMMENT ON COLUMN projects.featured_order IS 'Orden de aparición en featured (1, 2, 3)';
@@ -63,7 +70,7 @@ COMMENT ON COLUMN project_technologies.technology_id IS 'ID de la tecnología';
 
 -- Índices para mejorar consultas
 CREATE INDEX IF NOT EXISTS idx_technologies_name ON technologies(name);
-CREATE INDEX IF NOT EXISTS idx_projects_type ON projects(project_type);
+CREATE INDEX IF NOT EXISTS idx_projects_platforms ON projects USING GIN (platforms);
 CREATE INDEX IF NOT EXISTS idx_projects_featured ON projects(is_featured) WHERE is_featured = TRUE;
 CREATE INDEX IF NOT EXISTS idx_projects_featured_order ON projects(featured_order) WHERE is_featured = TRUE;
 CREATE INDEX IF NOT EXISTS idx_project_technologies_project ON project_technologies(project_id);
@@ -113,13 +120,13 @@ INSERT INTO technologies (name, icon_url, class_name) VALUES
 ON CONFLICT (name) DO NOTHING;
 
 -- Insertar proyectos reales (solo si la tabla está vacía, para no duplicar)
-INSERT INTO projects (title, description, image_url, project_type, is_featured, featured_size, featured_order, urls)
+INSERT INTO projects (title, description, image_url, platforms, is_featured, featured_size, featured_order, urls)
 SELECT * FROM (VALUES
 (
   'Gestipol',
   'Gestipol es una aplicación que permite a los candidatos políticos gestionar el estado de sus votantes para tener una información más clara sobre el proceso durante la campaña.',
   'https://i.imgur.com/Y1WgyYI.png',
-  'web',
+  ARRAY['web']::text[],
   TRUE,
   'large',
   1,
@@ -129,7 +136,7 @@ SELECT * FROM (VALUES
   'Bank Landing Page',
   'Esta es una landing page de un banco ficticio, la cual fue creada con el fin de practicar y mejorar mis habilidades en el desarrollo web. La página es completamente responsive y fue inspirada en un diseño de frontend mentor.',
   'https://i.imgur.com/LbmEbD2.png',
-  'web',
+  ARRAY['web']::text[],
   TRUE,
   'small',
   2,
@@ -139,7 +146,7 @@ SELECT * FROM (VALUES
   'Dental Clinic Web',
   'Dental Clinic Web es una landing page que permite al cliente tener mas informacion sobre la clinica dental que visitara y de sus doctores. La web fue desarrollada con el fin de brindar informacion de manera comoda y facil. Inspirada en un diseño personal.',
   'https://imgur.com/u6wEWGK.png',
-  'web',
+  ARRAY['web']::text[],
   TRUE,
   'small',
   3,
@@ -149,7 +156,7 @@ SELECT * FROM (VALUES
   'Multisemar Web',
   'Multisemar Web es una landing page que permite al cliente tener mas informacion sobre la empresa y sus servicios. La web fue desarrollada con el fin de brindar informacion de manera comoda y facil. Inspirada en un diseño personal.',
   'https://imgur.com/jEVndxk.png',
-  'web',
+  ARRAY['web']::text[],
   FALSE,
   NULL,
   NULL,
@@ -159,12 +166,12 @@ SELECT * FROM (VALUES
   'Flags App',
   'Flags App es una aplicación web que permite a los usuarios buscar y ver información sobre los países del mundo. La aplicación fue creada con el fin de practicar y mejorar mis habilidades en el desarrollo web. Inspirada en un diseño de frontend mentor.',
   'https://i.imgur.com/clPtB70.png',
-  'web',
+  ARRAY['web']::text[],
   FALSE,
   NULL,
   NULL,
   '[{"name": "Github", "url": "https://github.com/ElJosecito/country-app"}, {"name": "En Vivo", "url": "https://guileless-daffodil-25c071.netlify.app/"}]'::jsonb
-)) AS seed(title, description, image_url, project_type, is_featured, featured_size, featured_order, urls)
+)) AS seed(title, description, image_url, platforms, is_featured, featured_size, featured_order, urls)
 WHERE NOT EXISTS (SELECT 1 FROM projects);
 
 -- Vincular tecnologías a proyectos
