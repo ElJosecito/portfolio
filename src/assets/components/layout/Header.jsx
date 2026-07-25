@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 //import icons
 import { FaBars, FaMoon, FaLanguage, FaSun } from "react-icons/fa";
@@ -10,33 +10,12 @@ import { motion } from "framer-motion";
 //react router
 import { Link } from "react-router-dom";
 
-function Header({ onDatos, languaje }) {
-  //theme
-  const [theme, setTheme] = useState(() => {
-    if (!localStorage.getItem("theme")) {
-      if (
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-      ) {
-        localStorage.setItem("theme", "dark");
-        return "dark";
-      } else {
-        localStorage.setItem("theme", "light");
-        return "light";
-      }
-    } else {
-      return localStorage.getItem("theme");
-    }
-  });
+//theme
+import { useTheme } from "../../../shared/theme";
 
-  //set theme
-  useEffect(() => {
-    if (theme === "dark") {
-      document.querySelector("html").classList.add("dark");
-    } else {
-      document.querySelector("html").classList.remove("dark");
-    }
-  }, [theme]);
+function Header({ onDatos, languaje }) {
+  //theme — la clase la aplica shared/theme, acá solo se alterna
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     if (!localStorage.getItem("languaje")) {
@@ -59,15 +38,7 @@ function Header({ onDatos, languaje }) {
   }, []);
 
   //handle theme
-  const handleTheme = () => {
-    if (theme === "light") {
-      localStorage.setItem("theme", "dark");
-      setTheme("dark");
-    } else {
-      localStorage.setItem("theme", "light");
-      setTheme("light");
-    }
-  };
+  const handleTheme = toggleTheme;
 
   //handle dropdown
   const handleDropdown = (className) => {
