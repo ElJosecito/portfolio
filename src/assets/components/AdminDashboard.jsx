@@ -1,36 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../../shared/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import CreateProjectForm from './admin/CreateProjectForm';
 
+import {
+  Avatar,
+  Button,
+  Menu,
+  MenuTrigger,
+  MenuList,
+  MenuItem,
+  MenuLabel,
+  MenuSeparator,
+} from '../../shared/ui';
+
+import CreateProjectForm from './admin/CreateProjectForm';
 import ProjectList from './admin/ProjectList';
+
+const VIEWS = {
+  projects: 'Gestionar proyectos',
+  'create-project': 'Crear proyecto',
+  'edit-project': 'Editar proyecto',
+};
+
+function FolderIcon() {
+  return (
+    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+    </svg>
+  );
+}
+
+function DotsIcon() {
+  return (
+    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="5" r="1.75" />
+      <circle cx="12" cy="12" r="1.75" />
+      <circle cx="12" cy="19" r="1.75" />
+    </svg>
+  );
+}
 
 function AdminDashboard() {
   const navigate = useNavigate();
-  const [activeView, setActiveView] = useState('projects'); // 'projects', 'create-project', 'edit-project', 'messages', 'analytics', 'settings'
+  const [activeView, setActiveView] = useState('projects');
   const [projectToEdit, setProjectToEdit] = useState(null);
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    // El email estaba hardcodeado como admin@ejemplo.com. Sale de la sesión.
+    supabase.auth.getUser().then(({ data }) => setEmail(data?.user?.email || ''));
+  }, []);
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
       toast.error(error.message || 'Error al cerrar sesión');
-    } else {
-      toast.success('Sesión cerrada');
-      navigate('/admin/login');
+      return;
     }
+    toast.success('Sesión cerrada');
+    navigate('/admin/login');
   };
 
   const handleEditProject = (project) => {
@@ -43,95 +72,71 @@ function AdminDashboard() {
     setProjectToEdit(null);
   };
 
+  const isProjectsSection = activeView.includes('project');
+  const initials = email ? email.slice(0, 2).toUpperCase() : 'AD';
+
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col">
-        <div className="p-6 border-b border-slate-200 dark:border-slate-800">
+    <div className="flex min-h-screen bg-noon dark:bg-plum-950">
+      <aside className="hidden w-64 shrink-0 flex-col border-r border-plum-200/70 bg-white dark:border-plum-800 dark:bg-plum-900 md:flex">
+        <div className="border-b border-plum-100 p-6 dark:border-plum-800">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-              <span className="text-white font-bold text-lg">A</span>
-            </div>
+            <Avatar initials="J" />
             <div>
-              <h2 className="font-semibold text-slate-900 dark:text-white">Admin Panel</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Dashboard</p>
+              <p className="font-display text-base font-bold text-plum-900 dark:text-plum-50">
+                Panel
+              </p>
+              <p className="text-xs text-plum-500 dark:text-plum-300/70">josecito.dev</p>
             </div>
           </div>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1">
+        <nav className="flex-1 space-y-1 p-4">
           <Button
-            variant={activeView === 'projects' || activeView === 'create-project' || activeView === 'edit-project' ? "secondary" : "ghost"}
-            className="w-full justify-start"
+            variant={isProjectsSection ? 'secondary' : 'ghost'}
+            block
+            className="justify-start"
             onClick={() => setActiveView('projects')}
           >
-            <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-            </svg>
+            <FolderIcon />
             Proyectos
           </Button>
         </nav>
 
-        <div className="p-4 border-t border-slate-200 dark:border-slate-800">
-          <div className="flex items-center gap-3 p-2 rounded-lg bg-slate-50 dark:bg-slate-800 mb-3">
-            <Avatar className="h-8 w-8">
-              <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white text-sm">AD</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-slate-900 dark:text-white truncate">Admin</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 truncate">admin@ejemplo.com</p>
-            </div>
+        <div className="border-t border-plum-100 p-4 dark:border-plum-800">
+          <div className="mb-3 flex items-center gap-3 rounded-xl bg-plum-50 p-2 dark:bg-plum-800/60">
+            <Avatar initials={initials} size="sm" />
+            <p className="min-w-0 flex-1 truncate text-xs text-plum-600 dark:text-plum-200">
+              {email || '—'}
+            </p>
           </div>
-          <Button
-            variant="outline"
-            className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950 border-red-200 dark:border-red-900"
-            onClick={handleSignOut}
-          >
-            <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
+          <Button variant="danger" block className="justify-start" onClick={handleSignOut}>
             Cerrar sesión
           </Button>
         </div>
       </aside>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-xl font-semibold text-slate-900 dark:text-white">
-              {activeView === 'projects' && 'Gestionar Proyectos'}
-              {activeView === 'create-project' && 'Crear Proyecto'}
-              {activeView === 'edit-project' && 'Editar Proyecto'}
+      <div className="flex flex-1 flex-col">
+        <header className="border-b border-plum-200/70 bg-white px-6 py-4 dark:border-plum-800 dark:bg-plum-900">
+          <div className="flex items-center justify-between gap-4">
+            <h1 className="text-lg font-bold tracking-tight text-plum-900 dark:text-plum-50">
+              {VIEWS[activeView]}
             </h1>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback>AD</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">Admin</p>
-                    <p className="text-xs leading-none text-muted-foreground">admin@ejemplo.com</p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Perfil</DropdownMenuItem>
-                <DropdownMenuItem>Configuración</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut}>Cerrar sesión</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Menu>
+              <MenuTrigger label="Menú de cuenta">
+                <DotsIcon />
+              </MenuTrigger>
+              <MenuList>
+                <MenuLabel>{email || 'Cuenta'}</MenuLabel>
+                <MenuSeparator />
+                <MenuItem danger onSelect={handleSignOut}>
+                  Cerrar sesión
+                </MenuItem>
+              </MenuList>
+            </Menu>
           </div>
         </header>
 
-        {/* Main Content Area */}
         <main className="flex-1 p-6">
           {activeView === 'projects' && (
             <div className="space-y-4">
@@ -141,24 +146,20 @@ function AdminDashboard() {
                     setProjectToEdit(null);
                     setActiveView('create-project');
                   }}
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
                 >
-                  Nuevo Proyecto
+                  Nuevo proyecto
                 </Button>
               </div>
               <ProjectList onEdit={handleEditProject} />
             </div>
           )}
+
           {activeView === 'create-project' && (
-            <CreateProjectForm
-              onSuccess={handleProjectSuccess}
-            />
+            <CreateProjectForm onSuccess={handleProjectSuccess} />
           )}
+
           {activeView === 'edit-project' && (
-            <CreateProjectForm
-              initialData={projectToEdit}
-              onSuccess={handleProjectSuccess}
-            />
+            <CreateProjectForm initialData={projectToEdit} onSuccess={handleProjectSuccess} />
           )}
         </main>
       </div>

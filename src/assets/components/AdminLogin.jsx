@@ -2,22 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../shared/supabaseClient';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+import { Button, Field, Input, Panel, PanelBody, PanelHeader, PanelTitle, PanelDescription } from '../../shared/ui';
 
 function AdminLogin() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -29,28 +21,36 @@ function AdminLogin() {
     checkSession();
   }, [navigate]);
 
-  const form = useForm({
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    setError(null);
+  };
 
-  const onSubmit = async (values) => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setLoading(true);
+    setError(null);
+
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: values.email,
-        password: values.password,
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: form.email,
+        password: form.password,
       });
 
-      if (error) {
-        toast.error(error.message || 'Error al iniciar sesión');
-      } else {
-        toast.success('Inicio de sesión correcto');
-        navigate('/admin');
+      if (signInError) {
+        // El error va al formulario y no solo al toast: un toast se va solo a
+        // los pocos segundos y quien lea con lupa o lector de pantalla se lo
+        // pierde entero.
+        setError('Email o contraseña incorrectos');
+        toast.error(signInError.message || 'Error al iniciar sesión');
+        return;
       }
+
+      toast.success('Inicio de sesión correcto');
+      navigate('/admin');
     } catch (err) {
+      setError('No se pudo conectar. Revisá tu conexión.');
       toast.error('Error en la petición');
     } finally {
       setLoading(false);
@@ -58,56 +58,50 @@ function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-purple-50/30 to-pink-50/20 dark:from-slate-950 dark:via-purple-950/30 dark:to-pink-950/20 p-4">
-      <Card className="w-full max-w-md shadow-lg">
-        <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold tracking-tight">Bienvenido</CardTitle>
-          <CardDescription>Ingresa tus credenciales para acceder al panel</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-noon p-4 dark:bg-plum-950">
+      {/* Mismo fondo que el portfolio público: la grilla y el bloom fucsia. El
+          admin es otra sección del sitio, no otra aplicación. */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+      <div className="absolute inset-0 bg-fuchsia-300 opacity-20 blur-[100px]" />
+
+      <Panel className="relative z-10 w-full max-w-md">
+        <PanelHeader className="text-center">
+          <PanelTitle className="text-2xl">Bienvenido</PanelTitle>
+          <PanelDescription>Ingresá tus credenciales para acceder al panel</PanelDescription>
+        </PanelHeader>
+
+        <PanelBody>
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+            <Field label="Email" required>
+              <Input
                 name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="admin@ejemplo.com" {...field} type="email" autoComplete="email" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="admin@ejemplo.com"
+                autoComplete="email"
+                required
               />
+            </Field>
 
-              <FormField
-                control={form.control}
+            <Field label="Contraseña" error={error} required>
+              <Input
                 name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Contraseña</FormLabel>
-                    <FormControl>
-                      <Input placeholder="••••••••" {...field} type="password" autoComplete="current-password" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                type="password"
+                value={form.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                autoComplete="current-password"
+                required
               />
+            </Field>
 
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading && (
-                  <svg className="mr-2 h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                  </svg>
-                )}
-                {loading ? 'Ingresando...' : 'Iniciar sesión'}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+            <Button type="submit" block size="lg" loading={loading}>
+              {loading ? 'Ingresando…' : 'Iniciar sesión'}
+            </Button>
+          </form>
+        </PanelBody>
+      </Panel>
     </div>
   );
 }
