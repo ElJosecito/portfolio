@@ -7,16 +7,26 @@ import { useProjects } from '../../../shared/hooks/useProjects';
 import ProjectCard from '../cards/ProjectCard';
 
 
+const FILTERS = ['all', 'web', 'mobile'];
+
 function ProjectsPage({ languaje }) {
     const [isMobile, setIsMobile] = useState(false);
     const mobile = useMediaQuery("only screen and (max-width : 768px)");
     const { projects, loading } = useProjects();
+    const [filter, setFilter] = useState('all');
 
     useEffect(() => {
         document.title = "Projectos || ElJosecito";
         setIsMobile(mobile);
         window.scrollTo(0, 0);
     }, []);
+
+    // Se filtra acá y no en la query: son pocos proyectos y ya están todos
+    // traídos, así que cambiar de pestaña es instantáneo y sin ir al servidor.
+    const visible =
+        filter === 'all'
+            ? projects
+            : projects.filter((project) => project.platforms?.includes(filter));
 
     return (
         <section className="w-full  p-5 pb-10 bg-noon dark:bg-slate-950 flex justify-center pt-20" >
@@ -32,17 +42,39 @@ function ProjectsPage({ languaje }) {
                     </p>
                 </div>
 
+                <div
+                    role="tablist"
+                    aria-label={languaje.projects.title}
+                    className="mb-8 flex justify-center gap-2"
+                >
+                    {FILTERS.map((option) => (
+                        <button
+                            key={option}
+                            role="tab"
+                            aria-selected={filter === option}
+                            onClick={() => setFilter(option)}
+                            className={`rounded-lg px-4 py-2 text-sm font-medium shadow-md transition-transform duration-300 hover:scale-105 ${
+                                filter === option
+                                    ? 'bg-[#6a4279] text-white dark:bg-[#020617]'
+                                    : 'bg-[#EFE0F4] text-dark-grey dark:bg-[#372D48] dark:text-moonlit'
+                            }`}
+                        >
+                            {languaje.projects.filters[option]}
+                        </button>
+                    ))}
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {loading ? (
                         <div className="col-span-full flex justify-center items-center h-96 dark:text-moonlit">
                             <p className="text-xl">{languaje.projects.loading}</p>
                         </div>
-                    ) : projects.length === 0 ? (
+                    ) : visible.length === 0 ? (
                         <div className="col-span-full flex justify-center items-center h-96 dark:text-moonlit">
                             <p className="text-xl">{languaje.projects.empty}</p>
                         </div>
                     ) : (
-                        projects.map((project) => (
+                        visible.map((project) => (
                             <ProjectCard
                                 key={project.id}
                                 project={project}

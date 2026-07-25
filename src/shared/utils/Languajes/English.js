@@ -11,18 +11,25 @@ export const English = {
   },
   hero: {
     name: "Jose Miguel Martinez Florimon",
-    subtitle: ["Web Developer", "Front-End", "Back-End", "Full-Stack"],
+    subtitle: [
+      "Web Developer",
+      "Mobile Developer",
+      "Front-End",
+      "Back-End",
+      "Full-Stack",
+    ],
   },
   about: {
     title: "About me",
     subtitle: "About me and contact ways.",
     description:
-      "Web developer with experience in designing, developing and maintaining front-end web applications.",
+      "Web and mobile developer with experience designing, building and maintaining applications end to end.",
     paragraphs: [
-      "I am passionate about technology and web development. With solid experience in the Full Stack field, I have specialized in the exciting MERN ecosystem (MongoDB, Express.js, React.js, and Node.js).",
-      "I love to challenge myself and explore new technologies to create innovative and efficient solutions. As a developer, I stand out for my ability to design, develop, and maintain complete and engaging web applications, which not only meet client requirements but also provide an interactive and satisfying experience for the end user.",
+      "I am passionate about technology and product development. With solid experience in the Full Stack field, I have specialized in the MERN ecosystem (MongoDB, Express.js, React.js, and Node.js), and I bring that same stack to mobile with React Native.",
+      "I love to challenge myself and explore new technologies to create innovative and efficient solutions. As a developer, I stand out for my ability to design, develop, and maintain complete and engaging applications — on the web and on the phone — which not only meet client requirements but also provide an interactive and satisfying experience for the end user.",
+      "Working across both platforms means I think about a product as a whole: shared APIs, consistent design, and the details that change when an interface moves from a desktop screen to a thumb.",
       "I am a proactive, adaptable professional committed to the team's success. I enjoy working collaboratively, bringing my skills and knowledge to effectively and creatively achieve established goals.",
-      "I am excited to continue growing and learning in this exciting world of web development and technology!",
+      "I am excited to continue growing and learning in this exciting world of development and technology!",
     ],
   },
   country: {
@@ -72,6 +79,11 @@ export const English = {
     projectsBtn: "See all",
     loading: "Loading projects...",
     empty: "No projects available",
+    filters: {
+      all: "All",
+      web: "Web",
+      mobile: "Mobile",
+    },
     projects: [
       {
         id: "uuid()",

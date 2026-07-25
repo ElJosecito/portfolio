@@ -19,12 +19,17 @@ import {
     Textarea,
 } from '../../../shared/ui';
 
+const PLATFORMS = [
+    { value: 'web', label: 'Web' },
+    { value: 'mobile', label: 'Mobile' },
+];
+
 const EMPTY_FORM = {
     title: '',
     title_en: '',
     description: '',
     description_en: '',
-    project_type: 'web',
+    platforms: ['web'],
     is_featured: false,
     featured_size: '',
     featured_order: '',
@@ -45,7 +50,7 @@ function CreateProjectForm({ initialData = null, onSuccess }) {
         title_en: initialData?.title_en || '',
         description: initialData?.description || '',
         description_en: initialData?.description_en || '',
-        project_type: initialData?.project_type || 'web',
+        platforms: initialData?.platforms?.length ? initialData.platforms : ['web'],
         is_featured: initialData?.is_featured || false,
         featured_size: initialData?.featured_size || '',
         featured_order: initialData?.featured_order || '',
@@ -119,11 +124,24 @@ function CreateProjectForm({ initialData = null, onSuccess }) {
         }));
     };
 
+    const handlePlatformToggle = (platform) => {
+        setFormData((prev) => ({
+            ...prev,
+            platforms: prev.platforms.includes(platform)
+                ? prev.platforms.filter((p) => p !== platform)
+                : [...prev.platforms, platform],
+        }));
+        setErrors((prev) => ({ ...prev, platforms: undefined }));
+    };
+
     const validate = () => {
         const next = {};
         if (!formData.title.trim()) next.title = 'El título es requerido';
         if (!formData.description.trim()) next.description = 'La descripción es requerida';
         if (!imageFile && !initialData) next.image = 'La imagen es requerida';
+        // La base tiene un CHECK que exige al menos una plataforma; si no se
+        // valida acá, el error llega como un fallo de constraint sin contexto.
+        if (formData.platforms.length === 0) next.platforms = 'Elegí al menos una plataforma';
         setErrors(next);
         return Object.keys(next).length === 0;
     };
@@ -151,7 +169,7 @@ function CreateProjectForm({ initialData = null, onSuccess }) {
                 description: formData.description,
                 description_en: formData.description_en,
                 image_url: imageUrl,
-                project_type: formData.project_type,
+                platforms: formData.platforms,
                 is_featured: formData.is_featured,
                 featured_size: formData.is_featured ? formData.featured_size || null : null,
                 featured_order: formData.is_featured
@@ -284,17 +302,26 @@ function CreateProjectForm({ initialData = null, onSuccess }) {
                         />
                     </Field>
 
-                    <Field label="Tipo de proyecto" required>
-                        <Select
-                            name="project_type"
-                            value={formData.project_type}
-                            onChange={handleInputChange}
-                            options={[
-                                { value: 'web', label: 'Web' },
-                                { value: 'mobile', label: 'Mobile' },
-                            ]}
-                        />
-                    </Field>
+                    <fieldset>
+                        <legend className="mb-2 text-sm font-medium text-plum-800 dark:text-plum-100">
+                            Plataformas<span className="ml-0.5 text-red-500">*</span>
+                        </legend>
+                        <div className="flex gap-6">
+                            {PLATFORMS.map((platform) => (
+                                <Checkbox
+                                    key={platform.value}
+                                    checked={formData.platforms.includes(platform.value)}
+                                    onChange={() => handlePlatformToggle(platform.value)}
+                                    label={platform.label}
+                                />
+                            ))}
+                        </div>
+                        {errors.platforms && (
+                            <p className="mt-1.5 text-xs font-medium text-red-600 dark:text-red-400">
+                                {errors.platforms}
+                            </p>
+                        )}
+                    </fieldset>
 
                     <div className="grid gap-4 md:grid-cols-2">
                         <Field label="URL de GitHub">

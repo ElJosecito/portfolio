@@ -101,7 +101,7 @@ function ProjectList({ onEdit }) {
                         <TR>
                             <TH className="w-20">Imagen</TH>
                             <TH>Título</TH>
-                            <TH>Tipo</TH>
+                            <TH>Plataformas</TH>
                             <TH>Destacado</TH>
                             <TH className="text-right">Acciones</TH>
                         </TR>
@@ -123,7 +123,13 @@ function ProjectList({ onEdit }) {
                                     </TD>
                                     <TD className="font-medium">{project.title}</TD>
                                     <TD>
-                                        <Badge tone="muted">{project.project_type}</Badge>
+                                        <span className="flex flex-wrap gap-1">
+                                            {project.platforms?.map((platform) => (
+                                                <Badge key={platform} tone="muted">
+                                                    {platform}
+                                                </Badge>
+                                            ))}
+                                        </span>
                                     </TD>
                                     <TD>
                                         {project.is_featured ? (

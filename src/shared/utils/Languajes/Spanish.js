@@ -11,18 +11,25 @@ export const Spanish = {
   },
   hero: {
     name: "Jose Miguel Martinez Florimon",
-    subtitle: ["Desarrollador Web", "Front-End", "Back-End", "Full-Stack"],
+    subtitle: [
+      "Desarrollador Web",
+      "Desarrollador Móvil",
+      "Front-End",
+      "Back-End",
+      "Full-Stack",
+    ],
   },
   about: {
     title: "Sobre mí",
     subtitle: "Acercade de mi y formas de contacto.",
     description:
-      "Desarrollador web con experiencia en diseño, desarrollo y mantenimiento de aplicaciones web front-end.",
+      "Desarrollador web y móvil con experiencia en diseño, desarrollo y mantenimiento de aplicaciones de punta a punta.",
     paragraphs: [
-      "Soy un apasionado de la tecnología y el desarrollo web. Con una sólida experiencia en el ámbito Full Stack, me he especializado en el emocionante ecosistema MERN (MongoDB, Express.js, React.js y Node.js).",
-      "Me encanta desafiarme a mí mismo y explorar nuevas tecnologías para crear soluciones innovadoras y eficientes. Como desarrollador, me destaco por mi capacidad para diseñar, desarrollar y mantener aplicaciones web completas y atractivas, que no solo cumplan con los requisitos del cliente, sino que también ofrezcan una experiencia interactiva y satisfactoria para el usuario final.",
+      "Soy un apasionado de la tecnología y el desarrollo de producto. Con una sólida experiencia en el ámbito Full Stack, me he especializado en el ecosistema MERN (MongoDB, Express.js, React.js y Node.js), y llevo ese mismo stack al móvil con React Native.",
+      "Me encanta desafiarme a mí mismo y explorar nuevas tecnologías para crear soluciones innovadoras y eficientes. Como desarrollador, me destaco por mi capacidad para diseñar, desarrollar y mantener aplicaciones completas y atractivas —en la web y en el teléfono— que no solo cumplan con los requisitos del cliente, sino que también ofrezcan una experiencia interactiva y satisfactoria para el usuario final.",
+      "Trabajar en las dos plataformas me obliga a pensar el producto entero: APIs compartidas, diseño consistente, y los detalles que cambian cuando una interfaz pasa de una pantalla de escritorio a un pulgar.",
       "Soy un profesional proactivo, adaptable y comprometido con el éxito del equipo. Me gusta trabajar en colaboración, aportando mis habilidades y conocimientos para alcanzar los objetivos establecidos con eficacia y creatividad.",
-      "¡Estoy emocionado de seguir creciendo y aprendiendo en este apasionante mundo del desarrollo web y la tecnología!",
+      "¡Estoy emocionado de seguir creciendo y aprendiendo en este apasionante mundo del desarrollo y la tecnología!",
     ],
   },
   country: {
@@ -69,6 +76,11 @@ export const Spanish = {
     projectsBtn: "Ver todos",
     loading: "Cargando proyectos...",
     empty: "No hay proyectos disponibles",
+    filters: {
+      all: "Todos",
+      web: "Web",
+      mobile: "Mobile",
+    },
     projects: [
       {
         id: uuid(),

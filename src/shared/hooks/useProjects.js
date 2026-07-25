@@ -26,6 +26,7 @@ function formatProject(project) {
     image: project.image_url,
     urls: project.urls || [],
     size: project.featured_size,
+    platforms: project.platforms || [],
     techIcons: technologies.map((pt) => ({
       name: pt.technologies.name,
       icon: pt.technologies.icon_url,
