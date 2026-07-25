@@ -70,6 +70,8 @@ export const English = {
     title: "Projects",
     description: "Some of my main projects.",
     projectsBtn: "See all",
+    loading: "Loading projects...",
+    empty: "No projects available",
     projects: [
       {
         id: "uuid()",

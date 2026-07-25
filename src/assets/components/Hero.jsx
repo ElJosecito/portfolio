@@ -36,7 +36,10 @@ import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
 
 //supabase
-import { supabase } from "../../shared/supabaseClient";
+import { useProjects } from "../../shared/hooks/useProjects";
+
+//import cards
+import ProjectCard from "./cards/ProjectCard";
 
 function Hero({ languaje }) {
   const [text] = useTypewriter({
@@ -49,69 +52,11 @@ function Hero({ languaje }) {
   const email = "josemartinezflorimon@gmail.com";
   const [isMobile, setIsMobile] = useState(false);
   const mobile = useMediaQuery("only screen and (max-width : 768px)");
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { projects, loading } = useProjects({ featuredOnly: true });
 
   useEffect(() => {
     document.title = "Jose Martinez || Desarrollador Web";
     setIsMobile(mobile);
-  }, []);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('projects')
-          .select(`
-            *,
-            project_technologies (
-              technologies (
-                name,
-                icon_url,
-                class_name
-              )
-            )
-          `)
-          .eq('is_featured', true)
-          .order('featured_order', { ascending: true });
-
-        if (error) throw error;
-
-        console.log('Raw Project Data:', data);
-
-        // Transformar datos para que coincidan con la estructura esperada
-        const formattedProjects = data?.map(project => {
-          console.log('Processing project:', project.title, 'Technologies:', project.project_technologies);
-
-          // Filter out any null or undefined technologies
-          const validTechnologies = project.project_technologies?.filter(pt => pt?.technologies) || [];
-
-          return {
-            name: project.title,
-            description: project.description,
-            image: project.image_url,
-            urls: project.urls,
-            tech: validTechnologies.map(pt => pt.technologies.name),
-            techIcons: validTechnologies.map(pt => ({
-              name: pt.technologies.name,
-              icon: pt.technologies.icon_url,
-              className: pt.technologies.class_name
-            }))
-          }
-        });
-
-        console.log('Formatted Projects:', formattedProjects);
-
-        setProjects(formattedProjects);
-      } catch (error) {
-        console.error('Error fetching projects:', error);
-        toast.error('Error al cargar proyectos');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
   }, []);
 
   const copyToClipboard = () => {
@@ -339,228 +284,28 @@ function Hero({ languaje }) {
 
           {loading ? (
             <div className="flex justify-center items-center h-96 dark:text-moonlit">
-              <p className="text-xl">Cargando proyectos...</p>
+              <p className="text-xl">{languaje.projects.loading}</p>
             </div>
           ) : projects.length === 0 ? (
             <div className="flex justify-center items-center h-96 dark:text-moonlit">
-              <p className="text-xl">No hay proyectos destacados</p>
+              <p className="text-xl">{languaje.projects.empty}</p>
             </div>
           ) : (
             <div className="grid grid-cols-6 grid-rows-2 gap-5">
-              {projects[0] && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: isMobile ? 0.15 : 0.3, duration: 0.4 }}
-                  viewport={{ once: true }}
-                  className="w-full col-span-6 row-span-2 dark:bg-[#372D48] bg-[#EFE0F4] rounded-3xl flex flex-col items-center lg:items-start overflow-hidden p-5 shadow-md"
-                >
-                  <div className="w-full flex justify-end mb-3 lg:mb-0">
-                    {projects[0].urls?.[1] && (
-                      <a
-                        href={projects[0].urls[1].url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className=" gap-2 font-medium text-red-600 border border-red-600 hover:scale-110 px-4 py-1 mr-4 rounded-lg transition-transform duration-300 shadow-md"
-                      >
-                        {projects[0].urls[1].name}
-                      </a>
-                    )}
-
-                    {projects[0].urls?.[0] && (
-                      <a
-                        className="flex items-center font-medium bg-noon text-dark-grey px-3 py-1 rounded-lg  gap-2 hover:scale-110 transition-transform duration-300 shadow-md"
-                        href={projects[0].urls[0].url}
-                        target="_blank"
-                        rel="noreferrer"
-                        title={projects[0].urls[0].name}
-                      >
-                        <FaGithub />
-                        <span className="hidden lg:flex">GitHub</span>
-                      </a>
-                    )}
-                  </div>
-                  <div className="w-full h-full lg:flex ">
-                    <img
-                      className=" w-full lg:max-w-lg object-cover hover:cursor-pointer hover:scale-105 transition-transform duration-300  lg:mr-5"
-                      src={projects[0].image}
-                      alt={projects[0].name}
-                      title={projects[0].name}
-                    />
-
-                    <div className="pl-5 lg:pt-8 dark:text-moonlit flex flex-col">
-                      <div>
-                        <h3 className="text-5xl font-bold my-5">
-                          {projects[0].name}
-                        </h3>
-                        <p className="text-sm lg:text-base font-medium opacity-70 lg:ml-1 lg:pr-20 my-5">
-                          {projects[0].description}
-                        </p>
-                      </div>
-                      <ul className="mt-auto flex my-6">
-                        {projects[0].techIcons?.map((tech, index) => (
-                          <li
-                            key={index}
-                            className="cursor-pointer flex h-10 items-center self-end font-medium bg-[#6a4279]  text-white dark:bg-[#020617] px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
-                          >
-                            <div className="w-7 lg:mr-3 flex justify-center items-center">
-                              <img
-                                className={`w-full h-full ${tech.className || ''}`}
-                                src={tech.icon}
-                                alt={tech.name}
-                                title={tech.name}
-                              />
-                            </div>
-                            <span className="font-bold hidden lg:flex">{tech.name}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {projects[1] && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.4 }}
-                  viewport={{ once: true }}
-                  className=" col-span-6 md:col-span-3 dark:bg-[#372D48] bg-[#EFE0F4] rounded-3xl flex flex-col items-center overflow-hidden p-5 shadow-md"
-                >
-                  <div className="w-full flex justify-end mb-3">
-                    {projects[1].urls?.[1] && (
-                      <a
-                        href={projects[1].urls[1].url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className=" gap-2 font-medium text-red-600 border border-red-600 hover:scale-110 px-4 py-1 mr-4 rounded-lg transition-transform duration-300 shadow-md"
-                      >
-                        {projects[1].urls[1].name}
-                      </a>
-                    )}
-
-                    {projects[1].urls?.[0] && (
-                      <a
-                        className="flex items-center font-medium bg-noon text-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md"
-                        href={projects[1].urls[0].url}
-                        target="_blank"
-                        rel="noreferrer"
-                        title={projects[1].urls[0].name}
-                      >
-                        <FaGithub />
-                      </a>
-                    )}
-                  </div>
-                  <div className="w-full h-full ">
-                    <img
-                      className=" w-full object-cover hover:cursor-pointer hover:scale-105 transition-transform duration-300 lg:mr-5"
-                      src={projects[1].image}
-                      alt={projects[1].name}
-                      title={projects[1].name}
-                    />
-
-                    <div className="pl-5 lg:pt-8 dark:text-moonlit flex flex-col">
-                      <div>
-                        <h3 className="text-5xl font-bold my-5">
-                          {projects[1].name}
-                        </h3>
-                        <p className="text-sm lg:text-base font-normal opacity-70 my-5">
-                          {projects[1].description}
-                        </p>
-                      </div>
-                      <ul className="mt-auto flex my-6">
-                        {projects[1].techIcons?.map((tech, index) => (
-                          <li
-                            key={index}
-                            className="cursor-pointer flex h-10 items-center self-end font-medium bg-[#6a4279] dark:bg-[#020617] px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
-                          >
-                            <div className="w-7  flex justify-center items-center">
-                              <img
-                                className={`w-full h-full ${tech.className || ''}`}
-                                src={tech.icon}
-                                alt={tech.name}
-                                title={tech.name}
-                              />
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {projects[2] && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.6 }}
-                  viewport={{ once: true }}
-                  className=" col-span-6 md:col-span-3 dark:bg-[#372D48] bg-[#EFE0F4] rounded-3xl flex flex-col items-center overflow-hidden p-5 shadow-md"
-                >
-                  <div className="w-full flex justify-end mb-3">
-                    {projects[2].urls?.[1] && (
-                      <a
-                        href={projects[2].urls[1].url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className=" gap-2 font-medium text-red-600 border border-red-600 hover:scale-110 px-4 py-1 mr-4 rounded-lg transition-transform duration-300 shadow-md"
-                      >
-                        {projects[2].urls[1].name}
-                      </a>
-                    )}
-
-                    {projects[2].urls?.[0] && (
-                      <a
-                        className="flex items-center font-medium bg-noon text-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md"
-                        href={projects[2].urls[0].url}
-                        target="_blank"
-                        rel="noreferrer"
-                        title={projects[2].urls[0].name}
-                      >
-                        <FaGithub />
-                      </a>
-                    )}
-                  </div>
-                  <div className="w-full h-full ">
-                    <img
-                      className=" w-full object-cover hover:cursor-pointer hover:scale-105 transition-transform duration-300 lg:mr-5"
-                      src={projects[2].image}
-                      alt={projects[2].name}
-                      title={projects[2].name}
-                    />
-
-                    <div className="pl-5 lg:pt-8 dark:text-moonlit flex flex-col">
-                      <div>
-                        <h3 className="text-5xl font-bold my-5">
-                          {projects[2].name}
-                        </h3>
-                        <p className="text-sm lg:text-base font-normal opacity-70 my-5">
-                          {projects[2].description}
-                        </p>
-                      </div>
-                      <ul className="mt-auto flex my-6">
-                        {projects[2].techIcons?.map((tech, index) => (
-                          <li
-                            key={index}
-                            className="cursor-pointer flex h-10 items-center self-end font-medium bg-[#6a4279] dark:bg-[#020617] px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
-                          >
-                            <div className="w-7  flex justify-center items-center">
-                              <img
-                                className={`w-full h-full ${tech.className || ''}`}
-                                src={tech.icon}
-                                alt={tech.name}
-                                title={tech.name}
-                              />
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
+              {projects.map((project, index) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  languaje={languaje}
+                  variant={project.size === "large" ? "large" : "small"}
+                  className={
+                    project.size === "large"
+                      ? "w-full col-span-6 row-span-2 items-center lg:items-start"
+                      : "col-span-6 md:col-span-3 items-center"
+                  }
+                  delay={(isMobile ? 0.15 : 0.3) + index * 0.05}
+                />
+              ))}
             </div>
           )}
 

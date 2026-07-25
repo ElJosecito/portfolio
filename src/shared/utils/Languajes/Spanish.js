@@ -67,6 +67,8 @@ export const Spanish = {
     title: "Proyectos",
     description: "Algunos de mis proyectos principales.",
     projectsBtn: "Ver todos",
+    loading: "Cargando proyectos...",
+    empty: "No hay proyectos disponibles",
     projects: [
       {
         id: uuid(),
