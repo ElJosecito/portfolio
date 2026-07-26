@@ -66,11 +66,16 @@ function ProjectCard({ project, languaje, variant = "small", className = "", del
         {/* La imagen y el título llevan al detalle. Los links de GitHub y demo
             quedan afuera de este Link para no anidar anclas. */}
         <Link to={`/projects/${project.slug}`} className={isLarge ? "lg:max-w-lg" : ""}>
+          {/* Relación de aspecto fija: las capturas de los proyectos vienen con
+              proporciones distintas, así que sin esto cada card mide lo que mida
+              su imagen y la grilla se reacomoda a medida que van cargando. */}
           <img
-            className={`w-full object-cover hover:cursor-pointer hover:scale-105 transition-transform duration-300 lg:mr-5`}
+            className={`w-full aspect-[16/10] rounded-2xl object-cover hover:cursor-pointer hover:scale-105 transition-transform duration-300 lg:mr-5`}
             src={project.image}
             alt={name}
             title={name}
+            loading="lazy"
+            decoding="async"
           />
         </Link>
 

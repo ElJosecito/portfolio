@@ -26,16 +26,9 @@ function Header({ onDatos, languaje }) {
   // así no hay dos fuentes de verdad que se puedan desincronizar.
   const isSpanish = languaje?.languaje === "Español";
 
-  useEffect(() => {
-    if (!localStorage.getItem("languaje")) {
-      const navlang = navigator.language;
-      const lang = navlang?.startsWith("es") ? "es" : "en";
-      localStorage.setItem("languaje", lang);
-      onDatos(lang);
-    } else {
-      onDatos(localStorage.getItem("languaje") === "es" ? "es" : "en");
-    }
-  }, []);
+  // El idioma inicial ya lo resolvió el Router antes del primer render con
+  // `initLanguage`. Acá solo se cambia cuando el usuario toca ES/EN: hacerlo en
+  // un efecto de montaje obligaba a pintar todo en inglés y corregirlo después.
 
   // Cerrar el menú móvil al tocar afuera o con Escape. Antes los desplegables se
   // abrían con document.querySelector y classList.toggle, así que no había forma
@@ -60,10 +53,8 @@ function Header({ onDatos, languaje }) {
     };
   }, [menuOpen]);
 
-  const handleLanguaje = (lang) => {
-    localStorage.setItem("languaje", lang);
-    onDatos(lang);
-  };
+  // El Router es el que persiste la elección; acá solo se avisa.
+  const handleLanguaje = (lang) => onDatos(lang);
 
   const handleScroll = (sectionId) => {
     setMenuOpen(false);

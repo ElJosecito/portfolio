@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../shared/supabaseClient';
+import { FullPageLoader } from '../../shared/ui/Loader';
 
 function ProtectedRoute({ children }) {
   const [loading, setLoading] = useState(true);
@@ -37,11 +38,7 @@ function ProtectedRoute({ children }) {
   }, [navigate]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div>Cargando...</div>
-      </div>
-    );
+    return <FullPageLoader label="Verificando sesión" />;
   }
 
   return children;

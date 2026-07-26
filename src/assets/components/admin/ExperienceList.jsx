@@ -10,6 +10,7 @@ import {
     Button,
     ConfirmDialog,
     Panel,
+    SkeletonRows,
     Table,
     THead,
     TBody,
@@ -101,7 +102,7 @@ function ExperienceList({ onEdit }) {
                     </THead>
                     <TBody>
                         {loading ? (
-                            <TEmpty colSpan={5}>Cargando experiencia…</TEmpty>
+                            <SkeletonRows rows={3} columns={5} />
                         ) : experiences.length === 0 ? (
                             <TEmpty colSpan={5}>Todavía no hay experiencia cargada.</TEmpty>
                         ) : (

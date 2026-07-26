@@ -30,7 +30,12 @@ import {
     PanelDescription,
     PanelHeader,
     PanelTitle,
+    Skeleton,
 } from '../../../shared/ui';
+
+// Altos distintos a propósito: la galería es masonry, y un placeholder de
+// bloques todos iguales anuncia una grilla que después no aparece.
+const GALLERY_SKELETON_HEIGHTS = ['h-40', 'h-56', 'h-32', 'h-48', 'h-36', 'h-52'];
 
 // Sin estrategia de reacomodo: las estrategias que trae dnd-kit calculan el
 // desplazamiento de los demás elementos asumiendo una grilla de celdas iguales,
@@ -284,7 +289,15 @@ function GalleryManager({ projectId }) {
                     </label>
 
                     {loading ? (
-                        <p className="py-8 text-center text-sm text-plum-500">Cargando galería…</p>
+                        <div role="status" aria-live="polite" className="columns-2 gap-4 md:columns-3">
+                            {GALLERY_SKELETON_HEIGHTS.map((height, index) => (
+                                <Skeleton
+                                    key={index}
+                                    className={`mb-4 w-full break-inside-avoid rounded-xl ${height}`}
+                                />
+                            ))}
+                            <span className="sr-only">Cargando galería</span>
+                        </div>
                     ) : gallery.length === 0 ? (
                         <p className="py-8 text-center text-sm text-plum-500">
                             Todavía no hay imágenes en este proyecto.

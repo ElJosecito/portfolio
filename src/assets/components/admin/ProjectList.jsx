@@ -13,6 +13,7 @@ import {
   MenuLabel,
   MenuSeparator,
   Panel,
+  SkeletonRows,
   Table,
   THead,
   TBody,
@@ -108,7 +109,7 @@ function ProjectList({ onEdit }) {
                     </THead>
                     <TBody>
                         {loading ? (
-                            <TEmpty colSpan={5}>Cargando proyectos…</TEmpty>
+                            <SkeletonRows rows={4} columns={5} />
                         ) : projects.length === 0 ? (
                             <TEmpty colSpan={5}>Todavía no hay proyectos creados.</TEmpty>
                         ) : (
