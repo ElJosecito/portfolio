@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FaGithub } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 import { localizeProject } from "../../../shared/utils/i18n";
 
@@ -53,16 +54,24 @@ function ProjectCard({ project, languaje, variant = "small", className = "", del
       </div>
 
       <div className={`w-full h-full ${isLarge ? "lg:flex" : ""}`}>
-        <img
-          className={`w-full object-cover hover:cursor-pointer hover:scale-105 transition-transform duration-300 lg:mr-5 ${isLarge ? "lg:max-w-lg" : ""}`}
-          src={project.image}
-          alt={name}
-          title={name}
-        />
+        {/* La imagen y el título llevan al detalle. Los links de GitHub y demo
+            quedan afuera de este Link para no anidar anclas. */}
+        <Link to={`/projects/${project.slug}`} className={isLarge ? "lg:max-w-lg" : ""}>
+          <img
+            className={`w-full object-cover hover:cursor-pointer hover:scale-105 transition-transform duration-300 lg:mr-5`}
+            src={project.image}
+            alt={name}
+            title={name}
+          />
+        </Link>
 
         <div className="pl-5 lg:pt-8 dark:text-moonlit flex flex-col">
           <div>
-            <h3 className="font-display text-5xl font-bold my-5">{name}</h3>
+            <h3 className="font-display text-5xl font-bold my-5">
+              <Link to={`/projects/${project.slug}`} className="hover:opacity-70 transition-opacity">
+                {name}
+              </Link>
+            </h3>
             <p
               className={`text-sm lg:text-base opacity-70 my-5 ${isLarge ? "font-medium lg:ml-1 lg:pr-20" : "font-normal"}`}
             >

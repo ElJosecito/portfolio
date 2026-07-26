@@ -8,6 +8,10 @@ import ProjectsPage from "../assets/components/pages/ProjectsPage";
 const AdminLogin = lazy(() => import("../assets/components/AdminLogin"));
 const AdminDashboard = lazy(() => import("../assets/components/AdminDashboard"));
 
+// El detalle también, porque arrastra el renderer de markdown y la portada no
+// lo necesita.
+const ProjectDetail = lazy(() => import("../assets/components/pages/ProjectDetail"));
+
 import { Route, Routes } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Header from "../assets/components/layout/Header";
@@ -21,6 +25,14 @@ function AdminFallback() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-noon text-plum-500 dark:bg-plum-950 dark:text-plum-300">
       Cargando panel…
+    </div>
+  );
+}
+
+function PageFallback({ languaje }) {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-noon dark:bg-slate-950 dark:text-moonlit">
+      {languaje.projects.loading}
     </div>
   );
 }
@@ -53,6 +65,14 @@ function Router() {
           }
         ></Route>
         <Route path="/all-projects" element={<ProjectsPage languaje={languaje} />}></Route>
+        <Route
+          path="/projects/:slug"
+          element={
+            <Suspense fallback={<PageFallback languaje={languaje} />}>
+              <ProjectDetail languaje={languaje} />
+            </Suspense>
+          }
+        ></Route>
         <Route
           path="/admin/login"
           element={

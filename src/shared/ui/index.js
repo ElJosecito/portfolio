@@ -21,3 +21,4 @@ export {
   MenuSeparator,
 } from "./Menu";
 export { ImageDrop } from "./ImageDrop";
+export { Markdown } from "./Markdown";

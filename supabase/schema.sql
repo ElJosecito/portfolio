@@ -34,6 +34,18 @@ CREATE TABLE IF NOT EXISTS projects (
 ALTER TABLE projects ADD COLUMN IF NOT EXISTS title_en TEXT;
 ALTER TABLE projects ADD COLUMN IF NOT EXISTS description_en TEXT;
 
+-- Detalle: slug para la URL y texto largo en markdown
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS slug TEXT;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS content TEXT;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS content_en TEXT;
+
+UPDATE projects
+SET slug = TRIM(BOTH '-' FROM REGEXP_REPLACE(LOWER(title), '[^a-z0-9]+', '-', 'g'))
+WHERE slug IS NULL OR slug = '';
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_projects_slug ON projects(slug);
+ALTER TABLE projects ALTER COLUMN slug SET NOT NULL;
+
 ALTER TABLE projects DROP CONSTRAINT IF EXISTS projects_platforms_valid;
 ALTER TABLE projects ADD CONSTRAINT projects_platforms_valid CHECK (
   platforms <@ ARRAY['web', 'mobile']::text[]
@@ -83,6 +95,9 @@ COMMENT ON COLUMN projects.is_featured IS 'Si el proyecto aparece en la página 
 COMMENT ON COLUMN projects.featured_size IS 'Tamaño en featured: large (1 card grande) o small (2 cards pequeños)';
 COMMENT ON COLUMN projects.featured_order IS 'Orden de aparición en featured (1, 2, 3)';
 COMMENT ON COLUMN projects.urls IS 'Array JSON de URLs: [{"name": "GitHub", "url": "..."}, {"name": "Live Demo", "url": "..."}]';
+COMMENT ON COLUMN projects.slug IS 'Identificador para la URL /projects/:slug. Único.';
+COMMENT ON COLUMN projects.content IS 'Texto largo del proyecto en markdown (español)';
+COMMENT ON COLUMN projects.content_en IS 'Texto largo en inglés; si está vacío el front cae al español';
 COMMENT ON COLUMN projects.title_en IS 'Título en inglés; si está vacío el front cae al título en español';
 COMMENT ON COLUMN projects.description_en IS 'Descripción en inglés; si está vacía el front cae a la descripción en español';
 
@@ -180,10 +195,11 @@ INSERT INTO technologies (name, icon_url, class_name) VALUES
 ON CONFLICT (name) DO NOTHING;
 
 -- Insertar proyectos reales (solo si la tabla está vacía, para no duplicar)
-INSERT INTO projects (title, description, image_url, platforms, is_featured, featured_size, featured_order, urls)
+INSERT INTO projects (title, slug, description, image_url, platforms, is_featured, featured_size, featured_order, urls)
 SELECT * FROM (VALUES
 (
   'Gestipol',
+  'gestipol',
   'Gestipol es una aplicación que permite a los candidatos políticos gestionar el estado de sus votantes para tener una información más clara sobre el proceso durante la campaña.',
   'https://i.imgur.com/Y1WgyYI.png',
   ARRAY['web']::text[],
@@ -194,6 +210,7 @@ SELECT * FROM (VALUES
 ),
 (
   'Bank Landing Page',
+  'bank-landing-page',
   'Esta es una landing page de un banco ficticio, la cual fue creada con el fin de practicar y mejorar mis habilidades en el desarrollo web. La página es completamente responsive y fue inspirada en un diseño de frontend mentor.',
   'https://i.imgur.com/LbmEbD2.png',
   ARRAY['web']::text[],
@@ -204,6 +221,7 @@ SELECT * FROM (VALUES
 ),
 (
   'Dental Clinic Web',
+  'dental-clinic-web',
   'Dental Clinic Web es una landing page que permite al cliente tener mas informacion sobre la clinica dental que visitara y de sus doctores. La web fue desarrollada con el fin de brindar informacion de manera comoda y facil. Inspirada en un diseño personal.',
   'https://imgur.com/u6wEWGK.png',
   ARRAY['web']::text[],
@@ -214,6 +232,7 @@ SELECT * FROM (VALUES
 ),
 (
   'Multisemar Web',
+  'multisemar-web',
   'Multisemar Web es una landing page que permite al cliente tener mas informacion sobre la empresa y sus servicios. La web fue desarrollada con el fin de brindar informacion de manera comoda y facil. Inspirada en un diseño personal.',
   'https://imgur.com/jEVndxk.png',
   ARRAY['web']::text[],
@@ -224,6 +243,7 @@ SELECT * FROM (VALUES
 ),
 (
   'Flags App',
+  'flags-app',
   'Flags App es una aplicación web que permite a los usuarios buscar y ver información sobre los países del mundo. La aplicación fue creada con el fin de practicar y mejorar mis habilidades en el desarrollo web. Inspirada en un diseño de frontend mentor.',
   'https://i.imgur.com/clPtB70.png',
   ARRAY['web']::text[],
@@ -231,7 +251,7 @@ SELECT * FROM (VALUES
   NULL,
   NULL,
   '[{"name": "Github", "url": "https://github.com/ElJosecito/country-app"}, {"name": "En Vivo", "url": "https://guileless-daffodil-25c071.netlify.app/"}]'::jsonb
-)) AS seed(title, description, image_url, platforms, is_featured, featured_size, featured_order, urls)
+)) AS seed(title, slug, description, image_url, platforms, is_featured, featured_size, featured_order, urls)
 WHERE NOT EXISTS (SELECT 1 FROM projects);
 
 -- Vincular tecnologías a proyectos

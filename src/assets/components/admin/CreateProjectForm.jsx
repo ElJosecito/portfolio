@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../shared/supabaseClient';
 import { uploadImage } from '../../../shared/utils/uploadImage';
+import { slugify } from '../../../shared/utils/slugify';
 import toast from 'react-hot-toast';
 
 import {
@@ -9,6 +10,7 @@ import {
     Field,
     ImageDrop,
     Input,
+    Markdown,
     Panel,
     PanelBody,
     PanelDescription,
@@ -27,8 +29,11 @@ const PLATFORMS = [
 const EMPTY_FORM = {
     title: '',
     title_en: '',
+    slug: '',
     description: '',
     description_en: '',
+    content: '',
+    content_en: '',
     platforms: ['web'],
     is_featured: false,
     featured_size: '',
@@ -43,13 +48,18 @@ function CreateProjectForm({ initialData = null, onSuccess }) {
     const [technologies, setTechnologies] = useState([]);
     const [imageFile, setImageFile] = useState(null);
     const [errors, setErrors] = useState({});
+    const [slugTouched, setSlugTouched] = useState(Boolean(initialData));
+    const [previewLang, setPreviewLang] = useState('es');
 
     const [formData, setFormData] = useState({
         ...EMPTY_FORM,
         title: initialData?.title || '',
         title_en: initialData?.title_en || '',
+        slug: initialData?.slug || '',
         description: initialData?.description || '',
         description_en: initialData?.description_en || '',
+        content: initialData?.content || '',
+        content_en: initialData?.content_en || '',
         platforms: initialData?.platforms?.length ? initialData.platforms : ['web'],
         is_featured: initialData?.is_featured || false,
         featured_size: initialData?.featured_size || '',
@@ -111,7 +121,20 @@ function CreateProjectForm({ initialData = null, onSuccess }) {
 
     const handleInputChange = (event) => {
         const { name, value, type, checked } = event.target;
-        setFormData((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+
+        setFormData((prev) => {
+            const next = { ...prev, [name]: type === 'checkbox' ? checked : value };
+
+            // Al crear, el slug sigue al título hasta que se lo toque a mano.
+            // Al editar no se toca: cambiarlo rompería el enlace ya compartido.
+            if (name === 'title' && !initialData && !slugTouched) {
+                next.slug = slugify(value);
+            }
+
+            return next;
+        });
+
+        if (name === 'slug') setSlugTouched(true);
         setErrors((prev) => ({ ...prev, [name]: undefined }));
     };
 
@@ -139,6 +162,10 @@ function CreateProjectForm({ initialData = null, onSuccess }) {
         if (!formData.title.trim()) next.title = 'El título es requerido';
         if (!formData.description.trim()) next.description = 'La descripción es requerida';
         if (!imageFile && !initialData) next.image = 'La imagen es requerida';
+        if (!formData.slug.trim()) next.slug = 'El slug es requerido';
+        else if (formData.slug !== slugify(formData.slug)) {
+            next.slug = 'Solo minúsculas, números y guiones';
+        }
         // La base tiene un CHECK que exige al menos una plataforma; si no se
         // valida acá, el error llega como un fallo de constraint sin contexto.
         if (formData.platforms.length === 0) next.platforms = 'Elegí al menos una plataforma';
@@ -166,8 +193,11 @@ function CreateProjectForm({ initialData = null, onSuccess }) {
             const payload = {
                 title: formData.title,
                 title_en: formData.title_en,
+                slug: formData.slug,
                 description: formData.description,
                 description_en: formData.description_en,
+                content: formData.content || null,
+                content_en: formData.content_en || null,
                 image_url: imageUrl,
                 platforms: formData.platforms,
                 is_featured: formData.is_featured,
@@ -226,6 +256,14 @@ function CreateProjectForm({ initialData = null, onSuccess }) {
             }
         } catch (error) {
             console.error('Error saving project:', error);
+
+            // 23505 es violación de unicidad; el único índice único es el slug.
+            if (error.code === '23505') {
+                setErrors((prev) => ({ ...prev, slug: 'Ya hay un proyecto con ese slug' }));
+                toast.error('Ese slug ya está en uso');
+                return;
+            }
+
             toast.error(error.message || 'Error al guardar proyecto');
         } finally {
             setLoading(false);
@@ -284,6 +322,20 @@ function CreateProjectForm({ initialData = null, onSuccess }) {
                         </Field>
                     </div>
 
+                    <Field
+                        label="Slug"
+                        error={errors.slug}
+                        hint={`La URL del proyecto: /projects/${formData.slug || '…'}`}
+                        required
+                    >
+                        <Input
+                            name="slug"
+                            value={formData.slug}
+                            onChange={handleInputChange}
+                            placeholder="mi-proyecto"
+                        />
+                    </Field>
+
                     <Field label="Descripción (español)" error={errors.description} required>
                         <Textarea
                             name="description"
@@ -301,6 +353,54 @@ function CreateProjectForm({ initialData = null, onSuccess }) {
                             placeholder="Describe your project…"
                         />
                     </Field>
+
+                    <div className="space-y-2">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                            <p className="text-sm font-medium text-plum-800 dark:text-plum-100">
+                                Texto largo (markdown)
+                            </p>
+                            <div className="flex gap-1">
+                                {[
+                                    { key: 'es', label: 'Español' },
+                                    { key: 'en', label: 'Inglés' },
+                                ].map((option) => (
+                                    <Button
+                                        key={option.key}
+                                        size="sm"
+                                        variant={previewLang === option.key ? 'secondary' : 'ghost'}
+                                        onClick={() => setPreviewLang(option.key)}
+                                    >
+                                        {option.label}
+                                    </Button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="grid gap-4 lg:grid-cols-2">
+                            <Textarea
+                                name={previewLang === 'es' ? 'content' : 'content_en'}
+                                value={previewLang === 'es' ? formData.content : formData.content_en}
+                                onChange={handleInputChange}
+                                rows={16}
+                                className="font-mono text-xs"
+                                placeholder={'## El problema\n\nQué había antes y por qué no alcanzaba.\n\n- Un punto\n- Otro punto'}
+                            />
+                            <div className="max-h-[26rem] overflow-y-auto rounded-xl border border-plum-200 p-4 text-sm dark:border-plum-700">
+                                {(previewLang === 'es' ? formData.content : formData.content_en) ? (
+                                    <Markdown className="text-plum-800 dark:text-plum-100">
+                                        {previewLang === 'es' ? formData.content : formData.content_en}
+                                    </Markdown>
+                                ) : (
+                                    <p className="text-xs text-plum-400">
+                                        La vista previa aparece acá mientras escribís.
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+                        <p className="text-xs text-plum-500 dark:text-plum-300/70">
+                            Opcional. Si el inglés queda vacío, se muestra el español.
+                        </p>
+                    </div>
 
                     <fieldset>
                         <legend className="mb-2 text-sm font-medium text-plum-800 dark:text-plum-100">
