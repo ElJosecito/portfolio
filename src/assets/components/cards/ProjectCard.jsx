@@ -67,7 +67,7 @@ function ProjectCard({ project, languaje, variant = "small", className = "", del
 
         <div className="pl-5 lg:pt-8 dark:text-moonlit flex flex-col">
           <div>
-            <h3 className="font-display text-5xl font-bold my-5">
+            <h3 className="text-5xl font-bold my-5">
               <Link to={`/projects/${project.slug}`} className="hover:opacity-70 transition-opacity">
                 {name}
               </Link>

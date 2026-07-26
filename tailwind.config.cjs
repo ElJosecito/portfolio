@@ -7,8 +7,6 @@ module.exports = {
   theme: {
   	extend: {
   		fontFamily: {
-  			// Syne pone la actitud en los titulares; Inter se borra y deja leer.
-  			display: ['Syne', 'sans-serif'],
   			sans: ['Inter', 'sans-serif'],
   		},
   		colors: {

@@ -114,7 +114,7 @@ function AdminDashboard() {
           <div className="flex items-center gap-3">
             <Avatar initials="J" />
             <div>
-              <p className="font-display text-base font-bold text-plum-900 dark:text-plum-50">
+              <p className="text-base font-bold text-plum-900 dark:text-plum-50">
                 Panel
               </p>
               <p className="text-xs text-plum-500 dark:text-plum-300/70">josecito.dev</p>

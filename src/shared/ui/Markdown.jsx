@@ -20,13 +20,13 @@ export function Markdown({ children, className = "" }) {
       <ReactMarkdown
         components={{
           h1: ({ children }) => (
-            <h2 className="font-display mt-8 text-3xl font-bold">{children}</h2>
+            <h2 className="mt-8 text-3xl font-bold">{children}</h2>
           ),
           h2: ({ children }) => (
-            <h2 className="font-display mt-8 text-2xl font-bold">{children}</h2>
+            <h2 className="mt-8 text-2xl font-bold">{children}</h2>
           ),
           h3: ({ children }) => (
-            <h3 className="font-display mt-6 text-xl font-bold">{children}</h3>
+            <h3 className="mt-6 text-xl font-bold">{children}</h3>
           ),
           p: ({ children }) => <p className="opacity-80">{children}</p>,
           a: ({ href, children }) => (
