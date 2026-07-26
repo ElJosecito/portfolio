@@ -1,5 +1,3 @@
-import { v4 as uuid } from "uuid";
-
 export const English = {
   languaje: "English",
   header: {
@@ -44,34 +42,8 @@ export const English = {
   experience: {
     title: "Experience",
     description: "My work experience.",
-    experiences: [
-      {
-        id: uuid(),
-        date: "Currently...",
-        title: "Freelancer",
-        company: "Freelancer",
-        description:
-          "As a freelance developer, I have successfully delivered custom applications to various clients, ensuring their specific needs were met, from creating websites to implementing complete web applications. I have worked closely with clients to ensure their goals are met and their expectations exceeded. My focus on quality and customer satisfaction has resulted in a high rate of retention and recommendation.",
-        link: "https://www.linkedin.com/in/jose-martinez-dev/",
-      },
-      {
-        id: uuid(),
-        date: "March 2024 - September 2024",
-        title: "Junior Data Analyst",
-        company: "La Romana, DO",
-        description:
-          "In my role as a data entry specialist, I meticulously entered individual information into a centralized database to facilitate the marketing team's communication. Ensuring accuracy in sensitive data, while preventing duplicates, was paramount. Collaborating closely with the marketing team, I kept information up to date to support their strategies, meeting high quality standards and consistently meeting deadlines.",
-      },
-      {
-        id: uuid(),
-        date: "Currently...",
-        title: "Fullstack Developer",
-        company: "Freelancer",
-        description:
-          "As a full-stack developer, I have designed, developed, and maintained web applications from start to finish, ensuring that they meet client requirements and provide an engaging user experience. I have experience working with the MERN stack (MongoDB, Express.js, React.js, and Node.js) to create dynamic and responsive web applications that deliver value to clients and users.",
-        link: "https://www.linkedin.com/in/jose-martinez-dev/",
-      },
-    ],
+    loading: "Loading experience...",
+    empty: "No experience listed yet",
   },
   projects: {
     title: "Projects",
@@ -84,106 +56,5 @@ export const English = {
       web: "Web",
       mobile: "Mobile",
     },
-    projects: [
-      {
-        id: "uuid()",
-        name: "Gestipol",
-        image: "https://i.imgur.com/Y1WgyYI.png",
-        description:
-          "Gestipol is an application that allows political candidates to manage the status of their voters to have clearer information about the process during the campaign.",
-        tech: ["React", "Node.js", "Tailwind CSS", "MongoDB"],
-        urls: [
-          {
-            id: "uuid()",
-            name: "Github",
-            url: "https://github.com/ElJosecito/crm-frontend",
-          },
-          {
-            id: "uuid()",
-            name: "Live",
-            url: "https://gestipol.onrender.com/home",
-          },
-        ],
-      },
-      {
-        id: "uuid()",
-        name: "Bank Landing Page",
-        image: "https://i.imgur.com/LbmEbD2.png",
-        description:
-          "This is a landing page for a fictional bank, which was created in order to practice and improve my web development skills. The page is fully responsive and was inspired by a design from frontend mentor.",
-        tech: ["React", "Tailwind CSS", "SASS", "Vite"],
-        urls: [
-          {
-            id: "uuid()",
-            name: "Github",
-            url: "https://github.com/ElJosecito/bank-Landing",
-          },
-          {
-            id: "uuid()",
-            name: "Live",
-            url: "https://vermillion-kashata-e30b59.netlify.app/",
-          },
-        ],
-      },
-      {
-        id: uuid(),
-        name: "Dental Clinic Web",
-        image: "https://imgur.com/u6wEWGK.png",
-        description: "Dental Clinic Web is a landing page that allows the client to have more information about the dental clinic they will visit and its doctors. The website was developed to provide information in a convenient and easy way. Inspired by a personal design.",
-        tech: ["React", "Tailwind CSS", "Vite"],
-        urls: [
-          {
-            id: uuid(),
-            name: "Github",
-            url: "https://github.com/ElJosecito/vdc-web"
-          },
-          {
-            id: uuid(),
-            name: "Live",
-            url: "https://vdc-web.netlify.app/"
-          }
-        ]
-      },
-      
-      {
-        id: uuid(),
-        name: "Multisemar Web",
-        image: "https://imgur.com/jEVndxk.png",
-        description: "Multisemar Web is a landing page that allows the client to have more information about the company and its services. The website was developed to provide information in a convenient and easy way. Inspired by a personal design.",
-        tech: ["React", "Tailwind CSS", "Next.js"],
-        urls: [
-          {
-            id: uuid(),
-            name: "Github",
-            url: "https://github.com/ElJosecito/multisemar-web"
-          },
-          {
-            id: uuid(),
-            name: "Live",
-            url: "https://landingmultisemar.netlify.app/"
-          }
-        ]
-      },
-      {
-        id: "uuid()",
-        name: "Flags App",
-        image: "https://i.imgur.com/clPtB70.png",
-        description:
-          "Flags App is a web application that allows users to search for and view information about countries around the world. The application was created in order to practice and improve my web development skills. Inspired by a design from frontend mentor.",
-        tech: ["React", "Tailwind CSS", "SASS", "Vite"],
-        urls: [
-          {
-            id: "uuid()",
-            name: "Github",
-            url: "https://github.com/ElJosecito/country-app",
-          },
-          {
-            id: "uuid()",
-            name: "Live",
-            url: "https://guileless-daffodil-25c071.netlify.app/",
-          },
-        ],
-      },
-    ],
   },
 };

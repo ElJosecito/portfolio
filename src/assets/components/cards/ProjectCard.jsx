@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { FaGithub } from "react-icons/fa";
 
-import { localizeProject } from "../../../shared/utils/projectI18n";
+import { localizeProject } from "../../../shared/utils/i18n";
 
 /**
  * Card de proyecto compartida entre el Hero (destacados) y la página de proyectos.

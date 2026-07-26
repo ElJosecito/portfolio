@@ -37,6 +37,7 @@ import { Link } from "react-router-dom";
 
 //supabase
 import { useProjects } from "../../shared/hooks/useProjects";
+import { useExperiences } from "../../shared/hooks/useExperiences";
 
 //import cards
 import ProjectCard from "./cards/ProjectCard";
@@ -53,6 +54,7 @@ function Hero({ languaje }) {
   const [isMobile, setIsMobile] = useState(false);
   const mobile = useMediaQuery("only screen and (max-width : 768px)");
   const { projects, loading } = useProjects({ featuredOnly: true });
+  const { experiences, loading: experiencesLoading } = useExperiences();
 
   useEffect(() => {
     document.title = "Jose Martinez || Desarrollador Web";
@@ -256,16 +258,23 @@ function Hero({ languaje }) {
           </div>
 
           <div className="w-full max-w-screen-xl lg:px-20 pb-20 pt-10">
-            {languaje.experience.experiences.map((item, index) => (
-              <ExperienceCard
-                key={index}
-                title={item.title}
-                company={item.company}
-                description={item.description}
-                link={item.link}
-                date={item.date}
-              />
-            ))}
+            {experiencesLoading ? (
+              <p className="text-center text-lg opacity-70 dark:text-moonlit">
+                {languaje.experience.loading}
+              </p>
+            ) : experiences.length === 0 ? (
+              <p className="text-center text-lg opacity-70 dark:text-moonlit">
+                {languaje.experience.empty}
+              </p>
+            ) : (
+              experiences.map((experience) => (
+                <ExperienceCard
+                  key={experience.id}
+                  experience={experience}
+                  languaje={languaje}
+                />
+              ))
+            )}
           </div>
 
 

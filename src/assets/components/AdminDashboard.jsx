@@ -16,17 +16,30 @@ import {
 
 import CreateProjectForm from './admin/CreateProjectForm';
 import ProjectList from './admin/ProjectList';
+import ExperienceForm from './admin/ExperienceForm';
+import ExperienceList from './admin/ExperienceList';
 
 const VIEWS = {
   projects: 'Gestionar proyectos',
   'create-project': 'Crear proyecto',
   'edit-project': 'Editar proyecto',
+  experience: 'Gestionar experiencia',
+  'create-experience': 'Nueva experiencia',
+  'edit-experience': 'Editar experiencia',
 };
 
 function FolderIcon() {
   return (
     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+    </svg>
+  );
+}
+
+function BriefcaseIcon() {
+  return (
+    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v1m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
     </svg>
   );
 }
@@ -45,6 +58,8 @@ function AdminDashboard() {
   const navigate = useNavigate();
   const [activeView, setActiveView] = useState('projects');
   const [projectToEdit, setProjectToEdit] = useState(null);
+  const [experienceToEdit, setExperienceToEdit] = useState(null);
+  const [experienceCount, setExperienceCount] = useState(0);
   const [email, setEmail] = useState('');
 
   useEffect(() => {
@@ -72,7 +87,23 @@ function AdminDashboard() {
     setProjectToEdit(null);
   };
 
+  const handleExperienceSuccess = () => {
+    setActiveView('experience');
+    setExperienceToEdit(null);
+  };
+
+  // Las nuevas van al final de la lista; desde ahí se suben con las flechas.
+  const openNewExperience = async () => {
+    const { count } = await supabase
+      .from('experiences')
+      .select('id', { count: 'exact', head: true });
+    setExperienceCount(count || 0);
+    setExperienceToEdit(null);
+    setActiveView('create-experience');
+  };
+
   const isProjectsSection = activeView.includes('project');
+  const isExperienceSection = activeView.includes('experience');
   const initials = email ? email.slice(0, 2).toUpperCase() : 'AD';
 
   return (
@@ -99,6 +130,15 @@ function AdminDashboard() {
           >
             <FolderIcon />
             Proyectos
+          </Button>
+          <Button
+            variant={isExperienceSection ? 'secondary' : 'ghost'}
+            block
+            className="justify-start"
+            onClick={() => setActiveView('experience')}
+          >
+            <BriefcaseIcon />
+            Experiencia
           </Button>
         </nav>
 
@@ -160,6 +200,36 @@ function AdminDashboard() {
 
           {activeView === 'edit-project' && (
             <CreateProjectForm initialData={projectToEdit} onSuccess={handleProjectSuccess} />
+          )}
+
+          {activeView === 'experience' && (
+            <div className="space-y-4">
+              <div className="flex justify-end">
+                <Button onClick={openNewExperience}>Nueva experiencia</Button>
+              </div>
+              <ExperienceList
+                onEdit={(experience) => {
+                  setExperienceToEdit(experience);
+                  setActiveView('edit-experience');
+                }}
+              />
+            </div>
+          )}
+
+          {activeView === 'create-experience' && (
+            <ExperienceForm
+              nextSortOrder={experienceCount}
+              onSuccess={handleExperienceSuccess}
+              onCancel={handleExperienceSuccess}
+            />
+          )}
+
+          {activeView === 'edit-experience' && (
+            <ExperienceForm
+              initialData={experienceToEdit}
+              onSuccess={handleExperienceSuccess}
+              onCancel={handleExperienceSuccess}
+            />
           )}
         </main>
       </div>
