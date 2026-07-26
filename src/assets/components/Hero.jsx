@@ -42,6 +42,15 @@ import { useExperiences } from "../../shared/hooks/useExperiences";
 //import cards
 import ProjectCard from "./cards/ProjectCard";
 
+//skeletons de carga
+import ExperienceSkeleton from "./skeletons/ExperienceSkeleton";
+import ProjectsGridSkeleton from "./skeletons/ProjectsGridSkeleton";
+
+//seo
+import { useSeo } from "../../shared/hooks/useSeo";
+import { isEnglish } from "../../shared/utils/i18n";
+import { SITE_URL, SOCIAL_LINKS, absoluteUrl } from "../../shared/utils/seo";
+
 //efecto vidrio
 import { refractive } from "@hashintel/refractive";
 
@@ -64,9 +73,57 @@ function Hero({ languaje }) {
   const { experiences, loading: experiencesLoading } = useExperiences();
 
   useEffect(() => {
-    document.title = "Jose Martinez || Desarrollador Web";
     setIsMobile(mobile);
   }, []);
+
+  const english = isEnglish(languaje);
+
+  // `Person` es el structured data que más rinde en un portfolio: es lo que
+  // Google usa para asociar el nombre con el sitio y con los perfiles de
+  // GitHub y LinkedIn. `sameAs` es justamente esa asociación.
+  useSeo({
+    title: languaje.seo.home.title,
+    description: languaje.seo.home.description,
+    path: "/",
+    locale: english ? "en_US" : "es_DO",
+    lang: english ? "en" : "es",
+    jsonLd: [
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: "Jose Miguel Martinez Florimon",
+        alternateName: "Jose Martinez",
+        jobTitle: languaje.seo.jobTitle,
+        description: languaje.about.description,
+        url: SITE_URL,
+        image: absoluteUrl("/jose-martinez.png"),
+        email: `mailto:${email}`,
+        sameAs: SOCIAL_LINKS,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "La Romana",
+          addressCountry: "DO",
+        },
+        knowsAbout: [
+          "React",
+          "React Native",
+          "Node.js",
+          "Express.js",
+          "MongoDB",
+          "JavaScript",
+          "Desarrollo web",
+          "Desarrollo móvil",
+        ],
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "Jose Martinez",
+        url: SITE_URL,
+        inLanguage: english ? "en" : "es",
+      },
+    ],
+  });
 
   const copyToClipboard = () => {
     const el = document.createElement("textarea");
@@ -102,7 +159,7 @@ function Hero({ languaje }) {
         {/* La barra fija ocupa ~80px desde el borde: 24 de su pt-6 más 56 de
             alto. Este padding es el que le deja aire debajo. */}
         <section
-          className="w-full max-w-screen-xl max-h-fit pt-32 px-5 sm:pt-36"
+          className="w-full max-w-screen-xl max-h-fit pt-26 px-5 sm:pt-32"
           id="home"
         >
           <div className="w-full grid auto-rows-[192px] grid-cols-6 gap-4">
@@ -117,13 +174,16 @@ function Hero({ languaje }) {
               <img
                 className="absolute w-full h-full object-cover left-0 top-0"
                 src={josecito}
-                alt="personal"
-                title="Personal"
+                alt={`${languaje.hero.name}, ${languaje.seo.jobTitle}`}
+                title={languaje.hero.name}
               />
               <div className="w-full flex flex-col z-[2] absolute left-0 bottom-0 leading-4 p-5 font-inter">
-                <span className="text-3xl font-bold leading-7">
+                {/* El h1 de la portada. Era un span, así que la página de
+                    entrada del sitio no tenía encabezado principal: para un
+                    buscador, nada declaraba de quién es este portfolio. */}
+                <h1 className="text-3xl font-bold leading-7">
                   {languaje.hero.name}
-                </span>
+                </h1>
                 <span className="text-lg font-medium leading-9 h-10 my-[2px]">
                   {text}
                 </span>
@@ -168,7 +228,7 @@ function Hero({ languaje }) {
               className="row-span-1 col-span-6 rounded-3xl dark:bg-[#372D48]/45 bg-[#EFE0F4]/55 shadow-lg relative flex flex-col overflow-hidden border-2 border-transparent gap-2 p-7  dark:text-white xl:col-span-2 lg:p-10"
             >
               <h2 className="text-2xl font-bold z-[1]">
-                {languaje.about.title}
+                {languaje.about.summaryTitle}
               </h2>
               <p className="text-base w-full z-[1] opacity-70">
                 {languaje.about.description}
@@ -205,8 +265,8 @@ function Hero({ languaje }) {
                     ? mapsDark
                     : mapsLight
                 }
-                alt="Location"
-                title="Location"
+                alt={languaje.country.description}
+                title={languaje.country.description}
               />
               <img
                 className="w-28 z-10"
@@ -270,9 +330,7 @@ function Hero({ languaje }) {
 
           <div className="w-full max-w-screen-xl lg:px-20 pb-20 pt-10">
             {experiencesLoading ? (
-              <p className="text-center text-lg opacity-70 dark:text-moonlit">
-                {languaje.experience.loading}
-              </p>
+              <ExperienceSkeleton label={languaje.experience.loading} />
             ) : experiences.length === 0 ? (
               <p className="text-center text-lg opacity-70 dark:text-moonlit">
                 {languaje.experience.empty}
@@ -302,30 +360,37 @@ function Hero({ languaje }) {
             </p>
           </div>
 
-          {loading ? (
-            <div className="flex justify-center items-center h-96 dark:text-moonlit">
-              <p className="text-xl">{languaje.projects.loading}</p>
-            </div>
-          ) : projects.length === 0 ? (
+          {/* La grilla se dibuja siempre, cargando o no: los skeletons entran
+              como items de la misma grilla y las cards reales los reemplazan en
+              su lugar, sin que el contenedor cambie de alto. */}
+          {!loading && projects.length === 0 ? (
             <div className="flex justify-center items-center h-96 dark:text-moonlit">
               <p className="text-xl">{languaje.projects.empty}</p>
             </div>
           ) : (
             <div className="grid grid-cols-6 grid-rows-2 gap-5">
-              {projects.map((project, index) => (
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                  languaje={languaje}
-                  variant={project.size === "large" ? "large" : "small"}
-                  className={
-                    project.size === "large"
-                      ? "w-full col-span-6 row-span-2 items-center lg:items-start"
-                      : "col-span-6 md:col-span-3 items-center"
-                  }
-                  delay={(isMobile ? 0.15 : 0.3) + index * 0.05}
+              {loading ? (
+                <ProjectsGridSkeleton
+                  count={3}
+                  featured
+                  label={languaje.projects.loading}
                 />
-              ))}
+              ) : (
+                projects.map((project, index) => (
+                  <ProjectCard
+                    key={project.id}
+                    project={project}
+                    languaje={languaje}
+                    variant={project.size === "large" ? "large" : "small"}
+                    className={
+                      project.size === "large"
+                        ? "w-full col-span-6 row-span-2 items-center lg:items-start"
+                        : "col-span-6 md:col-span-3 items-center"
+                    }
+                    delay={(isMobile ? 0.15 : 0.3) + index * 0.05}
+                  />
+                ))
+              )}
             </div>
           )}
 
@@ -443,8 +508,8 @@ function Hero({ languaje }) {
                       ? mapsDark
                       : mapsLight
                   }
-                  alt="Location"
-                  title="Location"
+                  alt={languaje.country.description}
+                  title={languaje.country.description}
                 />
                 <img
                   className="w-28 z-10"

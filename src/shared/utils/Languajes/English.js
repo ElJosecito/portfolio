@@ -19,6 +19,9 @@ export const English = {
   },
   about: {
     title: "About me",
+    // La tarjeta del bento y la sección de abajo decían las dos "About me", así
+    // que la página tenía dos encabezados de mismo nivel con el mismo texto.
+    summaryTitle: "At a glance",
     subtitle: "About me and contact ways.",
     description:
       "Web and mobile developer with experience designing, building and maintaining applications end to end.",
@@ -55,6 +58,24 @@ export const English = {
       all: "All",
       web: "Web",
       mobile: "Mobile",
+    },
+  },
+
+  // Textos que solo ven los buscadores y las tarjetas al compartir. Van
+  // separados de la copy de pantalla a propósito: un título de pestaña y un
+  // encabezado de sección se optimizan para cosas distintas, y mezclarlos
+  // termina con uno de los dos mal.
+  seo: {
+    jobTitle: "Full-Stack Web & Mobile Developer",
+    home: {
+      title: "Jose Martinez — Full-Stack Web & Mobile Developer",
+      description:
+        "Portfolio of Jose Martinez, full-stack web and mobile developer based in La Romana, Dominican Republic. Projects built with React, React Native, Node.js and MongoDB.",
+    },
+    projects: {
+      title: "Projects — Jose Martinez",
+      description:
+        "Web and mobile projects by Jose Martinez: full-stack applications built with React, React Native, Node.js and MongoDB.",
     },
   },
 };

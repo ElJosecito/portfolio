@@ -5,6 +5,12 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 import { useProjects } from '../../../shared/hooks/useProjects';
 //import cards
 import ProjectCard from '../cards/ProjectCard';
+//skeleton de carga
+import ProjectsGridSkeleton from '../skeletons/ProjectsGridSkeleton';
+//seo
+import { useSeo } from '../../../shared/hooks/useSeo';
+import { isEnglish, localizeProject } from '../../../shared/utils/i18n';
+import { absoluteUrl } from '../../../shared/utils/seo';
 
 
 const FILTERS = ['all', 'web', 'mobile'];
@@ -16,10 +22,42 @@ function ProjectsPage({ languaje }) {
     const [filter, setFilter] = useState('all');
 
     useEffect(() => {
-        document.title = "Projectos || ElJosecito";
+        // El scroll al tope lo maneja ScrollToTop en el Router, para todas las rutas.
         setIsMobile(mobile);
-        window.scrollTo(0, 0);
     }, []);
+
+    const english = isEnglish(languaje);
+
+    // `ItemList` deja que Google entienda que esto es un listado y de qué, en vez
+    // de una página suelta con imágenes. Se arma sobre `projects` y no sobre
+    // `visible` a propósito: el filtro es de pantalla, no cambia lo que la URL
+    // ofrece, y si lo siguiera el structured data diría algo distinto según qué
+    // pestaña tenga abierta el visitante.
+    useSeo({
+        title: languaje.seo.projects.title,
+        description: languaje.seo.projects.description,
+        path: '/all-projects',
+        locale: english ? 'en_US' : 'es_DO',
+        lang: english ? 'en' : 'es',
+        jsonLd: projects.length
+            ? {
+                  '@context': 'https://schema.org',
+                  '@type': 'CollectionPage',
+                  name: languaje.seo.projects.title,
+                  url: absoluteUrl('/all-projects'),
+                  mainEntity: {
+                      '@type': 'ItemList',
+                      numberOfItems: projects.length,
+                      itemListElement: projects.map((project, index) => ({
+                          '@type': 'ListItem',
+                          position: index + 1,
+                          name: localizeProject(project, languaje).name,
+                          url: absoluteUrl(`/projects/${project.slug}`),
+                      })),
+                  },
+              }
+            : null,
+    });
 
     // Se filtra acá y no en la query: son pocos proyectos y ya están todos
     // traídos, así que cambiar de pestaña es instantáneo y sin ir al servidor.
@@ -34,9 +72,11 @@ function ProjectsPage({ languaje }) {
             <div className="absolute inset-0 bg-fuchsia-300 bg-[size:20px_20px] opacity-20 blur-[100px]"></div>
             <div className="w-full max-w-screen-xl z-10">
                 <div className="mb-10 text-center w-full pl-3 dark:text-moonlit">
-                    <h2 className="text-5xl font-bold my-3">
+                    {/* h1 y no h2: es el encabezado principal de esta página.
+                        Arrancar en h2 deja la jerarquía sin raíz. */}
+                    <h1 className="text-5xl font-bold my-3">
                         {languaje.projects.title}
-                    </h2>
+                    </h1>
                     <p className="text-lg opacity-70">
                         {languaje.projects.description}
                     </p>
@@ -66,9 +106,7 @@ function ProjectsPage({ languaje }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {loading ? (
-                        <div className="col-span-full flex justify-center items-center h-96 dark:text-moonlit">
-                            <p className="text-xl">{languaje.projects.loading}</p>
-                        </div>
+                        <ProjectsGridSkeleton count={4} label={languaje.projects.loading} />
                     ) : visible.length === 0 ? (
                         <div className="col-span-full flex justify-center items-center h-96 dark:text-moonlit">
                             <p className="text-xl">{languaje.projects.empty}</p>

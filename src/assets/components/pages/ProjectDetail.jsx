@@ -5,7 +5,10 @@ import { FaGithub } from 'react-icons/fa'
 import { useProject } from '../../../shared/hooks/useProjects'
 import { useProjectImages } from '../../../shared/hooks/useProjectImages'
 import ProjectGallery from '../ProjectGallery'
+import ProjectDetailSkeleton from '../skeletons/ProjectDetailSkeleton'
 import { isEnglish, localizeProject } from '../../../shared/utils/i18n'
+import { useSeo } from '../../../shared/hooks/useSeo'
+import { SITE_URL, absoluteUrl } from '../../../shared/utils/seo'
 // Directo y no desde el barrel: importar el índice del kit haría que la página
 // pública se lleve también los componentes que solo usa el panel.
 import Markdown from '../../../shared/ui/Markdown'
@@ -21,15 +24,70 @@ function ProjectDetail({ languaje }) {
         ? (english && project.content_en) || project.content
         : null
 
-    useEffect(() => {
-        window.scrollTo(0, 0)
-    }, [slug])
+    // El scroll al tope lo maneja ScrollToTop en el Router: el slug es parte de
+    // la ruta, así que pasar de un proyecto a otro también lo dispara.
+
+    // Mientras carga no se toca nada: el título y la tarjeta quedan con lo que
+    // haya, en vez de parpadear a "Proyecto" y volver. Si el slug no existe,
+    // `noindex` para que un link roto no termine indexado.
+    useSeo({
+        title: localized ? `${localized.name} — Jose Martinez` : '',
+        description: localized?.description,
+        path: `/projects/${slug}`,
+        image: project?.image,
+        type: 'article',
+        locale: english ? 'en_US' : 'es_DO',
+        lang: english ? 'en' : 'es',
+        jsonLd: localized
+            ? [
+                  {
+                      '@context': 'https://schema.org',
+                      '@type': 'CreativeWork',
+                      name: localized.name,
+                      description: localized.description,
+                      url: absoluteUrl(`/projects/${slug}`),
+                      image: project.image,
+                      inLanguage: english ? 'en' : 'es',
+                      keywords: project.techIcons.map((tech) => tech.name).join(', '),
+                      author: {
+                          '@type': 'Person',
+                          name: 'Jose Martinez',
+                          url: SITE_URL,
+                      },
+                  },
+                  {
+                      '@context': 'https://schema.org',
+                      '@type': 'BreadcrumbList',
+                      itemListElement: [
+                          {
+                              '@type': 'ListItem',
+                              position: 1,
+                              name: languaje.projects.title,
+                              item: absoluteUrl('/all-projects'),
+                          },
+                          {
+                              '@type': 'ListItem',
+                              position: 2,
+                              name: localized.name,
+                              item: absoluteUrl(`/projects/${slug}`),
+                          },
+                      ],
+                  },
+              ]
+            : null,
+    })
 
     useEffect(() => {
-        document.title = localized
-            ? `${localized.name} || ElJosecito`
-            : 'Proyecto || ElJosecito'
-    }, [localized])
+        if (!notFound) return
+
+        const tag = document.createElement('meta')
+        tag.setAttribute('name', 'robots')
+        tag.setAttribute('content', 'noindex')
+        tag.setAttribute('data-seo', 'noindex')
+        document.head.appendChild(tag)
+
+        return () => tag.remove()
+    }, [notFound])
 
     const github = project?.urls.find((url) => /git/i.test(url.name)) || project?.urls[0]
     const live = project?.urls.find((url) => url !== github)
@@ -48,9 +106,7 @@ function ProjectDetail({ languaje }) {
                 </Link>
 
                 {loading ? (
-                    <p className="flex h-96 items-center justify-center text-xl">
-                        {languaje.projects.loading}
-                    </p>
+                    <ProjectDetailSkeleton label={languaje.projects.loading} />
                 ) : notFound || !project ? (
                     <div className="flex h-96 flex-col items-center justify-center gap-4">
                         <p className="text-xl">
@@ -105,10 +161,14 @@ function ProjectDetail({ languaje }) {
                             </div>
                         </header>
 
+                        {/* La relación de aspecto es fija a propósito: sin ella
+                            el navegador no sabe cuánto alto reservar y todo lo
+                            que va debajo salta cuando la portada termina de
+                            decodificar. */}
                         <img
                             src={project.image}
                             alt={localized.name}
-                            className="mb-8 w-full rounded-3xl object-cover shadow-md"
+                            className="mb-8 aspect-[16/9] w-full rounded-3xl object-cover shadow-md"
                         />
 
                         {project.techIcons.length > 0 && (
