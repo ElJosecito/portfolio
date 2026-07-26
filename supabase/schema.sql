@@ -40,6 +40,28 @@ ALTER TABLE projects ADD CONSTRAINT projects_platforms_valid CHECK (
   AND COALESCE(array_length(platforms, 1), 0) >= 1
 );
 
+-- Experiencia laboral. Las fechas son DATE y no texto: el front las formatea en
+-- cada idioma, en vez de mantener un date_label y un date_label_en a mano.
+-- end_date NULL significa "sigue en curso" — una sola fuente de verdad, en vez
+-- de un is_current que puede contradecir a la fecha.
+CREATE TABLE IF NOT EXISTS experiences (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  title_en TEXT,
+  company VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  description_en TEXT,
+  link TEXT,
+  start_date DATE,
+  end_date DATE,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
+  CONSTRAINT experiences_dates_ordered CHECK (
+    end_date IS NULL OR start_date IS NULL OR end_date >= start_date
+  )
+);
+
 -- Tabla intermedia para la relación many-to-many entre proyectos y tecnologías
 CREATE TABLE IF NOT EXISTS project_technologies (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -64,6 +86,10 @@ COMMENT ON COLUMN projects.urls IS 'Array JSON de URLs: [{"name": "GitHub", "url
 COMMENT ON COLUMN projects.title_en IS 'Título en inglés; si está vacío el front cae al título en español';
 COMMENT ON COLUMN projects.description_en IS 'Descripción en inglés; si está vacía el front cae a la descripción en español';
 
+COMMENT ON TABLE experiences IS 'Experiencia laboral mostrada en la portada';
+COMMENT ON COLUMN experiences.end_date IS 'NULL significa que el puesto sigue en curso';
+COMMENT ON COLUMN experiences.sort_order IS 'Orden manual de aparición; menor va primero';
+
 COMMENT ON TABLE project_technologies IS 'Tabla intermedia para relacionar proyectos con tecnologías (many-to-many)';
 COMMENT ON COLUMN project_technologies.project_id IS 'ID del proyecto';
 COMMENT ON COLUMN project_technologies.technology_id IS 'ID de la tecnología';
@@ -73,6 +99,7 @@ CREATE INDEX IF NOT EXISTS idx_technologies_name ON technologies(name);
 CREATE INDEX IF NOT EXISTS idx_projects_platforms ON projects USING GIN (platforms);
 CREATE INDEX IF NOT EXISTS idx_projects_featured ON projects(is_featured) WHERE is_featured = TRUE;
 CREATE INDEX IF NOT EXISTS idx_projects_featured_order ON projects(featured_order) WHERE is_featured = TRUE;
+CREATE INDEX IF NOT EXISTS idx_experiences_sort_order ON experiences(sort_order);
 CREATE INDEX IF NOT EXISTS idx_project_technologies_project ON project_technologies(project_id);
 CREATE INDEX IF NOT EXISTS idx_project_technologies_technology ON project_technologies(technology_id);
 
@@ -97,6 +124,39 @@ CREATE TRIGGER update_projects_updated_at
 BEFORE UPDATE ON projects
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_experiences_updated_at ON experiences;
+CREATE TRIGGER update_experiences_updated_at
+BEFORE UPDATE ON experiences
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
+-- Reordenar experiencias toca dos filas. Con dos UPDATE sueltos desde el
+-- cliente, si el segundo falla quedan dos compartiendo sort_order.
+CREATE OR REPLACE FUNCTION swap_experience_order(a_id UUID, b_id UUID)
+RETURNS VOID
+LANGUAGE plpgsql
+SECURITY INVOKER
+SET search_path = ''
+AS $$
+DECLARE
+  a_order INTEGER;
+  b_order INTEGER;
+BEGIN
+  SELECT sort_order INTO a_order FROM public.experiences WHERE id = a_id;
+  SELECT sort_order INTO b_order FROM public.experiences WHERE id = b_id;
+
+  IF a_order IS NULL OR b_order IS NULL THEN
+    RAISE EXCEPTION 'Experiencia no encontrada';
+  END IF;
+
+  UPDATE public.experiences SET sort_order = b_order WHERE id = a_id;
+  UPDATE public.experiences SET sort_order = a_order WHERE id = b_id;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION swap_experience_order(UUID, UUID) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION swap_experience_order(UUID, UUID) TO authenticated;
 
 -- =============================================================================
 -- SEED
@@ -220,6 +280,7 @@ ON CONFLICT (project_id, technology_id) DO NOTHING;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE technologies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE project_technologies ENABLE ROW LEVEL SECURITY;
+ALTER TABLE experiences ENABLE ROW LEVEL SECURITY;
 
 -- projects
 DROP POLICY IF EXISTS "Proyectos públicos para lectura" ON projects;
@@ -271,6 +332,20 @@ USING (true);
 DROP POLICY IF EXISTS "Solo autenticados pueden escribir relaciones" ON project_technologies;
 CREATE POLICY "Solo autenticados pueden escribir relaciones"
 ON project_technologies FOR ALL
+TO authenticated
+USING (true)
+WITH CHECK (true);
+
+-- experiences
+DROP POLICY IF EXISTS "Experiencias publicas para lectura" ON experiences;
+CREATE POLICY "Experiencias publicas para lectura"
+ON experiences FOR SELECT
+TO public
+USING (true);
+
+DROP POLICY IF EXISTS "Solo autenticados pueden escribir experiencias" ON experiences;
+CREATE POLICY "Solo autenticados pueden escribir experiencias"
+ON experiences FOR ALL
 TO authenticated
 USING (true)
 WITH CHECK (true);
