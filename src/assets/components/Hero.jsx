@@ -38,6 +38,11 @@ import { Link } from "react-router-dom";
 //supabase
 import { useProjects } from "../../shared/hooks/useProjects";
 import { useExperiences } from "../../shared/hooks/useExperiences";
+import { useSiteSettings } from "../../shared/hooks/useSiteSettings";
+
+// Directo y no desde el barrel del kit: el índice arrastra los componentes que
+// solo usa el panel.
+import { Skeleton } from "../../shared/ui/Skeleton";
 
 //import cards
 import ProjectCard from "./cards/ProjectCard";
@@ -71,6 +76,11 @@ function Hero({ languaje }) {
   const mobile = useMediaQuery("only screen and (max-width : 768px)");
   const { projects, loading } = useProjects({ featuredOnly: true });
   const { experiences, loading: experiencesLoading } = useExperiences();
+  const { settings, loading: settingsLoading } = useSiteSettings();
+
+  // La imagen del bundle es el respaldo: si nadie cargó una foto desde el panel,
+  // o si la consulta falla, la portada igual tiene su foto.
+  const heroPhoto = settings?.hero_image_url || josecito;
 
   useEffect(() => {
     setIsMobile(mobile);
@@ -96,7 +106,9 @@ function Hero({ languaje }) {
         jobTitle: languaje.seo.jobTitle,
         description: languaje.about.description,
         url: SITE_URL,
-        image: absoluteUrl("/jose-martinez.png"),
+        // Sigue a la foto del panel: si no, el día que la cambies el structured
+        // data se queda declarando una cara que ya no está en la página.
+        image: absoluteUrl(settings?.hero_image_url || "/jose-martinez.png"),
         email: `mailto:${email}`,
         sameAs: SOCIAL_LINKS,
         address: {
@@ -171,12 +183,19 @@ function Hero({ languaje }) {
               className="row-span-2 col-span-6 rounded-3xl relative flex flex-col overflow-hidden gap-10 justify-end p-6 text-white xl:col-span-4 lg:items-end sm:flex-row lg:p-10 dark:bg-[#372D48] bg-[#EFE0F4]"
             >
               <div className="absolute bg-gradient-to-t from-dusky-alt to-transparent top-0 left-0 bottom-0 right-0 z-[2]" />
-              <img
-                className="absolute w-full h-full object-cover left-0 top-0"
-                src={josecito}
-                alt={`${languaje.hero.name}, ${languaje.seo.jobTitle}`}
-                title={languaje.hero.name}
-              />
+              {/* Mientras no se sepa qué foto va, un skeleton. Pintar la del
+                  bundle y después cambiarla por la de la base sería un cambiazo
+                  de imagen a la vista, justo en lo primero que se mira. */}
+              {settingsLoading ? (
+                <Skeleton className="absolute inset-0 rounded-3xl" />
+              ) : (
+                <img
+                  className="absolute w-full h-full object-cover left-0 top-0"
+                  src={heroPhoto}
+                  alt={`${languaje.hero.name}, ${languaje.seo.jobTitle}`}
+                  title={languaje.hero.name}
+                />
+              )}
               <div className="w-full flex flex-col z-[2] absolute left-0 bottom-0 leading-4 p-5 font-inter">
                 {/* El h1 de la portada. Era un span, así que la página de
                     entrada del sitio no tenía encabezado principal: para un

@@ -100,6 +100,20 @@ CREATE TABLE IF NOT EXISTS project_technologies (
   UNIQUE(project_id, technology_id)
 );
 
+-- Configuración del sitio: lo que el panel cambia sin pasar por un redeploy.
+-- Una sola fila. `id BOOLEAN PRIMARY KEY` con el CHECK que lo obliga a ser TRUE
+-- hace que una segunda inserción choque contra la clave primaria, así que no hay
+-- forma de terminar con dos filas discutiendo cuál es la buena.
+CREATE TABLE IF NOT EXISTS site_settings (
+  id BOOLEAN PRIMARY KEY DEFAULT TRUE,
+  hero_image_url TEXT,
+  hero_image_path TEXT,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
+  CONSTRAINT site_settings_single_row CHECK (id)
+);
+
+INSERT INTO site_settings (id) VALUES (TRUE) ON CONFLICT (id) DO NOTHING;
+
 -- Comentarios para documentar la estructura
 COMMENT ON TABLE technologies IS 'Tabla para almacenar las tecnologías disponibles';
 COMMENT ON COLUMN technologies.name IS 'Nombre de la tecnología (ej: React, Node.js)';
@@ -166,6 +180,12 @@ EXECUTE FUNCTION update_updated_at_column();
 DROP TRIGGER IF EXISTS update_experiences_updated_at ON experiences;
 CREATE TRIGGER update_experiences_updated_at
 BEFORE UPDATE ON experiences
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_site_settings_updated_at ON site_settings;
+CREATE TRIGGER update_site_settings_updated_at
+BEFORE UPDATE ON site_settings
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 
@@ -467,6 +487,21 @@ USING (true);
 DROP POLICY IF EXISTS "Solo autenticados pueden escribir imagenes" ON project_images;
 CREATE POLICY "Solo autenticados pueden escribir imagenes"
 ON project_images FOR ALL
+TO authenticated
+USING (true)
+WITH CHECK (true);
+
+ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Ajustes publicos para lectura" ON site_settings;
+CREATE POLICY "Ajustes publicos para lectura"
+ON site_settings FOR SELECT
+TO public
+USING (true);
+
+DROP POLICY IF EXISTS "Solo autenticados pueden escribir ajustes" ON site_settings;
+CREATE POLICY "Solo autenticados pueden escribir ajustes"
+ON site_settings FOR ALL
 TO authenticated
 USING (true)
 WITH CHECK (true);
