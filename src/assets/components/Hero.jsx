@@ -42,6 +42,13 @@ import { useExperiences } from "../../shared/hooks/useExperiences";
 //import cards
 import ProjectCard from "./cards/ProjectCard";
 
+//efecto vidrio
+import { refractive } from "@hashintel/refractive";
+
+// Fuera del componente: creado en cada render, el HOC devolvería un tipo nuevo
+// cada vez y React desmontaría y remontaría la card.
+const GlassPanel = refractive(motion.div);
+
 function Hero({ languaje }) {
   const [text] = useTypewriter({
     words: languaje.hero.subtitle,
@@ -150,12 +157,13 @@ function Hero({ languaje }) {
                 </div>
               </div>
             </motion.div>
-            <motion.div
+            <GlassPanel
+              refraction={{ radius: 24, blur: 3, bezelWidth: 12, specularOpacity: 0.3 }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.3 }}
               viewport={{ once: true }}
-              className="row-span-1 col-span-6 rounded-3xl dark:bg-[#372D48] bg-[#EFE0F4] shadow-lg relative flex flex-col overflow-hidden border-2 border-transparent gap-2 p-7  dark:text-white xl:col-span-2 lg:p-10"
+              className="row-span-1 col-span-6 rounded-3xl dark:bg-[#372D48]/45 bg-[#EFE0F4]/55 shadow-lg relative flex flex-col overflow-hidden border-2 border-transparent gap-2 p-7  dark:text-white xl:col-span-2 lg:p-10"
             >
               <h2 className="text-2xl font-bold z-[1]">
                 {languaje.about.title}
@@ -163,13 +171,14 @@ function Hero({ languaje }) {
               <p className="text-base w-full z-[1] opacity-70">
                 {languaje.about.description}
               </p>
-            </motion.div>
-            <motion.div
+            </GlassPanel>
+            <GlassPanel
+              refraction={{ radius: 24, blur: 3, bezelWidth: 12, specularOpacity: 0.3 }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: isMobile ? 0.15 : 0.3, duration: 0.3 }}
               viewport={{ once: true }}
-              className="row-span-1 col-span-3 rounded-3xl dark:bg-[#372D48] bg-[#EFE0F4] shadow-lg relative flex flex-col overflow-hidden border-2 border-transparent gap-2 items-center justify-center  dark:text-white xl:col-span-1"
+              className="row-span-1 col-span-3 rounded-3xl dark:bg-[#372D48]/45 bg-[#EFE0F4]/55 shadow-lg relative flex flex-col overflow-hidden border-2 border-transparent gap-2 items-center justify-center  dark:text-white xl:col-span-1"
             >
               <p className="text-7xl z-[1] font-bold flex items-center gap-1">
                 <span>+</span>
@@ -179,7 +188,7 @@ function Hero({ languaje }) {
                 {languaje.experience.description}
               </p>
               <MdAutoGraph className="w-full h-full absolute -right-10 -bottom-12 opacity-5 dark:opacity-[0.02] p-5 z-[0]" />
-            </motion.div>
+            </GlassPanel>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
