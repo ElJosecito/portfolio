@@ -99,8 +99,10 @@ function Hero({ languaje }) {
         <div className="absolute inset-0 bg-fuchsia-300 bg-[size:20px_20px] opacity-20 blur-[100px]"></div>
 
         {/* hero */}
+        {/* La barra fija mide ~68px con el alto nuevo; pt-20 dejaba 12px de aire
+            contra la primera card. */}
         <section
-          className="w-full max-w-screen-xl max-h-fit pt-20 px-5"
+          className="w-full max-w-screen-xl max-h-fit pt-28 px-5 sm:pt-32"
           id="home"
         >
           <div className="w-full grid auto-rows-[192px] grid-cols-6 gap-4">
