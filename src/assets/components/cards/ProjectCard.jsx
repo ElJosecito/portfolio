@@ -3,7 +3,13 @@ import { motion } from "framer-motion";
 import { FaGithub } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
+import { refractive } from "@hashintel/refractive";
+
 import { localizeProject } from "../../../shared/utils/i18n";
+
+// Fuera del componente: si se creara en cada render, el HOC devolvería un tipo
+// nuevo cada vez y React desmontaría y volvería a montar la card entera.
+const GlassCard = refractive(motion.div);
 
 /**
  * Card de proyecto compartida entre el Hero (destacados) y la página de proyectos.
@@ -20,12 +26,15 @@ function ProjectCard({ project, languaje, variant = "small", className = "", del
   const live = project.urls.find((url) => url !== github);
 
   return (
-    <motion.div
+    <GlassCard
+      // radius 24 = el rounded-3xl que ya tenía la card. refractive pisa el
+      // borderRadius con este número, así que los dos tienen que coincidir.
+      refraction={{ radius: 24, blur: 3, bezelWidth: 12, specularOpacity: 0.3 }}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.4 }}
       viewport={{ once: true }}
-      className={`dark:bg-[#372D48] bg-[#EFE0F4] rounded-3xl flex flex-col overflow-hidden p-5 shadow-md ${className}`}
+      className={`dark:bg-[#372D48]/45 bg-[#EFE0F4]/55 rounded-3xl flex flex-col overflow-hidden p-5 shadow-md ${className}`}
     >
       <div className={`w-full flex justify-end ${isLarge ? "mb-3 lg:mb-0" : "mb-3"}`}>
         {live && (
@@ -98,7 +107,7 @@ function ProjectCard({ project, languaje, variant = "small", className = "", del
           </ul>
         </div>
       </div>
-    </motion.div>
+    </GlassCard>
   );
 }
 

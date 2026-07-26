@@ -13,6 +13,9 @@ import { Link } from "react-router-dom";
 //theme
 import { useTheme } from "../../../shared/theme";
 
+//efecto vidrio
+import { refractive } from "@hashintel/refractive";
+
 function Header({ onDatos, languaje }) {
   //theme — la clase la aplica shared/theme, acá solo se alterna
   const { theme, toggleTheme } = useTheme();
@@ -68,7 +71,14 @@ function Header({ onDatos, languaje }) {
 
   return (
     <header className="w-full fixed z-50 flex justify-center pt-2">
-      <div className="flex shadow-md dark:bg-[#372D48] bg-[#EFE0F4] py-2 px-10 rounded-full">
+      {/* El fondo va con alpha a propósito: el vidrio refracta lo que pasa por
+          detrás, y sobre un color sólido no se vería nada. `radius` es ~la mitad
+          del alto de la barra para conservar la forma de píldora, porque
+          refractive pisa el borderRadius con ese valor en píxeles. */}
+      <refractive.div
+        refraction={{ radius: 20, blur: 8, bezelWidth: 8, specularOpacity: 0.4 }}
+        className="flex shadow-md dark:bg-[#372D48]/40 bg-[#EFE0F4]/50 py-2 px-10 rounded-full"
+      >
         <ul className="items-center dark:text-moonlit font-inter font-bold text-sm hidden md:flex">
           <a className="cursor-pointer" href="#/" onClick={()=>{
             handleScroll("home")
@@ -97,7 +107,10 @@ function Header({ onDatos, languaje }) {
             </li>
           </a>
         </ul>
-        <div className="flex md:hidden">
+        {/* `relative` explícito: backdrop-filter convierte a la píldora en
+            bloque contenedor, así que sin esto el desplegable móvil cambiaría
+            de anclaje al aplicar el vidrio. */}
+        <div className="relative flex md:hidden">
           <FaBars
             className="w-6 h-6 dark:text-white"
             onClick={() => handleDropdown(".nav-dropdown")}
@@ -181,7 +194,7 @@ function Header({ onDatos, languaje }) {
             </motion.div>
           </div>
         </div>
-      </div>
+      </refractive.div>
     </header>
   );
 }
