@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# El panel no tiene nada que indexar y además es privado.
+Disallow: /admin
+
+Sitemap: https://josecito.dev/sitemap.xml

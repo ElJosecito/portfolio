@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>Jose Martinez</title>
+    <script>
+      // GitHub Pages no sabe de rutas de cliente: cualquier URL que no sea un
+      // archivo real cae acá. Esta página guarda la ruta pedida en la query y
+      // manda a la raíz, que sí existe; index.html la vuelve a poner en la barra
+      // antes de que monte React.
+      //
+      // Es el patrón spa-github-pages (rafgraph). Reemplaza al redirect anterior
+      // a `/#/ruta`, que no servía: la app usa BrowserRouter, que lee
+      // `location.pathname` e ignora el hash, así que todo terminaba en la
+      // portada. Ninguna página de proyecto era alcanzable por link directo.
+      //
+      // El sitio vive en la raíz de josecito.dev, así que no hay segmentos de
+      // repositorio que preservar.
+      var pathSegmentsToKeep = 0;
+
+      var l = window.location;
+      l.replace(
+        l.protocol +
+          '//' +
+          l.hostname +
+          (l.port ? ':' + l.port : '') +
+          l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') +
+          '/?/' +
+          l.pathname
+            .slice(1)
+            .split('/')
+            .slice(pathSegmentsToKeep)
+            .join('/')
+            // `&` se escapa porque la ruta viaja dentro de una query string y si
+            // no, cualquier `&` de la ruta partiría el parámetro en dos.
+            .replace(/&/g, '~and~') +
+          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash
+      );
+    </script>
+  </head>
+  <body></body>
+</html>
