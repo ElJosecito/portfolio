@@ -1,1 +1,5 @@
+# Este archivo es de Netlify y Cloudflare Pages. En GitHub Pages, que es
+# donde vive josecito.dev hoy, no hace nada: ahi el fallback de rutas de
+# cliente lo resuelven public/404.html e index.html juntos. Se deja por si el
+# sitio se muda.
 /* /index.html 200

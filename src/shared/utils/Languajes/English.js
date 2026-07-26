@@ -1,28 +1,36 @@
-import { v4 as uuid } from "uuid";
-
 export const English = {
   languaje: "English",
   header: {
     home: "Home",
-    expecience: "Experience",
+    experience: "Experience",
     about: "About",
     projects: "Projects",
     contact: "Contact",
   },
   hero: {
     name: "Jose Miguel Martinez Florimon",
-    subtitle: ["Web Developer", "Front-End", "Back-End", "Full-Stack"],
+    subtitle: [
+      "Web Developer",
+      "Mobile Developer",
+      "Front-End",
+      "Back-End",
+      "Full-Stack",
+    ],
   },
   about: {
     title: "About me",
+    // La tarjeta del bento y la sección de abajo decían las dos "About me", así
+    // que la página tenía dos encabezados de mismo nivel con el mismo texto.
+    summaryTitle: "At a glance",
     subtitle: "About me and contact ways.",
     description:
-      "Web developer with experience in designing, developing and maintaining front-end web applications.",
+      "Web and mobile developer with experience designing, building and maintaining applications end to end.",
     paragraphs: [
-      "I am passionate about technology and web development. With solid experience in the Full Stack field, I have specialized in the exciting MERN ecosystem (MongoDB, Express.js, React.js, and Node.js).",
-      "I love to challenge myself and explore new technologies to create innovative and efficient solutions. As a developer, I stand out for my ability to design, develop, and maintain complete and engaging web applications, which not only meet client requirements but also provide an interactive and satisfying experience for the end user.",
+      "I am passionate about technology and product development. With solid experience in the Full Stack field, I have specialized in the MERN ecosystem (MongoDB, Express.js, React.js, and Node.js), and I bring that same stack to mobile with React Native.",
+      "I love to challenge myself and explore new technologies to create innovative and efficient solutions. As a developer, I stand out for my ability to design, develop, and maintain complete and engaging applications — on the web and on the phone — which not only meet client requirements but also provide an interactive and satisfying experience for the end user.",
+      "Working across both platforms means I think about a product as a whole: shared APIs, consistent design, and the details that change when an interface moves from a desktop screen to a thumb.",
       "I am a proactive, adaptable professional committed to the team's success. I enjoy working collaboratively, bringing my skills and knowledge to effectively and creatively achieve established goals.",
-      "I am excited to continue growing and learning in this exciting world of web development and technology!",
+      "I am excited to continue growing and learning in this exciting world of development and technology!",
     ],
   },
   country: {
@@ -37,139 +45,37 @@ export const English = {
   experience: {
     title: "Experience",
     description: "My work experience.",
-    experiences: [
-      {
-        id: uuid(),
-        date: "Currently...",
-        title: "Freelancer",
-        company: "Freelancer",
-        description:
-          "As a freelance developer, I have successfully delivered custom applications to various clients, ensuring their specific needs were met, from creating websites to implementing complete web applications. I have worked closely with clients to ensure their goals are met and their expectations exceeded. My focus on quality and customer satisfaction has resulted in a high rate of retention and recommendation.",
-        link: "https://www.linkedin.com/in/jose-martinez-dev/",
-      },
-      {
-        id: uuid(),
-        date: "March 2024 - September 2024",
-        title: "Junior Data Analyst",
-        company: "La Romana, DO",
-        description:
-          "In my role as a data entry specialist, I meticulously entered individual information into a centralized database to facilitate the marketing team's communication. Ensuring accuracy in sensitive data, while preventing duplicates, was paramount. Collaborating closely with the marketing team, I kept information up to date to support their strategies, meeting high quality standards and consistently meeting deadlines.",
-      },
-      {
-        id: uuid(),
-        date: "Currently...",
-        title: "Fullstack Developer",
-        company: "Freelancer",
-        description:
-          "As a full-stack developer, I have designed, developed, and maintained web applications from start to finish, ensuring that they meet client requirements and provide an engaging user experience. I have experience working with the MERN stack (MongoDB, Express.js, React.js, and Node.js) to create dynamic and responsive web applications that deliver value to clients and users.",
-        link: "https://www.linkedin.com/in/jose-martinez-dev/",
-      },
-    ],
+    loading: "Loading experience...",
+    empty: "No experience listed yet",
   },
   projects: {
     title: "Projects",
     description: "Some of my main projects.",
     projectsBtn: "See all",
-    projects: [
-      {
-        id: "uuid()",
-        name: "Gestipol",
-        image: "https://i.imgur.com/Y1WgyYI.png",
-        description:
-          "Gestipol is an application that allows political candidates to manage the status of their voters to have clearer information about the process during the campaign.",
-        tech: ["React", "Node.js", "Tailwind CSS", "MongoDB"],
-        urls: [
-          {
-            id: "uuid()",
-            name: "Github",
-            url: "https://github.com/ElJosecito/crm-frontend",
-          },
-          {
-            id: "uuid()",
-            name: "Live",
-            url: "https://gestipol.onrender.com/home",
-          },
-        ],
-      },
-      {
-        id: "uuid()",
-        name: "Bank Landing Page",
-        image: "https://i.imgur.com/LbmEbD2.png",
-        description:
-          "This is a landing page for a fictional bank, which was created in order to practice and improve my web development skills. The page is fully responsive and was inspired by a design from frontend mentor.",
-        tech: ["React", "Tailwind CSS", "SASS", "Vite"],
-        urls: [
-          {
-            id: "uuid()",
-            name: "Github",
-            url: "https://github.com/ElJosecito/bank-Landing",
-          },
-          {
-            id: "uuid()",
-            name: "Live",
-            url: "https://vermillion-kashata-e30b59.netlify.app/",
-          },
-        ],
-      },
-      {
-        id: uuid(),
-        name: "Dental Clinic Web",
-        image: "https://imgur.com/u6wEWGK.png",
-        description: "Dental Clinic Web is a landing page that allows the client to have more information about the dental clinic they will visit and its doctors. The website was developed to provide information in a convenient and easy way. Inspired by a personal design.",
-        tech: ["React", "Tailwind CSS", "Vite"],
-        urls: [
-          {
-            id: uuid(),
-            name: "Github",
-            url: "https://github.com/ElJosecito/vdc-web"
-          },
-          {
-            id: uuid(),
-            name: "Live",
-            url: "https://vdc-web.netlify.app/"
-          }
-        ]
-      },
-      
-      {
-        id: uuid(),
-        name: "Multisemar Web",
-        image: "https://imgur.com/jEVndxk.png",
-        description: "Multisemar Web is a landing page that allows the client to have more information about the company and its services. The website was developed to provide information in a convenient and easy way. Inspired by a personal design.",
-        tech: ["React", "Tailwind CSS", "Next.js"],
-        urls: [
-          {
-            id: uuid(),
-            name: "Github",
-            url: "https://github.com/ElJosecito/multisemar-web"
-          },
-          {
-            id: uuid(),
-            name: "Live",
-            url: "https://landingmultisemar.netlify.app/"
-          }
-        ]
-      },
-      {
-        id: "uuid()",
-        name: "Flags App",
-        image: "https://i.imgur.com/clPtB70.png",
-        description:
-          "Flags App is a web application that allows users to search for and view information about countries around the world. The application was created in order to practice and improve my web development skills. Inspired by a design from frontend mentor.",
-        tech: ["React", "Tailwind CSS", "SASS", "Vite"],
-        urls: [
-          {
-            id: "uuid()",
-            name: "Github",
-            url: "https://github.com/ElJosecito/country-app",
-          },
-          {
-            id: "uuid()",
-            name: "Live",
-            url: "https://guileless-daffodil-25c071.netlify.app/",
-          },
-        ],
-      },
-    ],
+    loading: "Loading projects...",
+    empty: "No projects available",
+    filters: {
+      all: "All",
+      web: "Web",
+      mobile: "Mobile",
+    },
+  },
+
+  // Textos que solo ven los buscadores y las tarjetas al compartir. Van
+  // separados de la copy de pantalla a propósito: un título de pestaña y un
+  // encabezado de sección se optimizan para cosas distintas, y mezclarlos
+  // termina con uno de los dos mal.
+  seo: {
+    jobTitle: "Full-Stack Web & Mobile Developer",
+    home: {
+      title: "Jose Martinez — Full-Stack Web & Mobile Developer",
+      description:
+        "Portfolio of Jose Martinez, full-stack web and mobile developer based in La Romana, Dominican Republic. Projects built with React, React Native, Node.js and MongoDB.",
+    },
+    projects: {
+      title: "Projects — Jose Martinez",
+      description:
+        "Web and mobile projects by Jose Martinez: full-stack applications built with React, React Native, Node.js and MongoDB.",
+    },
   },
 };

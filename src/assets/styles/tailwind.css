@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-white text-dark-grey dark:bg-slate-950 dark:text-moonlit;
+  }
+}

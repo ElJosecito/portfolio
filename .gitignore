@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+.env
+.env.*
+!.env.example
+
+# Agent tooling
+.atl/

@@ -1,10 +1,18 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+/* Las fuentes se cargan desde index.html con preconnect, no acá: un @import de
+   CSS obliga al navegador a descargar esta hoja antes de siquiera pedirlas. */
 * {
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
-  scroll-behavior: smooth;
   box-sizing: border-box;
 }
+
+/* `scroll-behavior: smooth` estaba en `*`, o sea en todo el documento. Con eso,
+   cualquier scroll programático se animaba: al entrar a una página el
+   `window.scrollTo(0, 0)` no saltaba arriba, se deslizaba, y eso es lo que se
+   veía como que el hero "subía solo" mientras cargaban los datos.
+
+   Ahora el suave se pide donde se quiere: el Header ya llama a scrollIntoView
+   con `behavior: "smooth"` para los anclajes de la portada. */
 
 .font-inter {
   font-family: "Inter", sans-serif;

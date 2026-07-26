@@ -35,6 +35,34 @@ import toast, { Toaster } from "react-hot-toast";
 //link
 import { Link } from "react-router-dom";
 
+//supabase
+import { useProjects } from "../../shared/hooks/useProjects";
+import { useExperiences } from "../../shared/hooks/useExperiences";
+import { useSiteSettings } from "../../shared/hooks/useSiteSettings";
+
+// Directo y no desde el barrel del kit: el índice arrastra los componentes que
+// solo usa el panel.
+import { Skeleton } from "../../shared/ui/Skeleton";
+
+//import cards
+import ProjectCard from "./cards/ProjectCard";
+
+//skeletons de carga
+import ExperienceSkeleton from "./skeletons/ExperienceSkeleton";
+import ProjectsGridSkeleton from "./skeletons/ProjectsGridSkeleton";
+
+//seo
+import { useSeo } from "../../shared/hooks/useSeo";
+import { isEnglish } from "../../shared/utils/i18n";
+import { SITE_URL, SOCIAL_LINKS, absoluteUrl } from "../../shared/utils/seo";
+
+//efecto vidrio
+import { refractive } from "@hashintel/refractive";
+
+// Fuera del componente: creado en cada render, el HOC devolvería un tipo nuevo
+// cada vez y React desmontaría y remontaría la card.
+const GlassPanel = refractive(motion.div);
+
 function Hero({ languaje }) {
   const [text] = useTypewriter({
     words: languaje.hero.subtitle,
@@ -46,11 +74,68 @@ function Hero({ languaje }) {
   const email = "josemartinezflorimon@gmail.com";
   const [isMobile, setIsMobile] = useState(false);
   const mobile = useMediaQuery("only screen and (max-width : 768px)");
+  const { projects, loading } = useProjects({ featuredOnly: true });
+  const { experiences, loading: experiencesLoading } = useExperiences();
+  const { settings, loading: settingsLoading } = useSiteSettings();
+
+  // La imagen del bundle es el respaldo: si nadie cargó una foto desde el panel,
+  // o si la consulta falla, la portada igual tiene su foto.
+  const heroPhoto = settings?.hero_image_url || josecito;
 
   useEffect(() => {
-    document.title = "Jose Martinez || Desarrollador Web";
     setIsMobile(mobile);
   }, []);
+
+  const english = isEnglish(languaje);
+
+  // `Person` es el structured data que más rinde en un portfolio: es lo que
+  // Google usa para asociar el nombre con el sitio y con los perfiles de
+  // GitHub y LinkedIn. `sameAs` es justamente esa asociación.
+  useSeo({
+    title: languaje.seo.home.title,
+    description: languaje.seo.home.description,
+    path: "/",
+    locale: english ? "en_US" : "es_DO",
+    lang: english ? "en" : "es",
+    jsonLd: [
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: "Jose Miguel Martinez Florimon",
+        alternateName: "Jose Martinez",
+        jobTitle: languaje.seo.jobTitle,
+        description: languaje.about.description,
+        url: SITE_URL,
+        // Sigue a la foto del panel: si no, el día que la cambies el structured
+        // data se queda declarando una cara que ya no está en la página.
+        image: absoluteUrl(settings?.hero_image_url || "/jose-martinez.png"),
+        email: `mailto:${email}`,
+        sameAs: SOCIAL_LINKS,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "La Romana",
+          addressCountry: "DO",
+        },
+        knowsAbout: [
+          "React",
+          "React Native",
+          "Node.js",
+          "Express.js",
+          "MongoDB",
+          "JavaScript",
+          "Desarrollo web",
+          "Desarrollo móvil",
+        ],
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "Jose Martinez",
+        url: SITE_URL,
+        inLanguage: english ? "en" : "es",
+      },
+    ],
+  });
 
   const copyToClipboard = () => {
     const el = document.createElement("textarea");
@@ -75,16 +160,18 @@ function Hero({ languaje }) {
       });
     }
   };
-{/* <div class="relative h-full w-full bg-neutral-900"></div> */}
+  {/* <div class="relative h-full w-full bg-neutral-900"></div> */ }
   return (
     <>
       <main className="w-full min-h-fit h-fit pb-10 flex flex-col items-center bg-noon dark:bg-slate-950">
-      <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
-      <div className="absolute inset-0 bg-fuchsia-300 bg-[size:20px_20px] opacity-20 blur-[100px]"></div>
-      
+        <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+        <div className="absolute inset-0 bg-fuchsia-300 bg-[size:20px_20px] opacity-20 blur-[100px]"></div>
+
         {/* hero */}
+        {/* La barra fija ocupa ~80px desde el borde: 24 de su pt-6 más 56 de
+            alto. Este padding es el que le deja aire debajo. */}
         <section
-          className="w-full max-w-screen-xl max-h-fit pt-20 px-5"
+          className="w-full max-w-screen-xl max-h-fit pt-26 px-5 sm:pt-32"
           id="home"
         >
           <div className="w-full grid auto-rows-[192px] grid-cols-6 gap-4">
@@ -96,16 +183,26 @@ function Hero({ languaje }) {
               className="row-span-2 col-span-6 rounded-3xl relative flex flex-col overflow-hidden gap-10 justify-end p-6 text-white xl:col-span-4 lg:items-end sm:flex-row lg:p-10 dark:bg-[#372D48] bg-[#EFE0F4]"
             >
               <div className="absolute bg-gradient-to-t from-dusky-alt to-transparent top-0 left-0 bottom-0 right-0 z-[2]" />
-              <img
-                className="absolute w-full h-full object-cover left-0 top-0"
-                src={josecito}
-                alt="personal"
-                title="Personal"
-              />
+              {/* Mientras no se sepa qué foto va, un skeleton. Pintar la del
+                  bundle y después cambiarla por la de la base sería un cambiazo
+                  de imagen a la vista, justo en lo primero que se mira. */}
+              {settingsLoading ? (
+                <Skeleton className="absolute inset-0 rounded-3xl" />
+              ) : (
+                <img
+                  className="absolute w-full h-full object-cover left-0 top-0"
+                  src={heroPhoto}
+                  alt={`${languaje.hero.name}, ${languaje.seo.jobTitle}`}
+                  title={languaje.hero.name}
+                />
+              )}
               <div className="w-full flex flex-col z-[2] absolute left-0 bottom-0 leading-4 p-5 font-inter">
-                <span className="text-3xl font-bold leading-7">
+                {/* El h1 de la portada. Era un span, así que la página de
+                    entrada del sitio no tenía encabezado principal: para un
+                    buscador, nada declaraba de quién es este portfolio. */}
+                <h1 className="text-3xl font-bold leading-7">
                   {languaje.hero.name}
-                </span>
+                </h1>
                 <span className="text-lg font-medium leading-9 h-10 my-[2px]">
                   {text}
                 </span>
@@ -141,26 +238,28 @@ function Hero({ languaje }) {
                 </div>
               </div>
             </motion.div>
-            <motion.div
+            <GlassPanel
+              refraction={{ radius: 24, blur: 3, bezelWidth: 12, specularOpacity: 0.3 }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.3 }}
               viewport={{ once: true }}
-              className="row-span-1 col-span-6 rounded-3xl dark:bg-[#372D48] bg-[#EFE0F4] shadow-lg relative flex flex-col overflow-hidden border-2 border-transparent gap-2 p-7  dark:text-white xl:col-span-2 lg:p-10"
+              className="row-span-1 col-span-6 rounded-3xl dark:bg-[#372D48]/45 bg-[#EFE0F4]/55 shadow-lg relative flex flex-col overflow-hidden border-2 border-transparent gap-2 p-7  dark:text-white xl:col-span-2 lg:p-10"
             >
               <h2 className="text-2xl font-bold z-[1]">
-                {languaje.about.title}
+                {languaje.about.summaryTitle}
               </h2>
               <p className="text-base w-full z-[1] opacity-70">
                 {languaje.about.description}
               </p>
-            </motion.div>
-            <motion.div
+            </GlassPanel>
+            <GlassPanel
+              refraction={{ radius: 24, blur: 3, bezelWidth: 12, specularOpacity: 0.3 }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: isMobile ? 0.15 : 0.3, duration: 0.3 }}
               viewport={{ once: true }}
-              className="row-span-1 col-span-3 rounded-3xl dark:bg-[#372D48] bg-[#EFE0F4] shadow-lg relative flex flex-col overflow-hidden border-2 border-transparent gap-2 items-center justify-center  dark:text-white xl:col-span-1"
+              className="row-span-1 col-span-3 rounded-3xl dark:bg-[#372D48]/45 bg-[#EFE0F4]/55 shadow-lg relative flex flex-col overflow-hidden border-2 border-transparent gap-2 items-center justify-center  dark:text-white xl:col-span-1"
             >
               <p className="text-7xl z-[1] font-bold flex items-center gap-1">
                 <span>+</span>
@@ -170,7 +269,7 @@ function Hero({ languaje }) {
                 {languaje.experience.description}
               </p>
               <MdAutoGraph className="w-full h-full absolute -right-10 -bottom-12 opacity-5 dark:opacity-[0.02] p-5 z-[0]" />
-            </motion.div>
+            </GlassPanel>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -185,8 +284,8 @@ function Hero({ languaje }) {
                     ? mapsDark
                     : mapsLight
                 }
-                alt="Location"
-                title="Location"
+                alt={languaje.country.description}
+                title={languaje.country.description}
               />
               <img
                 className="w-28 z-10"
@@ -213,17 +312,17 @@ function Hero({ languaje }) {
         <section className="w-full max-w-screen-xl max-h-fit p-5">
 
           <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25, duration: 0.3 }}
-              viewport={{ once: true }}
-              className="flex flex-col items-center justify-center rounded-3xl dark:bg-[#372D48] bg-[#EFE0F4] shadow-lg relative overflow-hidden dark:text-white py-10"
-            >
-              <div className='absolute right-0 w-28 h-full bg-gradient-to-l dark:from-[#372D48] from-[#EFE0F4] to-transparent dark:from-raisin-black dark:to-transparent z-[1]' />
-              <div className='absolute left-0 w-28 h-full bg-gradient-to-r dark:from-[#372D48] from-[#EFE0F4] to-transparent dark:from-raisin-black dark:to-transparent z-[1]' />
-              <InfinityScroll />
-            </motion.div>
-          
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.3 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center justify-center rounded-3xl dark:bg-[#372D48] bg-[#EFE0F4] shadow-lg relative overflow-hidden dark:text-white py-10"
+          >
+            <div className='absolute right-0 w-28 h-full bg-gradient-to-l dark:from-[#372D48] from-[#EFE0F4] to-transparent dark:from-raisin-black dark:to-transparent z-[1]' />
+            <div className='absolute left-0 w-28 h-full bg-gradient-to-r dark:from-[#372D48] from-[#EFE0F4] to-transparent dark:from-raisin-black dark:to-transparent z-[1]' />
+            <InfinityScroll />
+          </motion.div>
+
           {/* See more btn */}
           {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -249,16 +348,21 @@ function Hero({ languaje }) {
           </div>
 
           <div className="w-full max-w-screen-xl lg:px-20 pb-20 pt-10">
-            {languaje.experience.experiences.map((item, index) => (
-              <ExperienceCard
-                key={index}
-                title={item.title}
-                company={item.company}
-                description={item.description}
-                link={item.link}
-                date={item.date}
-              />
-            ))}
+            {experiencesLoading ? (
+              <ExperienceSkeleton label={languaje.experience.loading} />
+            ) : experiences.length === 0 ? (
+              <p className="text-center text-lg opacity-70 dark:text-moonlit">
+                {languaje.experience.empty}
+              </p>
+            ) : (
+              experiences.map((experience) => (
+                <ExperienceCard
+                  key={experience.id}
+                  experience={experience}
+                  languaje={languaje}
+                />
+              ))
+            )}
           </div>
 
 
@@ -275,204 +379,39 @@ function Hero({ languaje }) {
             </p>
           </div>
 
-          <div className="grid grid-cols-6 grid-rows-2 gap-5">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: isMobile ? 0.15 : 0.3, duration: 0.4 }}
-              viewport={{ once: true }}
-              className="w-full col-span-6 row-span-2 dark:bg-[#372D48] bg-[#EFE0F4] rounded-3xl flex flex-col items-center lg:items-start overflow-hidden p-5 shadow-md"
-            >
-              <div className="w-full flex justify-end mb-3 lg:mb-0">
-                <a
-                  href={languaje.projects.projects[0].urls[1].url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className=" gap-2 font-medium text-red-600 border border-red-600 hover:scale-110 px-4 py-1 mr-4 rounded-lg transition-transform duration-300 shadow-md"
-                >
-                  {languaje.projects.projects[0].urls[1].name}
-                </a>
-
-                <a
-                  className="flex items-center font-medium bg-noon text-dark-grey px-3 py-1 rounded-lg  gap-2 hover:scale-110 transition-transform duration-300 shadow-md"
-                  href={languaje.projects.projects[0].urls[0].url}
-                  target="_blank"
-                  rel="noreferrer"
-                  title={languaje.projects.projects[0].urls[0].name}
-                >
-                  <FaGithub />
-                  <span className="hidden lg:flex">GitHub</span>
-                </a>
-              </div>
-              <div className="w-full h-full lg:flex ">
-                <img
-                  className=" w-full lg:max-w-lg object-cover hover:cursor-pointer hover:scale-105 transition-transform duration-300  lg:mr-5"
-                  src={languaje.projects.projects[0].image}
-                  alt={languaje.projects.projects[0].name}
-                  title={languaje.projects.projects[0].name}
+          {/* La grilla se dibuja siempre, cargando o no: los skeletons entran
+              como items de la misma grilla y las cards reales los reemplazan en
+              su lugar, sin que el contenedor cambie de alto. */}
+          {!loading && projects.length === 0 ? (
+            <div className="flex justify-center items-center h-96 dark:text-moonlit">
+              <p className="text-xl">{languaje.projects.empty}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-6 grid-rows-2 gap-5">
+              {loading ? (
+                <ProjectsGridSkeleton
+                  count={3}
+                  featured
+                  label={languaje.projects.loading}
                 />
-
-                <div className="pl-5 lg:pt-8 dark:text-moonlit flex flex-col">
-                  <div>
-                    <h3 className="text-5xl font-bold my-5">
-                      {languaje.projects.projects[0].name}
-                    </h3>
-                    <p className="text-sm lg:text-base font-medium opacity-70 lg:ml-1 lg:pr-20 my-5">
-                      {languaje.projects.projects[0].description}
-                    </p>
-                  </div>
-                  <ul className="mt-auto flex my-6">
-                    {languaje.projects.projects[0].tech.map((item, index) => (
-                      <li
-                        key={index}
-                        className="cursor-pointer flex h-10 items-center self-end font-medium bg-[#6a4279]  text-white dark:bg-[#020617] px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
-                      >
-                        <div className="w-7 lg:mr-3 flex justify-center items-center">
-                          <img
-                            className="w-full h-full"
-                            src={DevTools.find((dev) => dev.name === item).icon}
-                            alt={item}
-                            title={item}
-                          />
-                        </div>
-                        <span className="font-bold hidden lg:flex">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.4 }}
-              viewport={{ once: true }}
-              className=" col-span-6 md:col-span-3 dark:bg-[#372D48] bg-[#EFE0F4] rounded-3xl flex flex-col items-center overflow-hidden p-5 shadow-md"
-            >
-              <div className="w-full flex justify-end mb-3">
-                <a
-                  href={languaje.projects.projects[1].urls[1].url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className=" gap-2 font-medium text-red-600 border border-red-600 hover:scale-110 px-4 py-1 mr-4 rounded-lg transition-transform duration-300 shadow-md"
-                >
-                  {languaje.projects.projects[1].urls[1].name}
-                </a>
-
-                <a
-                  className="flex items-center font-medium bg-noon text-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md"
-                  href={languaje.projects.projects[1].urls[0].url}
-                  target="_blank"
-                  rel="noreferrer"
-                  title={languaje.projects.projects[1].urls[0].name}
-                >
-                  <FaGithub />
-                </a>
-              </div>
-              <div className="w-full h-full ">
-                <img
-                  className=" w-full object-cover hover:cursor-pointer hover:scale-105 transition-transform duration-300 lg:mr-5"
-                  src={languaje.projects.projects[1].image}
-                  alt={languaje.projects.projects[1].name}
-                  title={languaje.projects.projects[1].name}
-                />
-
-                <div className="pl-5 lg:pt-8 dark:text-moonlit flex flex-col">
-                  <div>
-                    <h3 className="text-5xl font-bold my-5">
-                      {languaje.projects.projects[1].name}
-                    </h3>
-                    <p className="text-sm lg:text-base font-normal opacity-70 my-5">
-                      {languaje.projects.projects[1].description}
-                    </p>
-                  </div>
-                  <ul className="mt-auto flex my-6">
-                    {languaje.projects.projects[1].tech.map((item, index) => (
-                      <li
-                        key={index}
-                        className="cursor-pointer flex h-10 items-center self-end font-medium bg-[#6a4279] dark:bg-[#020617] px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
-                      >
-                        <div className="w-7  flex justify-center items-center">
-                          <img
-                            className="w-full h-full"
-                            src={DevTools.find((dev) => dev.name === item).icon}
-                            alt={item}
-                            title={item}
-                          />
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: isMobile ? 0.2 : 0.35, duration: 0.6 }}
-              viewport={{ once: true }}
-              className=" col-span-6 md:col-span-3 dark:bg-[#372D48] bg-[#EFE0F4] rounded-3xl flex flex-col items-center overflow-hidden p-5 shadow-md"
-            >
-              <div className="w-full flex justify-end mb-3">
-                <a
-                  href={languaje.projects.projects[2].urls[1].url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className=" gap-2 font-medium text-red-600 border border-red-600 hover:scale-110 px-4 py-1 mr-4 rounded-lg transition-transform duration-300 shadow-md"
-                >
-                  {languaje.projects.projects[2].urls[1].name}
-                </a>
-
-                <a
-                  className="flex items-center font-medium bg-noon text-dark-grey px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md"
-                  href={languaje.projects.projects[2].urls[0].url}
-                  target="_blank"
-                  rel="noreferrer"
-                  title={languaje.projects.projects[2].urls[0].name}
-                >
-                  <FaGithub />
-                </a>
-              </div>
-              <div className="w-full h-full ">
-                <img
-                  className=" w-full object-cover hover:cursor-pointer hover:scale-105 transition-transform duration-300 lg:mr-5"
-                  src={languaje.projects.projects[2].image}
-                  alt={languaje.projects.projects[2].name}
-                  title={languaje.projects.projects[2].name}
-                />
-
-                <div className="pl-5 lg:pt-8 dark:text-moonlit flex flex-col">
-                  <div>
-                    <h3 className="text-5xl font-bold my-5">
-                      {languaje.projects.projects[2].name}
-                    </h3>
-                    <p className="text-sm lg:text-base font-normal opacity-70 my-5">
-                      {languaje.projects.projects[2].description}
-                    </p>
-                  </div>
-                  <ul className="mt-auto flex my-6">
-                    {languaje.projects.projects[2].tech.map((item, index) => (
-                      <li
-                        key={index}
-                        className="cursor-pointer flex h-10 items-center self-end font-medium bg-[#6a4279] dark:bg-[#020617] px-3 py-1 rounded-lg hover:scale-110 transition-transform duration-300 shadow-md mr-2"
-                      >
-                        <div className="w-7  flex justify-center items-center">
-                          <img
-                            className="w-full h-full"
-                            src={DevTools.find((dev) => dev.name === item).icon}
-                            alt={item}
-                            title={item}
-                          />
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+              ) : (
+                projects.map((project, index) => (
+                  <ProjectCard
+                    key={project.id}
+                    project={project}
+                    languaje={languaje}
+                    variant={project.size === "large" ? "large" : "small"}
+                    className={
+                      project.size === "large"
+                        ? "w-full col-span-6 row-span-2 items-center lg:items-start"
+                        : "col-span-6 md:col-span-3 items-center"
+                    }
+                    delay={(isMobile ? 0.15 : 0.3) + index * 0.05}
+                  />
+                ))
+              )}
+            </div>
+          )}
 
           {/* See more btn */}
           <motion.div
@@ -588,8 +527,8 @@ function Hero({ languaje }) {
                       ? mapsDark
                       : mapsLight
                   }
-                  alt="Location"
-                  title="Location"
+                  alt={languaje.country.description}
+                  title={languaje.country.description}
                 />
                 <img
                   className="w-28 z-10"

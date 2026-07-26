@@ -1,216 +1,178 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 //import icons
-import { FaBars, FaMoon, FaLanguage, FaSun } from "react-icons/fa";
-import { IoLanguageOutline } from "react-icons/io5";
+import { FaBars, FaMoon, FaSun, FaTimes } from "react-icons/fa";
 
 //motion framer
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
-//react router
-import { Link } from "react-router-dom";
+//theme
+import { useTheme } from "../../../shared/theme";
+
+//efecto vidrio
+import { refractive } from "@hashintel/refractive";
+
+const GlassBar = refractive(motion.div);
+
+const SECTIONS = ["home", "experience", "projects", "about"];
 
 function Header({ onDatos, languaje }) {
-  //theme
-  const [theme, setTheme] = useState(() => {
-    if (!localStorage.getItem("theme")) {
-      if (
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-      ) {
-        localStorage.setItem("theme", "dark");
-        return "dark";
-      } else {
-        localStorage.setItem("theme", "light");
-        return "light";
-      }
-    } else {
-      return localStorage.getItem("theme");
-    }
-  });
+  //theme — la clase la aplica shared/theme, acá solo se alterna
+  const { theme, toggleTheme } = useTheme();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
 
-  //set theme
+  // El idioma activo sale del objeto de traducciones, no de un estado propio:
+  // así no hay dos fuentes de verdad que se puedan desincronizar.
+  const isSpanish = languaje?.languaje === "Español";
+
+  // El idioma inicial ya lo resolvió el Router antes del primer render con
+  // `initLanguage`. Acá solo se cambia cuando el usuario toca ES/EN: hacerlo en
+  // un efecto de montaje obligaba a pintar todo en inglés y corregirlo después.
+
+  // Cerrar el menú móvil al tocar afuera o con Escape. Antes los desplegables se
+  // abrían con document.querySelector y classList.toggle, así que no había forma
+  // de cerrarlos salvo volver a tocar el mismo botón.
   useEffect(() => {
-    if (theme === "dark") {
-      document.querySelector("html").classList.add("dark");
-    } else {
-      document.querySelector("html").classList.remove("dark");
-    }
-  }, [theme]);
+    if (!menuOpen) return;
 
-  useEffect(() => {
-    if (!localStorage.getItem("languaje")) {
-      const navlang = navigator.language;
-      console.log(navlang);
-      if (navlang === "e-ES" || navlang === "es") {
-        localStorage.setItem("languaje", "es");
-        onDatos("es");
-      } else {
-        localStorage.setItem("languaje", "en");
-        onDatos("en");
-      }
-    } else {
-      if (localStorage.getItem("languaje") === "es") {
-        onDatos("es");
-      } else {
-        onDatos("en");
-      }
-    }
-  }, []);
+    const onPointerDown = (event) => {
+      if (!menuRef.current?.contains(event.target)) setMenuOpen(false);
+    };
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
 
-  //handle theme
-  const handleTheme = () => {
-    if (theme === "light") {
-      localStorage.setItem("theme", "dark");
-      setTheme("dark");
-    } else {
-      localStorage.setItem("theme", "light");
-      setTheme("light");
-    }
-  };
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("touchstart", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("touchstart", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [menuOpen]);
 
-  //handle dropdown
-  const handleDropdown = (className) => {
-    const dropdown = document.querySelector(className);
-    dropdown.classList.toggle("hidden");
-  };
-
-  //handle languaje
-  const handleLanguaje = (lang) => {
-    if (lang === "es") {
-      localStorage.setItem("languaje", "es");
-      onDatos("es");
-      handleDropdown(".dropdown");
-    } else {
-      localStorage.setItem("languaje", "en");
-      onDatos("en");
-      handleDropdown(".dropdown");
-    }
-  };
+  // El Router es el que persiste la elección; acá solo se avisa.
+  const handleLanguaje = (lang) => onDatos(lang);
 
   const handleScroll = (sectionId) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
+    setMenuOpen(false);
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const labelFor = (section) => languaje.header[section];
+
   return (
-    <header className="w-full fixed z-50 flex justify-center pt-2">
-      <div className="flex shadow-md dark:bg-[#372D48] bg-[#EFE0F4] py-2 px-10 rounded-full">
-        <ul className="items-center dark:text-moonlit font-inter font-bold text-sm hidden md:flex">
-          <a className="cursor-pointer" href="#/" onClick={()=>{
-            handleScroll("home")
-          }}>
-            <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
-              {languaje.header.home}
+    <header className="w-full fixed z-50 flex justify-center pt-6 px-4">
+      {/* El fondo va con alpha a propósito: el vidrio refracta lo que pasa por
+          detrás, y sobre un color sólido no se vería nada. `radius` es ~la mitad
+          del alto de la barra para conservar la forma de píldora, porque
+          refractive pisa el borderRadius con ese valor en píxeles. */}
+      <GlassBar
+        refraction={{ radius: 28, blur: 10, bezelWidth: 10, specularOpacity: 0.5 }}
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="relative flex items-center gap-2 rounded-full border border-white/50 bg-[#EFE0F4]/50 px-3 py-2.5 shadow-lg dark:border-white/10 dark:bg-[#372D48]/40 sm:gap-4 sm:px-5"
+      >
+        {/* navegación de escritorio */}
+        <ul className="hidden items-center text-sm font-bold dark:text-moonlit md:flex">
+          {SECTIONS.map((section) => (
+            <li key={section}>
+              <button
+                type="button"
+                onClick={() => handleScroll(section)}
+                className="mx-3 rounded-full px-1 py-0.5 transition-transform duration-200 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#549eff]"
+              >
+                {labelFor(section)}
+              </button>
             </li>
-          </a>
-          <a className="cursor-pointer"
-            onClick={() => handleScroll("experience")}>
-            <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
-              {languaje.experience.title}
-            </li>
-          </a>
-          <a
-            className="cursor-pointer"
-            onClick={() => handleScroll("projects")}
-          >
-            <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
-              {languaje.header.projects}
-            </li>
-          </a>
-          <a className="cursor-pointer" onClick={() => handleScroll("about")}>
-            <li className="mx-4 transform hover:scale-150 transition-transform duration-200">
-              {languaje.header.about}
-            </li>
-          </a>
+          ))}
         </ul>
-        <div className="flex md:hidden">
-          <FaBars
-            className="w-6 h-6 dark:text-white"
-            onClick={() => handleDropdown(".nav-dropdown")}
-          />
-          {/* nav Dropdown */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="nav-dropdown absolute top-10 left-5 w-40 h-40 mt-5 bg-white dark:bg-moonlit rounded-lg shadow-md z-10 hidden"
+
+        {/* botón de menú móvil */}
+        <div className="relative flex md:hidden" ref={menuRef}>
+          <button
+            type="button"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-expanded={menuOpen}
+            aria-label="Menú"
+            className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#549eff] dark:text-white dark:hover:bg-white/10"
           >
-            <ul className="flex flex-col items-center justify-center h-full">
-              <li
-                onClick={() => {
-                  handleScroll("home");
-                  handleDropdown(".nav-dropdown");
-                }}
-                className="cursor-pointer my-2"
+            {menuOpen ? <FaTimes className="h-5 w-5" /> : <FaBars className="h-5 w-5" />}
+          </button>
+
+          <AnimatePresence>
+            {menuOpen && (
+              <motion.ul
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.18 }}
+                className="absolute left-0 top-12 w-44 overflow-hidden rounded-2xl border border-white/50 bg-[#EFE0F4]/95 py-1 shadow-xl backdrop-blur-md dark:border-white/10 dark:bg-[#372D48]/95 dark:text-moonlit"
               >
-                Home
-              </li>
-              <li
-                onClick={() => {
-                  handleScroll("projects");
-                  handleDropdown(".nav-dropdown");
-                }}
-                className="cursor-pointer my-2"
-              >
-                Proyectos
-              </li>
-              <li
-                onClick={() => {
-                  handleScroll("about");
-                  handleDropdown(".nav-dropdown");
-                }}
-                className="cursor-pointer my-2"
-              >
-                Sobre mi
-              </li>
-            </ul>
-          </motion.div>
+                {SECTIONS.map((section) => (
+                  <li key={section}>
+                    <button
+                      type="button"
+                      onClick={() => handleScroll(section)}
+                      className="w-full px-4 py-2.5 text-left text-sm font-medium transition-colors hover:bg-[#6a4279]/15 focus-visible:outline-none focus-visible:bg-[#6a4279]/15"
+                    >
+                      {labelFor(section)}
+                    </button>
+                  </li>
+                ))}
+              </motion.ul>
+            )}
+          </AnimatePresence>
         </div>
-        <div className="flex items-center">
-          {theme === "light" ? (
-            <FaSun
-              onClick={() => handleTheme()}
-              className="cursor-pointer mx-5 w-[20px] h-6 text-yellow-500"
-            />
-          ) : (
-            <FaMoon
-              onClick={() => handleTheme()}
-              className="cursor-pointer mx-5 w-[20px] h-6 text-white"
-            />
-          )}
-          {/* dropdown */}
-          <div className="relative">
-            <IoLanguageOutline
-              className="cursor-pointer lg:w-10 dark:text-moonlit"
-              onClick={() => handleDropdown(".dropdown")}
-            />
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="dropdown absolute top-10 left-5 w-40 h-40 bg-white dark:bg-moonlit rounded-lg shadow-md z-10 hidden"
-            >
-              <ul className="flex flex-col items-center justify-center h-full">
-                <li
-                  onClick={() => handleLanguaje("es")}
-                  className="cursor-pointer my-2"
-                >
-                  Español
-                </li>
-                <li
-                  onClick={() => handleLanguaje("en")}
-                  className="cursor-pointer my-2"
-                >
-                  English
-                </li>
-              </ul>
-            </motion.div>
+
+        <span className="h-6 w-px bg-black/10 dark:bg-white/15" aria-hidden="true" />
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={theme === "light" ? "Activar modo oscuro" : "Activar modo claro"}
+            className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#549eff] dark:hover:bg-white/10"
+          >
+            {theme === "light" ? (
+              <FaSun className="h-5 w-5 text-yellow-500" />
+            ) : (
+              <FaMoon className="h-5 w-5 text-white" />
+            )}
+          </button>
+
+          {/* Selector de idioma: control segmentado en vez de desplegable. Con
+              dos opciones, un menú obliga a dos interacciones para algo que se
+              resuelve en una, y además esconde cuál está activo. */}
+          <div
+            role="group"
+            aria-label="Idioma"
+            className="flex items-center rounded-full bg-black/5 p-0.5 text-xs font-bold dark:bg-white/10"
+          >
+            {[
+              { code: "es", label: "ES", active: isSpanish },
+              { code: "en", label: "EN", active: !isSpanish },
+            ].map((option) => (
+              <button
+                key={option.code}
+                type="button"
+                onClick={() => handleLanguaje(option.code)}
+                aria-pressed={option.active}
+                className={`rounded-full px-2.5 py-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#549eff] ${
+                  option.active
+                    ? "bg-[#6a4279] text-white shadow-sm"
+                    : "text-dark-grey/60 hover:text-dark-grey dark:text-moonlit/60 dark:hover:text-moonlit"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
           </div>
         </div>
-      </div>
+      </GlassBar>
     </header>
   );
 }
