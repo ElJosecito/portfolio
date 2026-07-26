@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom'
 import { FaGithub } from 'react-icons/fa'
 
 import { useProject } from '../../../shared/hooks/useProjects'
+import { useProjectImages } from '../../../shared/hooks/useProjectImages'
+import ProjectGallery from '../ProjectGallery'
 import { isEnglish, localizeProject } from '../../../shared/utils/i18n'
 // Directo y no desde el barrel: importar el índice del kit haría que la página
 // pública se lleve también los componentes que solo usa el panel.
@@ -11,6 +13,7 @@ import Markdown from '../../../shared/ui/Markdown'
 function ProjectDetail({ languaje }) {
     const { slug } = useParams()
     const { project, loading, notFound } = useProject(slug)
+    const { images } = useProjectImages(project?.id)
 
     const english = isEnglish(languaje)
     const localized = project ? localizeProject(project, languaje) : null
@@ -127,6 +130,8 @@ function ProjectDetail({ languaje }) {
                         )}
 
                         {content && <Markdown>{content}</Markdown>}
+
+                        <ProjectGallery images={images} languaje={languaje} />
                     </article>
                 )}
             </div>

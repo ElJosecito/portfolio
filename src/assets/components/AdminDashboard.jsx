@@ -18,6 +18,7 @@ import CreateProjectForm from './admin/CreateProjectForm';
 import ProjectList from './admin/ProjectList';
 import ExperienceForm from './admin/ExperienceForm';
 import ExperienceList from './admin/ExperienceList';
+import GalleryManager from './admin/GalleryManager';
 
 const VIEWS = {
   projects: 'Gestionar proyectos',
@@ -199,7 +200,12 @@ function AdminDashboard() {
           )}
 
           {activeView === 'edit-project' && (
-            <CreateProjectForm initialData={projectToEdit} onSuccess={handleProjectSuccess} />
+            // La galería solo aparece al editar: necesita un proyecto que ya
+            // exista para colgarle las imágenes.
+            <div className="mx-auto max-w-4xl space-y-6">
+              <CreateProjectForm initialData={projectToEdit} onSuccess={handleProjectSuccess} />
+              <GalleryManager projectId={projectToEdit?.id} />
+            </div>
           )}
 
           {activeView === 'experience' && (

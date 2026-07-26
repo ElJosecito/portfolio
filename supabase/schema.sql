@@ -74,6 +74,23 @@ CREATE TABLE IF NOT EXISTS experiences (
   )
 );
 
+-- Galería de cada proyecto. width y height se guardan porque el masonry los
+-- necesita para reservar el hueco de cada imagen antes de que cargue; sin eso
+-- la galería se reacomoda a saltos.
+CREATE TABLE IF NOT EXISTS project_images (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  project_id UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  url TEXT NOT NULL,
+  storage_path TEXT,
+  width INTEGER NOT NULL,
+  height INTEGER NOT NULL,
+  caption TEXT,
+  caption_en TEXT,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
+  CONSTRAINT project_images_dimensions_positive CHECK (width > 0 AND height > 0)
+);
+
 -- Tabla intermedia para la relación many-to-many entre proyectos y tecnologías
 CREATE TABLE IF NOT EXISTS project_technologies (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -105,6 +122,11 @@ COMMENT ON TABLE experiences IS 'Experiencia laboral mostrada en la portada';
 COMMENT ON COLUMN experiences.end_date IS 'NULL significa que el puesto sigue en curso';
 COMMENT ON COLUMN experiences.sort_order IS 'Orden manual de aparición; menor va primero';
 
+COMMENT ON TABLE project_images IS 'Galería de imágenes de cada proyecto';
+COMMENT ON COLUMN project_images.width IS 'Ancho en píxeles; lo necesita el masonry para reservar espacio';
+COMMENT ON COLUMN project_images.height IS 'Alto en píxeles; lo necesita el masonry para reservar espacio';
+COMMENT ON COLUMN project_images.storage_path IS 'Ruta en el bucket project-images, para poder borrar el archivo';
+
 COMMENT ON TABLE project_technologies IS 'Tabla intermedia para relacionar proyectos con tecnologías (many-to-many)';
 COMMENT ON COLUMN project_technologies.project_id IS 'ID del proyecto';
 COMMENT ON COLUMN project_technologies.technology_id IS 'ID de la tecnología';
@@ -115,6 +137,7 @@ CREATE INDEX IF NOT EXISTS idx_projects_platforms ON projects USING GIN (platfor
 CREATE INDEX IF NOT EXISTS idx_projects_featured ON projects(is_featured) WHERE is_featured = TRUE;
 CREATE INDEX IF NOT EXISTS idx_projects_featured_order ON projects(featured_order) WHERE is_featured = TRUE;
 CREATE INDEX IF NOT EXISTS idx_experiences_sort_order ON experiences(sort_order);
+CREATE INDEX IF NOT EXISTS idx_project_images_project ON project_images(project_id, sort_order);
 CREATE INDEX IF NOT EXISTS idx_project_technologies_project ON project_technologies(project_id);
 CREATE INDEX IF NOT EXISTS idx_project_technologies_technology ON project_technologies(technology_id);
 
@@ -172,6 +195,28 @@ $$;
 
 REVOKE ALL ON FUNCTION swap_experience_order(UUID, UUID) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION swap_experience_order(UUID, UUID) TO authenticated;
+
+-- Reordenar la galería reescribe el orden de todas las imágenes del proyecto,
+-- así que también va en una transacción.
+CREATE OR REPLACE FUNCTION set_project_image_order(p_project_id UUID, p_ids UUID[])
+RETURNS VOID
+LANGUAGE plpgsql
+SECURITY INVOKER
+SET search_path = ''
+AS $$
+BEGIN
+  UPDATE public.project_images AS pi
+  SET sort_order = ordered.position - 1
+  FROM (
+    SELECT UNNEST(p_ids) AS id, GENERATE_SUBSCRIPTS(p_ids, 1) AS position
+  ) AS ordered
+  WHERE pi.id = ordered.id
+    AND pi.project_id = p_project_id;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION set_project_image_order(UUID, UUID[]) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION set_project_image_order(UUID, UUID[]) TO authenticated;
 
 -- =============================================================================
 -- SEED
@@ -301,6 +346,7 @@ ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE technologies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE project_technologies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE experiences ENABLE ROW LEVEL SECURITY;
+ALTER TABLE project_images ENABLE ROW LEVEL SECURITY;
 
 -- projects
 DROP POLICY IF EXISTS "Proyectos públicos para lectura" ON projects;
@@ -366,6 +412,20 @@ USING (true);
 DROP POLICY IF EXISTS "Solo autenticados pueden escribir experiencias" ON experiences;
 CREATE POLICY "Solo autenticados pueden escribir experiencias"
 ON experiences FOR ALL
+TO authenticated
+USING (true)
+WITH CHECK (true);
+
+-- project_images
+DROP POLICY IF EXISTS "Imagenes publicas para lectura" ON project_images;
+CREATE POLICY "Imagenes publicas para lectura"
+ON project_images FOR SELECT
+TO public
+USING (true);
+
+DROP POLICY IF EXISTS "Solo autenticados pueden escribir imagenes" ON project_images;
+CREATE POLICY "Solo autenticados pueden escribir imagenes"
+ON project_images FOR ALL
 TO authenticated
 USING (true)
 WITH CHECK (true);
