@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 import { GLYPH_STROKES } from "../../../shared/ui/Loader";
@@ -136,28 +136,48 @@ function Curtain() {
   // toca el scroll del documento.
   const [visible, setVisible] = useState(shouldShow);
   const [noWebgl, setNoWebgl] = useState(false);
+  // El telón terminó de abrirse pero el nodo sigue montado. Ver más abajo.
+  const [fading, setFading] = useState(false);
   const canvasRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!visible) return;
 
     localStorage.setItem(STORAGE_KEY, String(Date.now()));
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const { body } = document;
+    const previousOverflow = body.style.overflow;
+    const previousPadding = body.style.paddingRight;
+
+    // Bloquear el scroll con overflow:hidden le saca la barra a la página, y la
+    // barra de este sitio ocupa lugar real (el CSS le da 6px de ancho, no es de
+    // las que flotan encima). O sea que mientras el telón está arriba la página
+    // es unos píxeles más ancha, y al soltar el bloqueo se encoge de golpe. Ese
+    // salto, justo al final, se ve como un parpadeo.
+    //
+    // El ancho se mide y no se escribe a mano: depende del sistema, y en macOS
+    // con barras flotantes da 0 y esto no hace nada, que es lo correcto.
+    const scrollbar = window.innerWidth - document.documentElement.clientWidth;
+
+    body.style.overflow = "hidden";
+    if (scrollbar > 0) body.style.paddingRight = `${scrollbar}px`;
 
     return () => {
-      document.body.style.overflow = previousOverflow;
+      body.style.overflow = previousOverflow;
+      body.style.paddingRight = previousPadding;
     };
   }, [visible]);
 
-  useEffect(() => {
+  // Layout effect y no effect común: el renderer pinta su primer cuadro de
+  // entrada, y esto corre antes de que el navegador dibuje. Con un useEffect
+  // normal el canvas se vería vacío durante un cuadro y asomaría el hero.
+  useLayoutEffect(() => {
     if (!visible || noWebgl || !canvasRef.current) return;
 
     const renderer = createCurtainRenderer(canvasRef.current, {
       // El tema ya está aplicado en <html> por initTheme, antes del render.
       dark: document.documentElement.classList.contains("dark"),
-      onOpened: () => setVisible(false),
+      onOpened: () => setFading(true),
     });
 
     if (!renderer) {
@@ -168,12 +188,39 @@ function Curtain() {
     return () => renderer.destroy();
   }, [visible, noWebgl]);
 
+  // El telón no se desmonta en el mismo momento en que termina de abrirse.
+  //
+  // `refractive` pinta el vidrio del header y de las cards con `backdrop-filter`,
+  // y eso son capas de compositor. Sacar de golpe un canvas fijo a pantalla
+  // completa que estaba por encima de todas ellas las obliga a rehacerse en el
+  // mismo cuadro, y ese es el parpadeo que quedaba al final.
+  //
+  // Con la opacidad en cero durante un momento, el compositor va soltando el
+  // telón de a poco y las capas de vidrio se rehacen mientras todavía hay algo
+  // encima. Recién después se saca el nodo, y para entonces ya no hay nada que
+  // recomponer. El canvas a esa altura ya es transparente, así que no se ve
+  // ninguna transición: lo único que hace es separar los dos eventos.
+  useEffect(() => {
+    if (!fading) return;
+
+    const timer = setTimeout(() => setVisible(false), 260);
+    return () => clearTimeout(timer);
+  }, [fading]);
+
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] overflow-hidden" aria-hidden="true">
+    <div
+      className="fixed inset-0 z-[100] overflow-hidden"
+      aria-hidden="true"
+      style={{
+        opacity: fading ? 0 : 1,
+        transition: "opacity 200ms linear",
+        pointerEvents: fading ? "none" : undefined,
+      }}
+    >
       {noWebgl ? (
-        <CurtainFallback onDone={() => setVisible(false)} />
+        <CurtainFallback onDone={() => setFading(true)} />
       ) : (
         <canvas ref={canvasRef} className="block h-full w-full" />
       )}

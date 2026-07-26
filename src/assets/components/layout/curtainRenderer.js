@@ -81,6 +81,14 @@ void main() {
   // Antialias del borde de fuga, medido en píxeles.
   float px = 1.5 / uResolution.x;
   float alpha = 1.0 - smoothstep(halfWidth - px, halfWidth + px, dist);
+
+  // Sobre el final el paño queda más angosto que el propio suavizado del borde,
+  // y entonces el smoothstep de arriba nunca llega a cero: deja una tira de un
+  // píxel medio opaca pegada a cada canto de la pantalla. Se queda ahí hasta que
+  // el telón se desmonta, y ahí desaparece de golpe. Ese es el parpadeo del
+  // final. Esto la apaga sola antes de que el paño llegue a ancho cero.
+  alpha *= smoothstep(0.0, 0.0025, halfWidth);
+
   if (alpha <= 0.002) discard;
 
   float u = dist / max(halfWidth, 1e-4);  // 0 en el borde exterior, 1 en el de fuga
@@ -92,9 +100,15 @@ void main() {
   float h  = foldHeight(u, y, uTime);
   float h2 = foldHeight(u + e, y, uTime);
 
+  // El paño cerrado está tenso: es liso, sin relieve. Los pliegues no están ahí
+  // de antes, aparecen porque la tela se amontona al correrse, y por eso nacen
+  // con la apertura. Como \`t\` ya trae el retraso del borde de abajo, los
+  // pliegues brotan arriba primero y van bajando con el movimiento.
+  float emerge = smoothstep(0.0, 0.30, t);
+
   // El paño va pinchado en el riel y se abre hacia abajo, y se ahonda a medida
   // que se frunce.
-  float amp = mix(0.62, 1.0, y) * mix(1.0, 1.7, clamp(gather - 1.0, 0.0, 1.0));
+  float amp = mix(0.62, 1.0, y) * mix(1.0, 1.7, clamp(gather - 1.0, 0.0, 1.0)) * emerge;
 
   // Sobre el final el paño queda tan angosto que un pliegue mide menos de dos
   // píxeles, y ahí el patrón deja de resolverse y empieza a titilar. Se baja el
@@ -114,8 +128,10 @@ void main() {
   // pliegue: es lo que le da ese halo que no tiene una tela mate.
   float sheen = pow(1.0 - max(dot(N, V), 0.0), 2.6);
 
-  // Oclusión: al fondo del pliegue no le llega luz.
-  float ao = mix(0.42, 1.0, smoothstep(-1.1, 0.7, h * amp));
+  // Oclusión: al fondo del pliegue no le llega luz. Va contra \`emerge\` también,
+  // porque sin pliegue no hay fondo de pliegue que ensombrecer: si no, el paño
+  // liso arrancaba oscurecido sin motivo.
+  float ao = mix(1.0, mix(0.42, 1.0, smoothstep(-1.1, 0.7, h * amp)), emerge);
 
   // Ciruela 700/500/300 en claro, 950/800/500 en oscuro. En claro se probó una
   // rampa más alta y el terciopelo se iba a satén: las crestas llegaban casi a
@@ -136,7 +152,12 @@ void main() {
 
   // Filo de luz en el borde de fuga: es el canto de la tela pegando contra el
   // aire. Sin esto el corte se ve cortado con tijera.
-  color += lit * smoothstep(0.985, 1.0, u) * 0.35;
+  //
+  // El segundo factor lo apaga sobre el final. El filo vive en el 1.5% interior
+  // del paño, así que cuando el paño se hace más angosto que eso el filo pasa a
+  // ser todo el paño: en vez de un canto iluminado queda una raya brillante
+  // pegada al borde de la pantalla.
+  color += lit * smoothstep(0.985, 1.0, u) * smoothstep(0.0, 0.02, halfWidth) * 0.35;
 
   // El monograma va impreso en la tela. Se muestrea en coordenadas del paño y
   // no de pantalla, así se comprime y se sombrea junto con los pliegues en vez
@@ -344,6 +365,11 @@ export function createCurtainRenderer(canvas, { dark = false, onOpened } = {}) {
   const OPEN_START = DRAW_END + TIMELINE.HOLD_MS;
   const TOTAL = OPEN_START + TIMELINE.OPEN_MS;
 
+  // Un par de cuadros ya vacíos antes de avisar que terminó. Le dan tiempo al
+  // compositor a asentarse con el canvas transparente en vez de tener que
+  // sacarle de encima una capa que recién se estaba dibujando.
+  const TAIL_MS = 80;
+
   // Arranca despacio, agarra velocidad y se asienta. Un lineal delata que hay
   // una interpolación atrás.
   function easeInOutCubic(t) {
@@ -354,10 +380,7 @@ export function createCurtainRenderer(canvas, { dark = false, onOpened } = {}) {
   let start = 0;
   let lastDrawProgress = -1;
 
-  function tick(now) {
-    if (!start) start = now;
-    const elapsed = now - start;
-
+  function renderAt(elapsed) {
     resize();
 
     const drawProgress = Math.max(0, Math.min(1, elapsed / DRAW_END));
@@ -375,8 +398,21 @@ export function createCurtainRenderer(canvas, { dark = false, onOpened } = {}) {
 
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
 
-    if (elapsed >= TOTAL) {
+  // El primer cuadro se pinta acá y no en el primer requestAnimationFrame: entre
+  // que el canvas se mete en el DOM y que llega ese rAF pasa al menos un cuadro,
+  // y en ese hueco el canvas está vacío y se ve el hero antes de que la tela lo
+  // tape. Llamado desde un layout effect, esto entra antes del primer pintado.
+  renderAt(0);
+
+  function tick(now) {
+    if (!start) start = now;
+    const elapsed = now - start;
+
+    renderAt(elapsed);
+
+    if (elapsed >= TOTAL + TAIL_MS) {
       onOpened?.();
       return;
     }
@@ -396,9 +432,12 @@ export function createCurtainRenderer(canvas, { dark = false, onOpened } = {}) {
       gl.deleteProgram(program);
       gl.deleteShader(vertex);
       gl.deleteShader(fragment);
+
       // Sin esto el contexto queda vivo hasta que pase el recolector, y los
-      // navegadores permiten pocos contextos WebGL a la vez.
-      gl.getExtension("WEBGL_lose_context")?.loseContext();
+      // navegadores permiten pocos contextos WebGL a la vez. Va diferido porque
+      // perder el contexto repinta el canvas, y si eso ocurre mientras el nodo
+      // todavía está en el documento se ve el repintado.
+      setTimeout(() => gl.getExtension("WEBGL_lose_context")?.loseContext(), 0);
     },
   };
 }
