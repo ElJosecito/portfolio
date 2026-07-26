@@ -7,10 +7,13 @@ import { TIMELINE, createCurtainRenderer } from "./curtainRenderer";
 /**
  * Cada cuánto vuelve a verse el telón, en milisegundos.
  *
- * En 0 se ve siempre que se entra a la portada, que es lo que sirve para
- * probarlo. Para que aparezca como mucho una vez cada 5 minutos: 5 * 60 * 1000.
+ * Cinco minutos: quien entra, se mete en un proyecto y vuelve a la portada no se
+ * come la presentación de nuevo, pero quien vuelve más tarde sí la ve. La marca
+ * va en localStorage, así que también aguanta recargas y pestañas nuevas.
+ *
+ * En 0 aparece en cada entrada a la portada, que es como se probó.
  */
-export const CURTAIN_COOLDOWN_MS = 0;
+export const CURTAIN_COOLDOWN_MS = 5 * 60 * 1000;
 
 const STORAGE_KEY = "curtain:last-shown";
 
