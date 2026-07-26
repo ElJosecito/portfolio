@@ -73,7 +73,7 @@ function Header({ onDatos, languaje }) {
   const labelFor = (section) => languaje.header[section];
 
   return (
-    <header className="w-full fixed z-50 flex justify-center pt-3 px-4">
+    <header className="w-full fixed z-50 flex justify-center pt-6 px-4">
       {/* El fondo va con alpha a propósito: el vidrio refracta lo que pasa por
           detrás, y sobre un color sólido no se vería nada. `radius` es ~la mitad
           del alto de la barra para conservar la forma de píldora, porque
