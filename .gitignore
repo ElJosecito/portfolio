@@ -25,5 +25,8 @@ dist-ssr
 
 
 .env
+.env.*
+!.env.example
+
 # Agent tooling
 .atl/

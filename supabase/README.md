@@ -75,6 +75,27 @@ Esto no es opcional: sin RLS, los roles `anon` y `authenticated` tienen `GRANT A
 el schema `public` por defecto, y la anon key viaja en el bundle del front. Cualquier tabla
 nueva en `public` necesita `ENABLE ROW LEVEL SECURITY` + sus policies.
 
+### Probar sin tocar producción:
+
+Hay un segundo proyecto Supabase, **Testing** (ref `urexozntscdkfiywxhyh`), con el
+mismo schema y el mismo seed. Sirve para probar subidas de imágenes, reordenar la
+galería y borrados sin ensuciar la base real.
+
+1. Creá `.env.testing` en la raíz (está en `.gitignore`) con la URL y la anon key
+   de ese proyecto.
+2. Levantá con `npm run dev:testing`. Vite carga `.env` y después `.env.testing`
+   encima, así que las variables de producción quedan pisadas solo en ese modo.
+3. El usuario admin hay que crearlo a mano desde el panel de Supabase
+   (Authentication → Add user): no se puede crear por SQL sin manipular el
+   hasheo de contraseñas.
+
+Ese proyecto tiene además tablas de un experimento anterior (`categories`,
+`portfolio_images`) que no se tocan; conviven con las del portfolio.
+
+Se auto-pausa por inactividad, igual que producción. Si al levantarlo da
+`the database system is not accepting connections`, hay que esperar un par de
+minutos a que termine de restaurar.
+
 ### Storage:
 
 Bucket `project-images`, público, límite de 15MB (el front valida además tipo de imagen y
