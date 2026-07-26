@@ -2,7 +2,7 @@ export const English = {
   languaje: "English",
   header: {
     home: "Home",
-    expecience: "Experience",
+    experience: "Experience",
     about: "About",
     projects: "Projects",
     contact: "Contact",
