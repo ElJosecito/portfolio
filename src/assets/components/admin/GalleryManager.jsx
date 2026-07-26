@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import {
     DndContext,
+    DragOverlay,
     KeyboardSensor,
     PointerSensor,
     closestCenter,
@@ -11,11 +12,9 @@ import {
 import {
     SortableContext,
     arrayMove,
-    rectSortingStrategy,
     sortableKeyboardCoordinates,
     useSortable,
 } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 
 import { supabase } from '../../../shared/supabaseClient';
 import { uploadImage, deleteImage } from '../../../shared/utils/uploadImage';
@@ -33,19 +32,24 @@ import {
     PanelTitle,
 } from '../../../shared/ui';
 
-function SortableImage({ image, onRemove, onCaptionChange }) {
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-        useSortable({ id: image.id });
+// Sin estrategia de reacomodo: las estrategias que trae dnd-kit calculan el
+// desplazamiento de los demás elementos asumiendo una grilla de celdas iguales,
+// y en un masonry cada imagen tiene su propio alto. Aplicarlas descoloca todo.
+// En su lugar, el elemento que se arrastra viaja en un DragOverlay y el destino
+// se marca con un borde.
+const NO_SHIFT = () => null;
+
+function SortableImage({ image, onRemove, onCaptionChange, isOver }) {
+    const { attributes, listeners, setNodeRef, isDragging } = useSortable({ id: image.id });
 
     return (
         <div
             ref={setNodeRef}
-            style={{
-                transform: CSS.Transform.toString(transform),
-                transition,
-                opacity: isDragging ? 0.4 : 1,
-            }}
-            className="overflow-hidden rounded-xl border border-plum-200 bg-white dark:border-plum-700 dark:bg-plum-900"
+            className={`overflow-hidden rounded-xl border bg-white transition-all dark:bg-plum-900 ${
+                isOver
+                    ? 'border-volt-500 ring-2 ring-volt-500'
+                    : 'border-plum-200 dark:border-plum-700'
+            } ${isDragging ? 'opacity-30' : ''}`}
         >
             {/* El asa de arrastre es un botón: dnd-kit le da soporte de teclado
                 (espacio para tomar, flechas para mover) sin trabajo extra. */}
@@ -99,10 +103,13 @@ function GalleryManager({ projectId }) {
     const [uploading, setUploading] = useState(false);
     const [pendingDelete, setPendingDelete] = useState(null);
     const [deleting, setDeleting] = useState(false);
+    const [activeId, setActiveId] = useState(null);
+    const [overId, setOverId] = useState(null);
 
     // `items` es el orden en pantalla mientras se arrastra; si es null, manda
     // lo que vino de la base.
     const gallery = items ?? images;
+    const activeImage = gallery.find((image) => image.id === activeId);
 
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -150,6 +157,9 @@ function GalleryManager({ projectId }) {
     };
 
     const handleDragEnd = async ({ active, over }) => {
+        setActiveId(null);
+        setOverId(null);
+
         if (!over || active.id === over.id) return;
 
         const oldIndex = gallery.findIndex((image) => image.id === active.id);
@@ -249,8 +259,9 @@ function GalleryManager({ projectId }) {
                 <PanelHeader>
                     <PanelTitle>Galería</PanelTitle>
                     <PanelDescription>
-                        Arrastrá para reordenar. Las imágenes se comprimen a WebP y se
-                        achican a 1600px antes de subirse.
+                        Esta es la galería tal como se ve en la página del proyecto.
+                        Arrastrá una imagen sobre otra para intercambiar su lugar. Se
+                        comprimen a WebP y se achican a 1600px antes de subirse.
                     </PanelDescription>
                 </PanelHeader>
 
@@ -282,17 +293,30 @@ function GalleryManager({ projectId }) {
                         <DndContext
                             sensors={sensors}
                             collisionDetection={closestCenter}
+                            onDragStart={({ active }) => setActiveId(active.id)}
+                            onDragOver={({ over }) => setOverId(over?.id ?? null)}
+                            onDragCancel={() => {
+                                setActiveId(null);
+                                setOverId(null);
+                            }}
                             onDragEnd={handleDragEnd}
                         >
                             <SortableContext
                                 items={gallery.map((image) => image.id)}
-                                strategy={rectSortingStrategy}
+                                strategy={NO_SHIFT}
                             >
-                                <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+                                {/* Mismas columnas que la galería pública: lo que
+                                    se acomoda acá es literalmente lo que se ve. */}
+                                <div className="columns-2 gap-4 md:columns-3">
                                     {gallery.map((image) => (
-                                        <div key={image.id} onBlur={() => handleCaptionSave(image.id)}>
+                                        <div
+                                            key={image.id}
+                                            onBlur={() => handleCaptionSave(image.id)}
+                                            className="mb-4 break-inside-avoid"
+                                        >
                                             <SortableImage
                                                 image={image}
+                                                isOver={overId === image.id && activeId !== image.id}
                                                 onRemove={setPendingDelete}
                                                 onCaptionChange={handleCaptionChange}
                                             />
@@ -300,6 +324,16 @@ function GalleryManager({ projectId }) {
                                     ))}
                                 </div>
                             </SortableContext>
+
+                            <DragOverlay>
+                                {activeImage && (
+                                    <img
+                                        src={activeImage.url}
+                                        alt=""
+                                        className="w-full rounded-xl opacity-90 shadow-2xl"
+                                    />
+                                )}
+                            </DragOverlay>
                         </DndContext>
                     )}
                 </PanelBody>
