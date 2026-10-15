@@ -23,9 +23,6 @@ import { initLanguage, storeLanguage } from "../shared/utils/language";
 //loader
 import { FullPageLoader } from "../shared/ui/Loader";
 
-//telón de entrada de la portada
-import Curtain from "../assets/components/layout/Curtain";
-
 //fallback del detalle: el mismo skeleton que usa la página ya cargada
 import ProjectDetailFallback from "../assets/components/skeletons/ProjectDetailFallback";
 
@@ -62,9 +59,6 @@ function Router() {
   return (
     <>
       <ScrollToTop />
-      {/* El telón es solo de la portada. Va acá y no dentro del Hero porque
-          tiene que tapar también la barra fija, que se monta a este nivel. */}
-      {location.pathname === "/" && <Curtain />}
       {/* <!-- Page content here --> */}
       {!hideLayout && <Header onDatos={handleLanguaje} languaje={languaje} />}
       <Routes>

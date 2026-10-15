@@ -4,10 +4,6 @@ import { cn } from "./cn";
 // El viewBox va ajustado al trazo más la mitad del grosor de línea que sobresale
 // a cada lado, para que el monograma no venga con aire de más y quede
 // descentrado respecto del riel de abajo.
-//
-// El telón de entrada usa los mismos trazos pero con un viewBox propio, porque
-// necesita que el centro caiga en el hueco entre las dos letras y este no lo
-// hace. Ver Curtain.jsx.
 export const GLYPH_VIEW_BOX = "6 10 72 44";
 
 /**
