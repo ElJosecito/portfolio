@@ -10,11 +10,11 @@ export const Spanish = {
   hero: {
     name: "Jose Miguel Martinez Florimon",
     subtitle: [
-      "Desarrollador Web",
+      "Mobile Tech Lead",
+      "React Native",
       "Desarrollador Móvil",
       "Front-End",
-      "Back-End",
-      "Full-Stack",
+      "Aprendiendo iOS nativo",
     ],
   },
   about: {
@@ -24,13 +24,12 @@ export const Spanish = {
     summaryTitle: "En resumen",
     subtitle: "Acercade de mi y formas de contacto.",
     description:
-      "Desarrollador web y móvil con experiencia en diseño, desarrollo y mantenimiento de aplicaciones de punta a punta.",
+      "Mobile Tech Lead con React Native: llevo apps de punta a punta, desde la arquitectura hasta la publicación en App Store y Google Play.",
     paragraphs: [
-      "Soy un apasionado de la tecnología y el desarrollo de producto. Con una sólida experiencia en el ámbito Full Stack, me he especializado en el ecosistema MERN (MongoDB, Express.js, React.js y Node.js), y llevo ese mismo stack al móvil con React Native.",
-      "Me encanta desafiarme a mí mismo y explorar nuevas tecnologías para crear soluciones innovadoras y eficientes. Como desarrollador, me destaco por mi capacidad para diseñar, desarrollar y mantener aplicaciones completas y atractivas —en la web y en el teléfono— que no solo cumplan con los requisitos del cliente, sino que también ofrezcan una experiencia interactiva y satisfactoria para el usuario final.",
+      "Trabajo sobre todo en móvil, con React Native y TypeScript. Lideré la arquitectura móvil de Lendy, una plataforma de préstamos con más de 10,000 descargas, y construí solo Vecinia, una plataforma para comunidades residenciales con dos apps publicadas en App Store y Google Play.",
+      "Hoy lidero el frontend en Medycore: la migración de una aplicación web en producción a React Native, el design system y los estándares de code review de un equipo de cuatro desarrolladores.",
       "Trabajar en las dos plataformas me obliga a pensar el producto entero: APIs compartidas, diseño consistente, y los detalles que cambian cuando una interfaz pasa de una pantalla de escritorio a un pulgar.",
-      "Soy un profesional proactivo, adaptable y comprometido con el éxito del equipo. Me gusta trabajar en colaboración, aportando mis habilidades y conocimientos para alcanzar los objetivos establecidos con eficacia y creatividad.",
-      "¡Estoy emocionado de seguir creciendo y aprendiendo en este apasionante mundo del desarrollo y la tecnología!",
+      "Ahora estoy aprendiendo iOS nativo con Swift y SwiftUI, con apps propias como DEBY, para entender mejor la plataforma en la que publico.",
     ],
   },
   country: {
@@ -67,16 +66,16 @@ export const Spanish = {
   // encabezado de sección se optimizan para cosas distintas, y mezclarlos
   // termina con uno de los dos mal.
   seo: {
-    jobTitle: "Desarrollador Web y Mobile Full-Stack",
+    jobTitle: "Mobile Tech Lead · React Native",
     home: {
-      title: "Jose Martinez — Desarrollador Web y Mobile Full-Stack",
+      title: "Jose Martinez — Mobile Tech Lead · React Native",
       description:
-        "Portfolio de Jose Martinez, desarrollador web y mobile full-stack desde La Romana, República Dominicana. Proyectos con React, React Native, Node.js y MongoDB.",
+        "Portfolio de Jose Martinez, Mobile Tech Lead desde La Romana, República Dominicana. Apps con React Native publicadas en App Store y Google Play, y proyectos web con React y Next.js.",
     },
     projects: {
       title: "Proyectos — Jose Martinez",
       description:
-        "Proyectos web y mobile de Jose Martinez: aplicaciones full-stack construidas con React, React Native, Node.js y MongoDB.",
+        "Proyectos web y mobile de Jose Martinez, construidos con React Native, React, Next.js y TypeScript.",
     },
   },
 };

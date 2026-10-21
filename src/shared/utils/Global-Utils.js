@@ -31,6 +31,22 @@ export const DevTools = [
 		name: 'React',
 		icon: 'https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg',
 	},
+	{
+		id: uuid(),
+		name: 'React Native',
+		icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/reactnative/reactnative-original.svg',
+	},
+	{
+		id: uuid(),
+		name: 'Expo',
+		icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/expo/expo-original.svg',
+		className: 'dark:invert opacity-70',
+	},
+	{
+		id: uuid(),
+		name: 'Swift',
+		icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg',
+	},
 	// {
 	// 	id: uuid(),
 	// 	name: 'Angular',

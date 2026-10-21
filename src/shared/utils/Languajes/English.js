@@ -10,11 +10,11 @@ export const English = {
   hero: {
     name: "Jose Miguel Martinez Florimon",
     subtitle: [
-      "Web Developer",
+      "Mobile Tech Lead",
+      "React Native",
       "Mobile Developer",
       "Front-End",
-      "Back-End",
-      "Full-Stack",
+      "Learning native iOS",
     ],
   },
   about: {
@@ -24,13 +24,12 @@ export const English = {
     summaryTitle: "At a glance",
     subtitle: "About me and contact ways.",
     description:
-      "Web and mobile developer with experience designing, building and maintaining applications end to end.",
+      "Mobile Tech Lead working in React Native: I take apps end to end, from architecture to release on the App Store and Google Play.",
     paragraphs: [
-      "I am passionate about technology and product development. With solid experience in the Full Stack field, I have specialized in the MERN ecosystem (MongoDB, Express.js, React.js, and Node.js), and I bring that same stack to mobile with React Native.",
-      "I love to challenge myself and explore new technologies to create innovative and efficient solutions. As a developer, I stand out for my ability to design, develop, and maintain complete and engaging applications — on the web and on the phone — which not only meet client requirements but also provide an interactive and satisfying experience for the end user.",
+      "I work mostly on mobile, with React Native and TypeScript. I led the mobile architecture of Lendy, a lending platform with over 10,000 downloads, and built Vecinia on my own, a platform for residential communities with two apps live on the App Store and Google Play.",
+      "Today I lead frontend at Medycore: migrating a production web app to React Native, owning the design system, and setting the code review standards for a team of four developers.",
       "Working across both platforms means I think about a product as a whole: shared APIs, consistent design, and the details that change when an interface moves from a desktop screen to a thumb.",
-      "I am a proactive, adaptable professional committed to the team's success. I enjoy working collaboratively, bringing my skills and knowledge to effectively and creatively achieve established goals.",
-      "I am excited to continue growing and learning in this exciting world of development and technology!",
+      "I'm currently learning native iOS with Swift and SwiftUI, through my own apps like DEBY, to better understand the platform I ship to.",
     ],
   },
   country: {
@@ -66,16 +65,16 @@ export const English = {
   // encabezado de sección se optimizan para cosas distintas, y mezclarlos
   // termina con uno de los dos mal.
   seo: {
-    jobTitle: "Full-Stack Web & Mobile Developer",
+    jobTitle: "Mobile Tech Lead · React Native",
     home: {
-      title: "Jose Martinez — Full-Stack Web & Mobile Developer",
+      title: "Jose Martinez — Mobile Tech Lead · React Native",
       description:
-        "Portfolio of Jose Martinez, full-stack web and mobile developer based in La Romana, Dominican Republic. Projects built with React, React Native, Node.js and MongoDB.",
+        "Portfolio of Jose Martinez, Mobile Tech Lead based in La Romana, Dominican Republic. React Native apps live on the App Store and Google Play, plus web projects built with React and Next.js.",
     },
     projects: {
       title: "Projects — Jose Martinez",
       description:
-        "Web and mobile projects by Jose Martinez: full-stack applications built with React, React Native, Node.js and MongoDB.",
+        "Web and mobile projects by Jose Martinez, built with React Native, React, Next.js and TypeScript.",
     },
   },
 };
