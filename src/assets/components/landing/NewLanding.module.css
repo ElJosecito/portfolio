@@ -19,4 +19,13 @@
      de NewLanding.module.css. */
   margin-bottom: calc(-1 * var(--footer-height, 0px));
   padding-bottom: var(--footer-height, 0px);
+  /* Ese padding-bottom es un hueco transparente, pero sigue siendo parte de
+     este `<main>` (z-index 1, encima del footer): sin esto se comía todos los
+     clics del footer revelado. El `<main>` deja pasar los clics y cada
+     sección los vuelve a tomar para su propio contenido. */
+  pointer-events: none;
+}
+
+.main > * {
+  pointer-events: auto;
 }
