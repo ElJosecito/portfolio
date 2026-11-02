@@ -1,0 +1,326 @@
+/*
+ * Migración de Tailwind a CSS Modules — ver tokens.css para las variables
+ * compartidas. Visualmente debe quedar igual al original en Tailwind.
+ */
+.section {
+  position: relative;
+  z-index: var(--z-section-content);
+  /* `isolate` original: crea un contexto de apilamiento propio para que el
+     fondo opaco tape a la cabeza 3D compartida detrás (ver comentario de
+     useStackedCards más arriba en el JSX) — load-bearing, no se puede caer. */
+  isolation: isolate;
+  width: 100%;
+  background-color: var(--color-plum-900);
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 7rem;
+  padding-bottom: 7rem;
+  color: white;
+}
+
+@media (min-width: 640px) {
+  .section {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    padding-top: 9rem;
+    padding-bottom: 9rem;
+  }
+}
+
+.header {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 72rem;
+}
+
+.kicker {
+  margin-top: 0.75rem;
+  font-family: var(--font-tech);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--color-plum-200);
+}
+
+.title {
+  margin-top: 1rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  text-transform: uppercase;
+  line-height: 0.95;
+}
+
+.list {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3rem;
+  max-width: 72rem;
+}
+
+@media (min-width: 768px) {
+  .list {
+    margin-top: 4rem;
+  }
+}
+
+.seeAllWrap {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3rem;
+  max-width: 72rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Mismo lenguaje visual que el CTA de ContactSection (`copyButton`): pill
+   blanca, mono en mayúsculas, sin bordes — la única diferencia es que acá
+   es un link real, no un botón. */
+.seeAllLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  background-color: white;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-tech);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-plum-900);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -4px rgba(0, 0, 0, 0.15);
+  transition: transform 150ms var(--ease-standard);
+}
+
+.seeAllLink:hover {
+  transform: translateX(4px);
+}
+
+.seeAllLink:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seeAllLink:hover {
+    transform: none;
+  }
+}
+
+.loadingText {
+  font-family: var(--font-tech);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.emptyText {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/*
+ * `--card-step` / `--header-offset` no son solo estilo: el `style={{ top }}`
+ * inline en el JSX los lee en tiempo de ejecución para calcular el `top`
+ * sticky de cada card (ver comentario junto al <Link> en ProjectsSection.jsx).
+ * Antes vivían como clases Tailwind `[--card-step:...]` directamente en el
+ * className; acá hay que declararlos como custom properties reales con el
+ * MISMO nombre, si se renombran el cálculo inline del JSX se rompe.
+ */
+.card {
+  --card-step: 0.75rem;
+  --header-offset: 4rem;
+  position: sticky;
+  margin-bottom: 1.5rem;
+  display: grid;
+  gap: 1.25rem;
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: var(--color-plum-800);
+  padding: 1.25rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transition: border-color 500ms var(--ease-standard);
+}
+
+.card:hover {
+  border-color: rgba(111, 172, 255, 0.4);
+}
+
+@media (min-width: 640px) {
+  .card {
+    --card-step: 1.25rem;
+    --header-offset: 5rem;
+    margin-bottom: 2rem;
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .card {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: center;
+    gap: 2.5rem;
+  }
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-family: var(--font-tech);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.index {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-volt-300);
+}
+
+.platforms {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.platformBadge {
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.25rem 0.625rem;
+}
+
+.name {
+  margin-top: 0.25rem;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  line-height: 1.25;
+}
+
+@media (min-width: 640px) {
+  .name {
+    font-size: 1.875rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .name {
+    font-size: 2.25rem;
+  }
+}
+
+/* `line-clamp-3` / `md:line-clamp-4` recreados a mano: recortada a propósito
+   (ver comentario junto a la descripción en el JSX), sin la utilidad de
+   Tailwind hay que escribir las cuatro propiedades del truco a mano. */
+.description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (min-width: 640px) {
+  .description {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .description {
+    -webkit-line-clamp: 4;
+  }
+}
+
+.techList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 1rem;
+  row-gap: 0.25rem;
+  font-family: var(--font-tech);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.viewProjectArrow {
+  margin-top: 0.5rem;
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-tech);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--color-volt-300);
+  transition: transform 300ms var(--ease-standard);
+}
+
+/* Reemplazo de `group` + `group-hover:translate-x-1`: `.card` (el <Link>)
+   hace de "group" implícito, la flecha reacciona a su :hover. */
+.card:hover .viewProjectArrow {
+  transform: translateX(0.25rem);
+}
+
+.imageWrapper {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  /* Tope de seguridad en svh para pantallas bajas (ver comentario en
+     ProjectImage, JSX) — se mantiene como valor literal con override por
+     breakpoint, igual que en Tailwind. */
+  max-height: 34svh;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: linear-gradient(
+    to bottom right,
+    rgba(71, 44, 82, 0.7),
+    rgba(55, 45, 72, 0.6),
+    var(--color-plum-900)
+  );
+}
+
+@media (min-width: 768px) {
+  .imageWrapper {
+    max-height: 60svh;
+  }
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.08), transparent 55%);
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  padding: 1.25rem;
+  transition: transform 500ms ease-out;
+}
+
+@media (min-width: 640px) {
+  .image {
+    padding: 2rem;
+  }
+}

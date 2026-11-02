@@ -24,3 +24,4 @@ export { Skeleton, SkeletonText, SkeletonRows } from "./Skeleton";
 export { Loader, FullPageLoader } from "./Loader";
 export { ImageDrop } from "./ImageDrop";
 export { Markdown } from "./Markdown";
+export { default as ErrorBoundary } from "./ErrorBoundary";

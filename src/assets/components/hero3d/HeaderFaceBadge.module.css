@@ -1,0 +1,28 @@
+/*
+ * Migración de Tailwind a CSS puro (ver HeaderFaceBadge.jsx). Breakpoint
+ * `sm` de Tailwind = 640px (ver tokens.css, comentario de breakpoints).
+ */
+
+/* h-10 w-10 shrink-0 sm:h-12 sm:w-12 → 40px mobile, 48px desde 640px. */
+.badge {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  height: 2.5rem; /* h-10 */
+  width: 2.5rem; /* w-10 */
+}
+
+@media (min-width: 640px) {
+  .badge {
+    height: 3rem; /* sm:h-12 */
+    width: 3rem; /* sm:w-12 */
+  }
+}
+
+/* h-full w-full rounded-full object-cover */
+.fallbackImg {
+  height: 100%;
+  width: 100%;
+  border-radius: 9999px;
+  object-fit: cover;
+}

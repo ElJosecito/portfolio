@@ -1,0 +1,147 @@
+/*
+ * Loader genérico (monograma "JM"), migrado de utilidades de Tailwind a CSS
+ * puro (ver revisión del rediseño de landing, "Nuevo loader") — las dos
+ * keyframes que usaba (`trace-glyph`/`slide-track`) solo las usaba este
+ * componente, así que se movieron acá y se borraron de tailwind.config.cjs
+ * en vez de dejarlas vivas sin nadie que las lea.
+ *
+ * Mismo ciruela/plum que el resto del sitio (ver tokens.css), consciente del
+ * tema claro/oscuro (`:global(.dark)`) — a diferencia del Footer o del
+ * cobalto de la intro, este loader SÍ vive dentro del flujo normal del
+ * tema, así que tiene que leerlo.
+ */
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.glyph {
+  width: auto;
+  color: var(--color-plum-500, #6a4279);
+}
+:global(.dark) .glyph {
+  color: var(--color-plum-200, #cfaadd);
+}
+
+.glyphSm {
+  height: 2rem;
+}
+.glyphMd {
+  height: 3.5rem;
+}
+.glyphLg {
+  height: 5rem;
+}
+
+.stroke {
+  stroke-dasharray: 100;
+  animation: trace-glyph 2.6s ease-in-out infinite;
+}
+
+@keyframes trace-glyph {
+  0% {
+    stroke-dashoffset: 100;
+    opacity: 0.15;
+  }
+  35% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  65% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: -100;
+    opacity: 0.15;
+  }
+}
+
+.rail {
+  position: relative;
+  display: block;
+  height: 3px;
+  width: 6rem;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--color-plum-500, #6a4279) 15%, transparent);
+}
+:global(.dark) .rail {
+  background: color-mix(in srgb, var(--color-plum-200, #cfaadd) 20%, transparent);
+}
+
+.railGlint {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 33%;
+  border-radius: 9999px;
+  background: var(--color-plum-500, #6a4279);
+  animation: slide-track 1.6s ease-in-out infinite;
+}
+:global(.dark) .railGlint {
+  background: var(--color-plum-200, #cfaadd);
+}
+
+@keyframes slide-track {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stroke {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  .railGlint {
+    animation: pulse 1.8s ease-in-out infinite;
+    width: 100%;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Pantalla completa (ver `FullPageLoader`): para los `Suspense` de rutas
+   secundarias (admin, detalle de proyecto si no tuviera su propio skeleton)
+   donde todavía no hay layout que preservar. Cobalto/ink, consciente de
+   tema — NO es el fondo de la intro (ver IntroFallback.jsx, ese es
+   cobalto fijo sin tema porque imita una pantalla puntual, esta es
+   genérica para cualquier ruta). */
+.fullPage {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-noon, #efeef2);
+}
+:global(.dark) .fullPage {
+  background: var(--color-midnight, #0f172a);
+}

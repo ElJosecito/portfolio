@@ -1,0 +1,15 @@
+/*
+ * Migración de Tailwind a CSS puro (ver HeadLayer.jsx): mismas reglas que
+ * `pointer-events-none fixed inset-0 z-20 overflow-hidden`, solo que ahora
+ * escopeadas a este componente.
+ */
+.layer {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  /* z-20 exacto: mismo nivel documentado en el comentario del JSX (nombre
+     gigante del hero en z-10, secciones en z-30, header en z-50). No
+     tocar este valor — ver tokens.css para el resto del stack de z-index. */
+  z-index: var(--z-head-layer);
+  overflow: hidden;
+}

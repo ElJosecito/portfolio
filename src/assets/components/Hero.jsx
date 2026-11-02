@@ -30,7 +30,11 @@ import ExperienceCard from "./cards/ExperienceCard";
 import { DevTools } from "../../shared/utils/Global-Utils";
 
 //hot toast
-import toast, { Toaster } from "react-hot-toast";
+// `Toaster` ahora se monta una sola vez, globalmente, en Router.jsx (ver su
+// comentario) — antes vivía acá y en NewLanding.jsx, cada uno solo presente
+// en "/", así que un toast disparado desde una ruta sin ninguno de los dos
+// (p. ej. el Footer en /all-projects) no tenía dónde pintarse.
+import toast from "react-hot-toast";
 
 //link
 import { Link } from "react-router-dom";
@@ -163,9 +167,15 @@ function Hero({ languaje }) {
   {/* <div class="relative h-full w-full bg-neutral-900"></div> */ }
   return (
     <>
-      <main className="w-full min-h-fit h-fit pb-10 flex flex-col items-center bg-noon dark:bg-slate-950">
+      {/* `relative` ancla el resplandor a este main. Sin él, `absolute` se
+          posicionaba contra el viewport inicial —el tope de la página— y con la
+          sección 3D arriba el velo fucsia quedaba pintado encima de la cara. */}
+      <main className="relative w-full min-h-fit h-fit pb-10 flex flex-col items-center bg-noon dark:bg-slate-950">
+        {/* Fondo de cuadrícula desactivado: el usuario prefiere el fondo plano.
         <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
-        <div className="absolute inset-0 bg-fuchsia-300 bg-[size:20px_20px] opacity-20 blur-[100px]"></div>
+        */}
+        {/* Alto de una pantalla, como se veía antes cuando el hero era lo primero. */}
+        <div className="absolute inset-x-0 top-0 h-screen bg-fuchsia-300 bg-[size:20px_20px] opacity-20 blur-[100px]"></div>
 
         {/* hero */}
         {/* La barra fija ocupa ~80px desde el borde: 24 de su pt-6 más 56 de
@@ -197,9 +207,13 @@ function Hero({ languaje }) {
                 />
               )}
               <div className="w-full flex flex-col z-[2] absolute left-0 bottom-0 leading-4 p-5 font-inter">
-                {/* El h1 de la portada. Era un span, así que la página de
-                    entrada del sitio no tenía encabezado principal: para un
-                    buscador, nada declaraba de quién es este portfolio. */}
+                {/* La landing clásica es el respaldo que se sirve a equipos
+                    débiles, sin WebGL, con movimiento reducido o
+                    `?landing=classic` — en todos esos casos NO se monta el
+                    landing nuevo (ver NewLanding/HeroSection), así que este
+                    es el único `<h1>` de la página. Sin él la landing
+                    clásica queda sin ningún encabezado de nivel 1 (ver
+                    revisión, punto 8). */}
                 <h1 className="text-3xl font-bold leading-7">
                   {languaje.hero.name}
                 </h1>
@@ -552,7 +566,6 @@ function Hero({ languaje }) {
           </div>
         </section>
       </main>
-      <Toaster />
     </>
   );
 }

@@ -1,0 +1,202 @@
+.section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--color-plum-800);
+  color: white;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 7rem;
+  padding-bottom: 7rem;
+}
+
+@media (min-width: 640px) {
+  .section {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    padding-top: 9rem;
+    padding-bottom: 9rem;
+  }
+}
+
+/* moonlit/10 -> transparent */
+.gradientTop {
+  pointer-events: none;
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 8rem;
+  background: linear-gradient(to bottom, rgba(245, 245, 247, 0.1), transparent);
+}
+
+.container {
+  position: relative;
+  z-index: var(--z-section-content);
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 64rem;
+}
+
+.kicker {
+  margin-top: 0.75rem;
+  font-family: var(--font-tech);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--color-plum-200);
+}
+
+.title {
+  margin-top: 1rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  text-transform: uppercase;
+  line-height: 0.95;
+}
+
+.description {
+  margin-top: 0.75rem;
+  max-width: 36rem;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.listWrap {
+  position: relative;
+  margin-top: 4rem;
+}
+
+.loadingText {
+  font-family: var(--font-tech);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.emptyText {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Riel base, apagado, siempre visible. */
+.railBase {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Línea animada (ver lineRef en el JS), se dibuja encima del riel base. */
+.railLine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  background-color: var(--color-volt-500);
+}
+
+@media (min-width: 640px) {
+  .railBase,
+  .railLine {
+    left: 0.5rem;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.item {
+  position: relative;
+  padding-left: 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .item {
+    padding-left: 4rem;
+  }
+}
+
+/* Punto sobre el riel */
+.dot {
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  height: 0.625rem;
+  width: 0.625rem;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background-color: var(--color-volt-400);
+}
+
+@media (min-width: 640px) {
+  .dot {
+    left: 0.5rem;
+  }
+}
+
+/* Año gigante en outline, de fondo: puro adorno tipográfico. El contorno en
+   sí (-webkit-text-stroke) queda como inline style en el JSX, no es Tailwind. */
+.yearOutline {
+  pointer-events: none;
+  position: absolute;
+  top: -2.5rem;
+  right: 0;
+  user-select: none;
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 10vw, 7rem);
+  text-transform: uppercase;
+  line-height: 1;
+  color: transparent;
+}
+
+@media (min-width: 640px) {
+  .yearOutline {
+    right: 1rem;
+  }
+}
+
+.itemContent {
+  position: relative;
+  max-width: 42rem;
+}
+
+.itemTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-volt-300);
+}
+
+.itemCompany {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.itemDate {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.itemDescription {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.itemLink {
+  font-weight: 700;
+  color: var(--color-volt-300);
+  transition: opacity 150ms var(--ease-standard);
+}
+
+.itemLink:hover {
+  opacity: 0.7;
+}

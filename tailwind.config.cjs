@@ -8,6 +8,18 @@ module.exports = {
   	extend: {
   		fontFamily: {
   			sans: ['Inter', 'sans-serif'],
+  			// Display gordo/pesado para el nombre gigante del hero 3D (antes era
+  			// una serif editorial, descartada por pedido explícito). Separada de
+  			// `sans` a propósito: el body sigue siendo Inter en todo el resto
+  			// del sitio, esto es solo para esa pieza puntual. "Milker" es un
+  			// archivo local (public/fonts/Milker.woff2, @font-face en
+  			// style.css): cubre tildes/ñ y no trae ninguna marca de "demo" o
+  			// trial en su tabla `name`, a diferencia de la otra fuente evaluada
+  			// (chunko-bold-demo), que le faltaban é/í/á/ó/ú/ñ.
+  			display: ['Milker', '"Arial Black"', '"Helvetica Neue"', 'sans-serif'],
+  			// Mono técnico para las notas/anotaciones del hero y la navegación:
+  			// el mismo mono se reusa en el header para los links y el CTA.
+  			tech: ['"JetBrains Mono"', '"Fira Code"', 'monospace'],
   		},
   		colors: {
   			'dark-grey': '#292929',
@@ -16,6 +28,14 @@ module.exports = {
   			'moonlit': '#f5f5f7',
   			'midnight': '#343436',
   			'noon': '#efeef2',
+  			// Cobalto plano del hero 3D: mismo azul en claro y oscuro a propósito
+  			// (es la identidad de esa sección puntual, no del tema). `ink` es el
+  			// casi-blanco del nombre gigante detrás de la cabeza.
+  			hero: {
+  				blue: '#2233c9',
+  				'blue-deep': '#1b2aa8',
+  				ink: '#dfe6ff',
+  			},
   			// Ciruela → berenjena. Es la identidad del portfolio: 50 son las cards
   			// en claro, 500 las pills de tecnología, 800 las cards en oscuro.
   			plum: {
@@ -45,9 +65,9 @@ module.exports = {
   			'infinite-scroll': 'infinite-scroll 25s linear infinite',
   			// Barrido de luz de los skeletons.
   			shimmer: 'shimmer 1.6s ease-in-out infinite',
-  			// El monograma del loader se dibuja y se borra en bucle.
-  			'trace-glyph': 'trace-glyph 2.6s ease-in-out infinite',
-  			'slide-track': 'slide-track 1.6s ease-in-out infinite',
+  			// Titileo sutil de los sparkles ✦. Nada vistoso, solo que no se vean
+  			// estáticos del todo.
+  			twinkle: 'twinkle 3.2s ease-in-out infinite',
   		},
   		keyframes: {
   			'infinite-scroll': {
@@ -66,19 +86,9 @@ module.exports = {
   					transform: 'translateX(100%)'
   				}
   			},
-  			// pathLength="100" en el SVG normaliza el largo de cada trazo, así el
-  			// dasharray es 100 para todos y estos valores no dependen de cuánto
-  			// mida realmente la curva. Offset negativo = el trazo se borra por
-  			// donde empezó a dibujarse.
-  			'trace-glyph': {
-  				'0%': { strokeDashoffset: '100', opacity: '0.15' },
-  				'35%': { strokeDashoffset: '0', opacity: '1' },
-  				'65%': { strokeDashoffset: '0', opacity: '1' },
-  				'100%': { strokeDashoffset: '-100', opacity: '0.15' }
-  			},
-  			'slide-track': {
-  				'0%': { transform: 'translateX(-100%)' },
-  				'100%': { transform: 'translateX(300%)' }
+  			twinkle: {
+  				'0%, 100%': { opacity: '0.25', transform: 'scale(0.85)' },
+  				'50%': { opacity: '0.9', transform: 'scale(1.05)' }
   			}
   		},
   	}

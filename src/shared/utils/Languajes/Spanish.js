@@ -6,6 +6,7 @@ export const Spanish = {
     about: "Acerca de",
     projects: "Proyectos",
     contact: "Contacto",
+    allProjects: "Todos los proyectos",
   },
   hero: {
     name: "Jose Miguel Martinez Florimon",
@@ -16,6 +17,29 @@ export const Spanish = {
       "Front-End",
       "Aprendiendo iOS nativo",
     ],
+  },
+  // Copy de la sección 3D: el nombre gigante detrás de la cabeza y las notas
+  // técnicas a los costados (ver landing/sections/HeroSection, el hero del
+  // landing nuevo). Separado de `hero` porque es contenido propio de esa
+  // sección, no del hero clásico de abajo (`hero`, arriba).
+  hero3d: {
+    firstName: "José",
+    lastName: "Martínez",
+    notes: {
+      topLeft: [
+        "MOBILE TECH LEAD",
+        "REACT NATIVE · TYPESCRIPT",
+        "+4 AÑOS EN PRODUCCIÓN",
+        "LA ROMANA · REP. DOMINICANA",
+      ],
+      midLeft: [
+        "LENDY — +10K DESCARGAS",
+        "VECINIA — 2 APPS, SOLO",
+        "MEDYCORE — LIDERANDO FRONTEND",
+      ],
+      topRight: ["DE ARQUITECTURA", "A GOOGLE PLAY", "Y APP STORE"],
+      midRight: ["APRENDIENDO", "iOS NATIVO", "SWIFT · SWIFTUI", "APP PROPIA: DEBY"],
+    },
   },
   about: {
     title: "Sobre mí",
@@ -59,6 +83,67 @@ export const Spanish = {
       web: "Web",
       mobile: "Mobile",
     },
+  },
+
+  // Copy exclusiva del landing nuevo (hero3d + scroll). Namespace separado a
+  // propósito: `about`/`experience`/`projects` de arriba siguen siendo la
+  // fuente de verdad para los hechos (títulos, descripciones, estados de
+  // carga) y las consume también el landing clásico; esto es solo la voz
+  // editorial puntual de las secciones nuevas (manifiesto, CTA de contacto),
+  // no datos que haya que mantener en dos lugares.
+  landing: {
+    sectionLabels: {
+      intro: "Cómo trabajo",
+      experience: "Experiencia",
+      projects: "Proyectos destacados",
+      stack: "Stack",
+      contact: "Contacto",
+    },
+    intro: {
+      kicker: "Manifiesto",
+      // `**palabra**` se parsea en AboutSection como resaltado en cobalto —
+      // mismo patrón simple que un `<mark>`, sin traer un parser de markdown
+      // completo para cuatro líneas.
+      manifesto: [
+        "Pienso en **producto completo**, no en pantallas sueltas.",
+        "React Native **de punta a punta**: de la arquitectura al App Store.",
+        "La consistencia entre plataformas **no es opcional**.",
+        "Y ahora, sumando **Swift** a la mezcla.",
+      ],
+    },
+    experience: {
+      kicker: "Trayectoria",
+    },
+    projects: {
+      kicker: "Lo último",
+      viewProject: "Ver proyecto",
+      seeAll: "Ver todos los proyectos",
+    },
+    stack: {
+      title: "Con qué trabajo",
+    },
+    contact: {
+      ctaTitle: "¿Hablamos?",
+      ctaSubtitle: "Escríbeme y vemos qué construimos.",
+      copyEmail: "Copiar email",
+      emailCopied: "Email copiado",
+    },
+  },
+
+  // Pie global (ver layout/Footer.jsx). Los links de nav reusan `header.*`
+  // de arriba, no se duplican acá. El toast de email copiado reusa
+  // `landing.contact.emailCopied` (mismo texto, mismo tono) en vez de
+  // duplicar la clave acá.
+  footer: {
+    rights: "Todos los derechos reservados.",
+    cta: "¿Construimos algo juntos?",
+    availability: "Disponible para proyectos",
+    localTimeLabel: "Hora local",
+    location: "La Romana, RD",
+    backToTop: "Volver arriba",
+    navAriaLabel: "Navegación del pie de página",
+    socialsAriaLabel: "Redes sociales",
+    builtWith: "Hecho con React · GSAP · Three.js",
   },
 
   // Textos que solo ven los buscadores y las tarjetas al compartir. Van

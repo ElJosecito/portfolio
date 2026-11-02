@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "./cn";
+import styles from "./Loader.module.css";
 
 // El viewBox va ajustado al trazo más la mitad del grosor de línea que sobresale
 // a cada lado, para que el monograma no venga con aire de más y quede
@@ -21,14 +22,17 @@ export const GLYPH_STROKES = [
 ];
 
 const SIZES = {
-  sm: "h-8",
-  md: "h-14",
-  lg: "h-20",
+  sm: styles.glyphSm,
+  md: styles.glyphMd,
+  lg: styles.glyphLg,
 };
 
 /**
  * Indicador de carga del portfolio: el monograma se escribe y se borra en bucle
  * sobre un riel con un destello que lo recorre.
+ *
+ * Migrado de utilidades de Tailwind a CSS Modules (ver Loader.module.css) —
+ * mismo look, mismo comportamiento, nada nuevo.
  *
  * No hay texto "Cargando" en pantalla a propósito. La palabra no aporta nada que
  * la animación no diga ya, y en cambio hay que traducirla y se ve pobre. El
@@ -36,16 +40,12 @@ const SIZES = {
  */
 export function Loader({ label = "Cargando", size = "md", className = "" }) {
   return (
-    <div
-      role="status"
-      aria-live="polite"
-      className={cn("flex flex-col items-center justify-center gap-4", className)}
-    >
+    <div role="status" aria-live="polite" className={cn(styles.wrap, className)}>
       <svg
         viewBox={GLYPH_VIEW_BOX}
         fill="none"
         aria-hidden="true"
-        className={cn("w-auto text-plum-500 dark:text-plum-200", SIZES[size] || SIZES.md)}
+        className={cn(styles.glyph, SIZES[size] || SIZES.md)}
       >
         {GLYPH_STROKES.map(({ d, delay }) => (
           <path
@@ -56,36 +56,34 @@ export function Loader({ label = "Cargando", size = "md", className = "" }) {
             strokeWidth="4"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="animate-trace-glyph motion-reduce:animate-none"
-            style={{ strokeDasharray: 100, animationDelay: delay }}
+            className={styles.stroke}
+            style={{ animationDelay: delay }}
           />
         ))}
       </svg>
 
-      <span
-        aria-hidden="true"
-        className="relative block h-[3px] w-24 overflow-hidden rounded-full bg-plum-500/15 dark:bg-plum-200/20"
-      >
-        <span className="absolute inset-y-0 left-0 w-1/3 animate-slide-track rounded-full bg-plum-500 motion-reduce:animate-pulse motion-reduce:w-full dark:bg-plum-200" />
+      <span aria-hidden="true" className={styles.rail}>
+        <span className={styles.railGlint} />
       </span>
 
-      <span className="sr-only">{label}</span>
+      <span className={styles.srOnly}>{label}</span>
     </div>
   );
 }
 
 /**
- * El mismo loader ocupando la pantalla. Para los `Suspense` de las rutas, donde
- * todavía no hay layout que preservar y un skeleton no tendría qué imitar.
+ * El mismo loader ocupando la pantalla. Para los `Suspense` de las rutas
+ * secundarias (admin, login, verificación de sesión) donde todavía no hay
+ * layout que preservar y un skeleton no tendría qué imitar.
+ *
+ * NO es el fallback de "/" con el landing nuevo (ver Router.jsx): ese usa
+ * `IntroFallback` para que la espera del chunk se sienta continua con la
+ * intro real (mismo cobalto + contador) en vez de con este monograma
+ * genérico — ver landing/intro/IntroFallback.jsx.
  */
 export function FullPageLoader({ label, className = "" }) {
   return (
-    <div
-      className={cn(
-        "flex min-h-screen items-center justify-center bg-noon dark:bg-slate-950",
-        className
-      )}
-    >
+    <div className={cn(styles.fullPage, className)}>
       <Loader label={label} size="lg" />
     </div>
   );

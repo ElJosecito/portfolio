@@ -1,5 +1,22 @@
-/* Las fuentes se cargan desde index.html con preconnect, no acá: un @import de
-   CSS obliga al navegador a descargar esta hoja antes de siquiera pedirlas. */
+/* Las fuentes de Google (Inter, JetBrains Mono) se cargan desde index.html con
+   preconnect, no acá: un @import de CSS obliga al navegador a descargar esta
+   hoja antes de siquiera pedirlas.
+
+   "Milker" es distinta: es un archivo propio (public/fonts/Milker.woff2), así
+   que sí va acá como @font-face. `font-display: swap` para no bloquear el
+   render del nombre gigante mientras carga; en "/" además se precarga con
+   un <link rel="preload"> que index.html inyecta solo en esa ruta (ver su
+   comentario — la clásica, el panel y el detalle de proyecto no usan esta
+   fuente), así que ahí el swap casi nunca se nota. En el resto de las
+   rutas no hay preload, pero tampoco hay texto en Milker que mostrar. */
+@font-face {
+  font-family: "Milker";
+  src: url("/fonts/Milker.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
@@ -11,8 +28,10 @@
    `window.scrollTo(0, 0)` no saltaba arriba, se deslizaba, y eso es lo que se
    veía como que el hero "subía solo" mientras cargaban los datos.
 
-   Ahora el suave se pide donde se quiere: el Header ya llama a scrollIntoView
-   con `behavior: "smooth"` para los anclajes de la portada. */
+   Ahora el suave se pide donde se quiere: Header y Footer navegan por id vía
+   `scrollToSection` (ver landing/scroll/lenisBridge.js), que usa Lenis cuando
+   está montado (landing nuevo) y cae a `scrollIntoView({behavior:"smooth"})`
+   si no (landing clásico, otras rutas). */
 
 .font-inter {
   font-family: "Inter", sans-serif;
@@ -58,4 +77,23 @@
 
 .animate-infinite-scroll-paused {
   animation-play-state: paused;
-}/*# sourceMappingURL=style.css.map */
+}
+
+/*
+ * View Transitions (morph de mockup → portada al navegar landing/
+ * all-projects → /projects/:slug, ver shared/utils/viewTransition.js y
+ * ProjectEditorialCard/ProjectsSection/ProjectDetail). Los pseudo-elementos
+ * `::view-transition-*` son globales (viven en el árbol del documento, no en
+ * ningún componente), así que tienen que ir en una hoja global y no en un
+ * CSS Module. `prefers-reduced-motion` ya gatea el feature-detect en JS
+ * (`viewTransitionLinkProps`), pero esta regla es el respaldo: si por lo que
+ * sea el navegador igual arma una transición, que no anime.
+ */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+/*# sourceMappingURL=style.css.map */

@@ -1,0 +1,137 @@
+/*
+ * Card del grid editorial de /all-projects. Mismo lenguaje visual que las
+ * cards apiladas de `landing/sections/ProjectsSection.module.css`: mockup
+ * grande con `object-contain` sobre una superficie propia (los mockups ya
+ * traen su fondo), título en la tipografía display, chips mono. A diferencia
+ * de la landing (una sola columna, sticky), esto es una grilla editorial
+ * normal — sin scroll ni pin, pensado para ser liviano en TODOS los
+ * dispositivos (ver constraint de la tarea: esta página la ven también los
+ * visitantes con el landing clásico).
+ */
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--color-plum-50) 70%, transparent);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s var(--ease-out-soft), box-shadow 0.3s var(--ease-out-soft);
+}
+
+:global(.dark) .card {
+  background: color-mix(in srgb, var(--color-plum-800) 55%, transparent);
+}
+
+.card:hover,
+.card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px -20px rgba(34, 51, 201, 0.35);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--color-volt-500);
+  outline-offset: 2px;
+}
+
+.imageWrap {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: color-mix(in srgb, var(--color-hero-blue) 6%, transparent);
+}
+
+:global(.dark) .imageWrap {
+  background: color-mix(in srgb, var(--color-hero-blue) 14%, transparent);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.4s var(--ease-out-soft);
+}
+
+.card:hover .image {
+  transform: scale(1.03);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.25rem 1.4rem 1.5rem;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.platformChip {
+  font-family: var(--font-tech);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: var(--color-hero-blue);
+  color: #fff;
+}
+
+:global(.dark) .platformChip {
+  background: var(--color-volt-500);
+  color: var(--color-plum-950);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem);
+  line-height: 1.05;
+  margin: 0;
+}
+
+.description {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  opacity: 0.72;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.techRow {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding-top: 0.5rem;
+  font-family: var(--font-tech);
+}
+
+.techChip {
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--color-plum-500) 14%, transparent);
+}
+
+:global(.dark) .techChip {
+  background: color-mix(in srgb, var(--color-volt-500) 18%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .image {
+    transition: none;
+  }
+}

@@ -6,6 +6,7 @@ export const English = {
     about: "About",
     projects: "Projects",
     contact: "Contact",
+    allProjects: "All projects",
   },
   hero: {
     name: "Jose Miguel Martinez Florimon",
@@ -16,6 +17,29 @@ export const English = {
       "Front-End",
       "Learning native iOS",
     ],
+  },
+  // Copy for the 3D section: the giant name behind the head and the
+  // technical side notes (see landing/sections/HeroSection, the new
+  // landing's hero). Kept apart from `hero` since it belongs to that
+  // section, not the classic hero below it (`hero`, above).
+  hero3d: {
+    firstName: "José",
+    lastName: "Martínez",
+    notes: {
+      topLeft: [
+        "MOBILE TECH LEAD",
+        "REACT NATIVE · TYPESCRIPT",
+        "4+ YEARS IN PRODUCTION",
+        "LA ROMANA · DOMINICAN REP.",
+      ],
+      midLeft: [
+        "LENDY — 10K+ DOWNLOADS",
+        "VECINIA — 2 APPS, SOLO",
+        "MEDYCORE — LEADING FRONTEND",
+      ],
+      topRight: ["FROM ARCHITECTURE", "TO APP STORE", "AND GOOGLE PLAY"],
+      midRight: ["LEARNING", "NATIVE iOS", "SWIFT · SWIFTUI", "OWN APP: DEBY"],
+    },
   },
   about: {
     title: "About me",
@@ -58,6 +82,67 @@ export const English = {
       web: "Web",
       mobile: "Mobile",
     },
+  },
+
+  // Copy exclusive to the new landing (hero3d + scroll). Kept in its own
+  // namespace: `about`/`experience`/`projects` above stay the single source
+  // of truth for facts (titles, descriptions, loading states) and the
+  // classic landing still consumes them too; this is just the editorial
+  // voice of the new sections (manifesto, contact CTA), not data that needs
+  // to be kept in two places.
+  landing: {
+    sectionLabels: {
+      intro: "How I work",
+      experience: "Experience",
+      projects: "Featured projects",
+      stack: "Stack",
+      contact: "Contact",
+    },
+    intro: {
+      kicker: "Manifesto",
+      // `**word**` gets parsed in AboutSection as a cobalt highlight — same
+      // idea as a `<mark>`, without pulling in a full markdown parser for
+      // four lines of copy.
+      manifesto: [
+        "I think in **whole products**, not loose screens.",
+        "React Native **end to end**: from architecture to the App Store.",
+        "Consistency across platforms **is not optional**.",
+        "And now, adding **Swift** to the mix.",
+      ],
+    },
+    experience: {
+      kicker: "Track record",
+    },
+    projects: {
+      kicker: "Latest work",
+      viewProject: "View project",
+      seeAll: "See all projects",
+    },
+    stack: {
+      title: "What I work with",
+    },
+    contact: {
+      ctaTitle: "Let's talk",
+      ctaSubtitle: "Write to me and let's see what we can build.",
+      copyEmail: "Copy email",
+      emailCopied: "Email copied",
+    },
+  },
+
+  // Global footer (see layout/Footer.jsx). The nav links reuse `header.*`
+  // above, not duplicated here. The email-copied toast reuses
+  // `landing.contact.emailCopied` (same copy, same tone) instead of
+  // duplicating the key here.
+  footer: {
+    rights: "All rights reserved.",
+    cta: "Shall we build something together?",
+    availability: "Available for work",
+    localTimeLabel: "Local time",
+    location: "La Romana, DR",
+    backToTop: "Back to top",
+    navAriaLabel: "Footer navigation",
+    socialsAriaLabel: "Social links",
+    builtWith: "Built with React · GSAP · Three.js",
   },
 
   // Textos que solo ven los buscadores y las tarjetas al compartir. Van

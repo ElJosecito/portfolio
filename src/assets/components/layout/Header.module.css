@@ -1,0 +1,514 @@
+/*
+ * Header global en CSS puro + vidrio líquido (refractive). Lee los tokens
+ * de landing/styles/tokens.css (z-index, fuentes) aunque este archivo vive
+ * fuera de landing/ — el header es global, pero comparte el mismo cobalto/
+ * mono del landing nuevo cuando va transparente sobre el hero.
+ */
+
+.header {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: var(--z-header, 50);
+  width: 100%;
+  /* El fondo/blur ya no vive acá: lo lleva la barra flotante de abajo
+     (`.bar`) para que el efecto de vidrio quede contenido en una pill, no
+     estirado a lo ancho de toda la pantalla (más caro de renderizar y,
+     visualmente, menos "liquid glass"). */
+  padding: 10px 12px 0;
+  pointer-events: none;
+}
+
+@media (min-width: 640px) {
+  .header {
+    padding: 14px 20px 0;
+  }
+}
+
+/* Barra flotante: acá vive el vidrio. `pointer-events: auto` porque el
+   `.header` que la envuelve es `pointer-events: none` (deja pasar los
+   clics fuera de la barra hacia el contenido de abajo). */
+.bar {
+  position: relative;
+  pointer-events: auto;
+  margin-inline: auto;
+  max-width: 1280px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 64px;
+  padding-inline: 16px;
+  border-radius: 9999px;
+  transition: background-color 0.3s var(--ease-standard, ease), border-color 0.3s var(--ease-standard, ease),
+    box-shadow 0.3s var(--ease-standard, ease);
+}
+
+@media (min-width: 768px) {
+  .bar {
+    height: 80px;
+    padding-inline: 24px;
+    grid-template-columns: 1fr auto 1fr;
+    display: grid;
+    align-items: center;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bar {
+    padding-inline: 32px;
+  }
+}
+
+/* --- Estado transparente (sobre el hero cobalto) --- */
+.barTransparent {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset;
+}
+
+/* --- Estado sólido (resto del sitio) --- */
+.barSolid {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(17, 17, 17, 0.06);
+  box-shadow: 0 8px 30px rgba(17, 17, 17, 0.08);
+}
+
+:global(.dark) .barSolid {
+  background: rgba(15, 23, 42, 0.55);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Fallback sin refractive (Safari/Firefox, ver shared/utils/browserSupport.js):
+   blur CSS estándar en vez del filtro SVG — menos "líquido" pero legible y
+   con el mismo lenguaje visual (borde sutil + resalte superior). */
+.barFallback {
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  /* Ni backdrop-filter ni refractive: fondo opaco, nunca transparente del
+     todo, para que el header siga siendo legible. */
+  .barFallback.barTransparent {
+    background: rgba(27, 42, 168, 0.65);
+  }
+  .barFallback.barSolid {
+    background: rgba(255, 255, 255, 0.92);
+  }
+  :global(.dark) .barFallback.barSolid {
+    background: rgba(15, 23, 42, 0.92);
+  }
+}
+
+/* --- Vitrina (cabeza 3D) --- */
+.brandButton {
+  /* Antes era un <button> (display: inline-block por defecto). Ahora es un
+     <Link> (ver Header.jsx, bug del nav fuera de "/") — un <a> es inline
+     por defecto, así que se fija explícito para que no cambie el layout. */
+  display: inline-flex;
+  justify-self: start;
+  border-radius: 9999px;
+  transition: transform 0.2s var(--ease-standard, ease);
+}
+.brandButton:focus-visible {
+  outline: 2px solid #549eff;
+  outline-offset: 2px;
+}
+
+/* --- Nav de escritorio --- */
+.nav {
+  position: relative;
+  display: none;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--font-tech, monospace);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  transition: color 0.2s var(--ease-standard, ease);
+}
+
+@media (min-width: 768px) {
+  .nav {
+    display: flex;
+  }
+}
+
+.navTransparent {
+  color: rgba(255, 255, 255, 0.9);
+}
+.navSolid {
+  color: rgba(41, 41, 41, 0.8);
+}
+:global(.dark) .navSolid {
+  color: rgba(245, 245, 247, 0.8);
+}
+
+.navItem {
+  /* Idem .brandButton: ahora es un <Link>, no un <button>. */
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  border-radius: 9999px;
+  padding: 8px 12px;
+  background: transparent;
+  transition: color 0.2s var(--ease-standard, ease);
+}
+.navItem:focus-visible {
+  outline: 2px solid #549eff;
+  outline-offset: 0;
+}
+
+/* Pill de vidrio que se desliza detrás del item hover/focus (ver Header.jsx,
+   `hoverRect`): una sola instancia reusada para todo el nav, en vez de un
+   filtro SVG permanente por botón — así el costo del vidrio es constante,
+   no proporcional a la cantidad de links. */
+.hoverPill {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 0;
+  z-index: 0;
+  border-radius: 9999px;
+  pointer-events: none;
+}
+.hoverPillTransparent {
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.hoverPillSolid {
+  background: rgba(17, 17, 17, 0.08);
+  border: 1px solid rgba(17, 17, 17, 0.06);
+}
+:global(.dark) .hoverPillSolid {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.hoverPillFallback {
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hoverPill {
+    transition: opacity 0.01ms !important;
+  }
+}
+
+/* --- Cluster derecho de escritorio --- */
+.rightCluster {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  justify-self: end;
+}
+@media (min-width: 768px) {
+  .rightCluster {
+    display: flex;
+  }
+}
+
+.iconButton {
+  display: flex;
+  height: 36px;
+  width: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: transparent;
+  transition: background-color 0.2s var(--ease-standard, ease), transform 0.2s var(--ease-standard, ease);
+}
+.iconButton:hover {
+  transform: scale(1.04);
+}
+.iconButton:focus-visible {
+  outline: 2px solid #549eff;
+  outline-offset: 0;
+}
+
+.iconButtonTransparent:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+.iconButtonTransparent:focus-visible {
+  outline-color: #fff;
+}
+.iconButtonSolid:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+:global(.dark) .iconButtonSolid:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sunIcon {
+  height: 16px;
+  width: 16px;
+}
+.sunIconTransparent {
+  color: #fff;
+}
+.sunIconSolid {
+  color: #eab308;
+}
+.moonIconTransparent {
+  color: #fff;
+}
+.moonIconSolid {
+  color: var(--color-dark-grey, #292929);
+}
+:global(.dark) .moonIconSolid {
+  color: #fff;
+}
+
+/* --- Selector de idioma (control segmentado) --- */
+.langGroup {
+  display: flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 2px;
+  font-family: var(--font-tech, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  transition: background-color 0.2s var(--ease-standard, ease);
+}
+.langGroupTransparent {
+  background: rgba(255, 255, 255, 0.15);
+}
+.langGroupSolid {
+  background: rgba(0, 0, 0, 0.05);
+}
+:global(.dark) .langGroupSolid {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.langOption {
+  border-radius: 9999px;
+  padding: 4px 10px;
+  transition: color 0.2s var(--ease-standard, ease), background-color 0.2s var(--ease-standard, ease);
+}
+.langOption:focus-visible {
+  outline: 2px solid #549eff;
+  outline-offset: 0;
+}
+.langOptionActive {
+  background: var(--color-plum-500, #6a4279);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+.langOptionInactiveTransparent {
+  color: rgba(255, 255, 255, 0.6);
+}
+.langOptionInactiveTransparent:hover {
+  color: #fff;
+}
+.langOptionInactiveSolid {
+  color: rgba(41, 41, 41, 0.6);
+}
+.langOptionInactiveSolid:hover {
+  color: var(--color-dark-grey, #292929);
+}
+:global(.dark) .langOptionInactiveSolid {
+  color: rgba(245, 245, 247, 0.6);
+}
+:global(.dark) .langOptionInactiveSolid:hover {
+  color: var(--color-moonlit, #f5f5f7);
+}
+
+.githubLink {
+  display: none;
+  font-family: var(--font-tech, monospace);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  text-underline-offset: 4px;
+  transition: color 0.2s var(--ease-standard, ease);
+}
+@media (min-width: 1024px) {
+  .githubLink {
+    display: inline;
+  }
+}
+.githubLink:hover {
+  text-decoration: underline;
+}
+
+/* --- CTA "Hablemos": vidrio permanente, pop extra al hover --- */
+.contactCta {
+  /* Idem .navItem: ahora es un <Link>, no un <button>. */
+  display: inline-block;
+  position: relative;
+  border-radius: 9999px;
+  padding: 8px 18px;
+  font-family: var(--font-tech, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-dark-grey, #292929);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s var(--ease-standard, ease), box-shadow 0.2s var(--ease-standard, ease);
+}
+.contactCta:hover {
+  transform: scale(1.06);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+.contactCta:focus-visible {
+  outline: 2px solid #549eff;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contactCta:hover,
+  .iconButton:hover,
+  .brandButton {
+    transform: none;
+  }
+}
+
+/* --- Menú móvil --- */
+.mobileCluster {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+@media (min-width: 768px) {
+  .mobileCluster {
+    display: none;
+  }
+}
+
+.menuPanel {
+  position: absolute;
+  right: 0;
+  top: 56px;
+  width: 224px;
+  overflow: hidden;
+  border-radius: 20px;
+  padding-block: 8px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+}
+.menuPanelGlass {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(17, 17, 17, 0.06);
+}
+:global(.dark) .menuPanelGlass {
+  background: rgba(15, 23, 42, 0.86);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.menuPanelFallback {
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+.menuList {
+  font-family: var(--font-tech, monospace);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-dark-grey, #292929);
+}
+:global(.dark) .menuList {
+  color: var(--color-moonlit, #f5f5f7);
+}
+
+.menuItemButton {
+  /* Ahora es un <Link>: display: block para que `width: 100%` siga
+     funcionando (un <a> es inline por defecto). */
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  text-align: left;
+  transition: background-color 0.15s var(--ease-standard, ease);
+}
+.menuItemButton:hover,
+.menuItemButton:focus-visible {
+  background: rgba(0, 0, 0, 0.05);
+  outline: none;
+}
+:global(.dark) .menuItemButton:hover,
+:global(.dark) .menuItemButton:focus-visible {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.menuDivider {
+  margin: 8px 16px;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+}
+:global(.dark) .menuDivider {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.menuRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 16px;
+}
+
+.menuGithubLink {
+  font-family: var(--font-tech, monospace);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(41, 41, 41, 0.8);
+  text-underline-offset: 4px;
+}
+.menuGithubLink:hover {
+  text-decoration: underline;
+}
+:global(.dark) .menuGithubLink {
+  color: rgba(245, 245, 247, 0.8);
+}
+
+.menuLangGroup {
+  display: flex;
+  align-items: center;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 2px;
+  font-family: var(--font-tech, monospace);
+  font-size: 11px;
+  font-weight: 700;
+}
+:global(.dark) .menuLangGroup {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.menuContactWrap {
+  padding: 8px 16px 0;
+}
+
+.menuContactButton {
+  /* Idem .menuItemButton: ahora es un <Link>. */
+  display: block;
+  width: 100%;
+  border-radius: 9999px;
+  background: var(--color-plum-500, #6a4279);
+  padding: 8px 16px;
+  text-align: center;
+  font-family: var(--font-tech, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s var(--ease-standard, ease);
+}
+.menuContactButton:hover {
+  transform: scale(1.02);
+}
+.menuContactButton:focus-visible {
+  outline: 2px solid #549eff;
+  outline-offset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menuContactButton:hover {
+    transform: none;
+  }
+}

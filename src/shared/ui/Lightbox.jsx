@@ -1,17 +1,45 @@
 import React from "react";
 import { createPortal } from "react-dom";
 
+import styles from "./Lightbox.module.css";
+
+const FOCUSABLE_SELECTOR =
+  'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+// Umbral en px: por debajo de esto un swipe se interpreta como un tap/scroll
+// vertical, no como "cambiar de imagen".
+const SWIPE_THRESHOLD = 50;
+
 /**
  * Visor de imagen a pantalla completa.
  *
- * Propio y no una librería: es un portal, cuatro teclas y un contador. Lo único
- * que hay que hacer bien es el foco — al abrirse se lo lleva el diálogo y al
- * cerrarse vuelve a la miniatura desde la que se abrió.
+ * Propio y no una librería: es un portal, cuatro teclas, un contador y ahora
+ * un trap de foco + swipe táctil. Lo único que hay que hacer bien es el foco
+ * — al abrirse se lo lleva el diálogo, se queda adentro (Tab no se escapa a
+ * la página de atrás) y al cerrarse vuelve a la miniatura desde la que se
+ * abrió.
  */
-export function Lightbox({ images, index, onClose, onNavigate, caption }) {
+export function Lightbox({ images, index, onClose, onNavigate, caption, languaje }) {
   const dialogRef = React.useRef(null);
   const previouslyFocused = React.useRef(null);
+  const touchStart = React.useRef(null);
   const open = index !== null && index >= 0;
+
+  const english = languaje?.languaje === "English";
+  const labels = {
+    close: english ? "Close" : "Cerrar",
+    prev: english ? "Previous" : "Anterior",
+    next: english ? "Next" : "Siguiente",
+    dialog: english ? "Enlarged image" : "Imagen ampliada",
+  };
+
+  const goTo = React.useCallback(
+    (nextIndex) => {
+      if (!images.length) return;
+      onNavigate(((nextIndex % images.length) + images.length) % images.length);
+    },
+    [images.length, onNavigate]
+  );
 
   React.useEffect(() => {
     if (!open) return;
@@ -22,10 +50,39 @@ export function Lightbox({ images, index, onClose, onNavigate, caption }) {
     dialogRef.current?.focus();
 
     const onKeyDown = (event) => {
-      if (event.key === "Escape") onClose();
-      else if (event.key === "ArrowRight") onNavigate((index + 1) % images.length);
-      else if (event.key === "ArrowLeft")
-        onNavigate((index - 1 + images.length) % images.length);
+      if (event.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        goTo(index + 1);
+        return;
+      }
+      if (event.key === "ArrowLeft") {
+        goTo(index - 1);
+        return;
+      }
+
+      // Trap de foco: Tab no debe poder escaparse del diálogo mientras está
+      // abierto (si no, un lector de pantalla o alguien navegando por teclado
+      // termina interactuando con el contenido tapado detrás del overlay).
+      if (event.key === "Tab") {
+        const node = dialogRef.current;
+        if (!node) return;
+        const focusable = Array.from(node.querySelectorAll(FOCUSABLE_SELECTOR));
+        if (focusable.length === 0) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
     };
 
     document.addEventListener("keydown", onKeyDown);
@@ -34,7 +91,35 @@ export function Lightbox({ images, index, onClose, onNavigate, caption }) {
       document.body.style.overflow = overflow;
       previouslyFocused.current?.focus?.();
     };
-  }, [open, index, images.length, onClose, onNavigate]);
+  }, [open, index, goTo, onClose]);
+
+  // Precarga las imágenes vecinas: al llegar a la última se nota menos el
+  // "pop-in" al navegar con flechas o swipe, sin bajar TODA la galería de
+  // una (que sería plata perdida para alguien que abre una sola imagen).
+  React.useEffect(() => {
+    if (!open || images.length < 2) return;
+
+    [index + 1, index - 1].forEach((neighborIndex) => {
+      const neighbor = images[((neighborIndex % images.length) + images.length) % images.length];
+      if (!neighbor) return;
+      const preload = new Image();
+      preload.src = neighbor.url;
+    });
+  }, [open, index, images]);
+
+  const handleTouchStart = (event) => {
+    touchStart.current = event.changedTouches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event) => {
+    if (touchStart.current === null) return;
+    const deltaX = (event.changedTouches[0]?.clientX ?? touchStart.current) - touchStart.current;
+    touchStart.current = null;
+
+    if (Math.abs(deltaX) < SWIPE_THRESHOLD) return;
+    // Swipe a la izquierda (deltaX negativo) avanza, igual que ArrowRight.
+    goTo(deltaX < 0 ? index + 1 : index - 1);
+  };
 
   if (!open) return null;
 
@@ -46,16 +131,18 @@ export function Lightbox({ images, index, onClose, onNavigate, caption }) {
       ref={dialogRef}
       role="dialog"
       aria-modal="true"
-      aria-label="Imagen ampliada"
+      aria-label={labels.dialog}
       tabIndex={-1}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 focus:outline-none"
+      className={styles.overlay}
       onClick={onClose}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <button
         type="button"
         onClick={onClose}
-        aria-label="Cerrar"
-        className="absolute right-4 top-4 rounded-xl p-3 text-2xl text-white/80 hover:bg-white/10 hover:text-white"
+        aria-label={labels.close}
+        className={styles.closeBtn}
       >
         ✕
       </button>
@@ -64,44 +151,41 @@ export function Lightbox({ images, index, onClose, onNavigate, caption }) {
         <>
           <button
             type="button"
-            aria-label="Anterior"
+            aria-label={labels.prev}
             onClick={(event) => {
               event.stopPropagation();
-              onNavigate((index - 1 + images.length) % images.length);
+              goTo(index - 1);
             }}
-            className="absolute left-2 rounded-xl p-4 text-3xl text-white/70 hover:bg-white/10 hover:text-white md:left-6"
+            className={`${styles.navBtn} ${styles.navPrev}`}
           >
             ‹
           </button>
           <button
             type="button"
-            aria-label="Siguiente"
+            aria-label={labels.next}
             onClick={(event) => {
               event.stopPropagation();
-              onNavigate((index + 1) % images.length);
+              goTo(index + 1);
             }}
-            className="absolute right-2 rounded-xl p-4 text-3xl text-white/70 hover:bg-white/10 hover:text-white md:right-6"
+            className={`${styles.navBtn} ${styles.navNext}`}
           >
             ›
           </button>
         </>
       )}
 
-      <figure
-        className="flex max-h-full flex-col items-center gap-3"
-        onClick={(event) => event.stopPropagation()}
-      >
+      <figure className={styles.figure} onClick={(event) => event.stopPropagation()}>
         <img
           src={image.url}
           alt={caption || ""}
           width={image.width}
           height={image.height}
-          className="max-h-[80vh] w-auto max-w-full rounded-xl object-contain"
+          className={styles.image}
         />
-        <figcaption className="text-center text-sm text-white/70">
-          {caption && <span className="block">{caption}</span>}
+        <figcaption className={styles.figcaption}>
+          {caption && <span>{caption}</span>}
           {images.length > 1 && (
-            <span className="text-white/50">
+            <span className={styles.counter}>
               {index + 1} / {images.length}
             </span>
           )}

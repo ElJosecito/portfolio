@@ -9,10 +9,20 @@ import ProjectDetailSkeleton from '../skeletons/ProjectDetailSkeleton'
 import { isEnglish, localizeProject } from '../../../shared/utils/i18n'
 import { useSeo } from '../../../shared/hooks/useSeo'
 import { SITE_URL, absoluteUrl } from '../../../shared/utils/seo'
+import { projectTransitionName } from '../../../shared/utils/viewTransition'
 // Directo y no desde el barrel: importar el índice del kit haría que la página
 // pública se lleve también los componentes que solo usa el panel.
 import Markdown from '../../../shared/ui/Markdown'
+import styles from './ProjectDetail.module.css'
 
+/**
+ * Rediseño editorial en el lenguaje del landing nuevo — hero grande en la
+ * tipografía display, fila de metadata en mono, portada en mockup con
+ * `object-contain` (igual criterio que las cards: la imagen YA trae su
+ * propio fondo) y el contenido de markdown con tipografía legible. Ver
+ * ProjectDetail.module.css para los tokens compartidos con el landing
+ * (`../landing/styles/tokens.css`).
+ */
 function ProjectDetail({ languaje }) {
     const { slug } = useParams()
     const { project, loading, notFound } = useProject(slug)
@@ -91,58 +101,63 @@ function ProjectDetail({ languaje }) {
 
     const github = project?.urls.find((url) => /git/i.test(url.name)) || project?.urls[0]
     const live = project?.urls.find((url) => url !== github)
+    const year = project?.createdAt ? new Date(project.createdAt).getFullYear() : null
+    const transitionName = projectTransitionName(project?.slug)
 
     return (
-        <section className="relative flex w-full justify-center bg-noon p-5 pb-20 pt-32 dark:bg-slate-950 sm:pt-36">
-            <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
-            <div className="absolute inset-0 bg-fuchsia-300 opacity-20 blur-[100px]" />
-
-            <div className="z-10 w-full max-w-4xl dark:text-moonlit">
-                <Link
-                    to="/all-projects"
-                    className="mb-8 inline-flex items-center gap-2 text-sm font-medium opacity-70 hover:opacity-100"
-                >
+        <section className={styles.page}>
+            <div className={styles.inner}>
+                <Link to="/all-projects" className={styles.back}>
                     ← {english ? 'Back to projects' : 'Volver a proyectos'}
                 </Link>
 
                 {loading ? (
                     <ProjectDetailSkeleton label={languaje.projects.loading} />
                 ) : notFound || !project ? (
-                    <div className="flex h-96 flex-col items-center justify-center gap-4">
-                        <p className="text-xl">
+                    <div className={styles.notFound}>
+                        <p className={styles.notFoundText}>
                             {english ? 'Project not found' : 'Proyecto no encontrado'}
                         </p>
-                        <Link
-                            to="/all-projects"
-                            className="rounded-lg bg-[#6a4279] px-4 py-2 font-medium text-white shadow-md transition-transform duration-300 hover:scale-105"
-                        >
+                        <Link to="/all-projects" className={styles.notFoundCta}>
                             {languaje.projects.projectsBtn}
                         </Link>
                     </div>
                 ) : (
                     <article>
-                        <header className="mb-8">
-                            <div className="mb-3 flex flex-wrap gap-2">
+                        <header className={styles.hero}>
+                            <div className={styles.metaRow}>
                                 {project.platforms.map((platform) => (
-                                    <span
-                                        key={platform}
-                                        className="rounded-lg bg-[#6a4279] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white dark:bg-[#020617]"
-                                    >
+                                    <span key={platform} className={styles.platformChip}>
                                         {languaje.projects.filters[platform] || platform}
                                     </span>
                                 ))}
                             </div>
 
-                            <h1 className="my-4 text-5xl font-bold lg:text-6xl">{localized.name}</h1>
-                            <p className="text-lg opacity-70">{localized.description}</p>
+                            <h1 className={styles.title}>{localized.name}</h1>
+                            <p className={styles.description}>{localized.description}</p>
 
-                            <div className="mt-6 flex flex-wrap gap-3">
+                            <dl className={styles.metaTable}>
+                                {year && (
+                                    <div>
+                                        <dt>{english ? 'Year' : 'Año'}</dt>
+                                        <dd>{year}</dd>
+                                    </div>
+                                )}
+                                {project.techIcons.length > 0 && (
+                                    <div>
+                                        <dt>{english ? 'Stack' : 'Stack'}</dt>
+                                        <dd>{project.techIcons.map((t) => t.name).join(' · ')}</dd>
+                                    </div>
+                                )}
+                            </dl>
+
+                            <div className={styles.links}>
                                 {live && (
                                     <a
                                         href={live.url}
                                         target="_blank"
                                         rel="noreferrer"
-                                        className="rounded-lg border border-red-600 px-4 py-2 font-medium text-red-600 shadow-md transition-transform duration-300 hover:scale-105"
+                                        className={styles.linkPrimary}
                                     >
                                         {live.name}
                                     </a>
@@ -152,7 +167,7 @@ function ProjectDetail({ languaje }) {
                                         href={github.url}
                                         target="_blank"
                                         rel="noreferrer"
-                                        className="flex items-center gap-2 rounded-lg bg-noon px-4 py-2 font-medium text-dark-grey shadow-md transition-transform duration-300 hover:scale-105"
+                                        className={styles.linkSecondary}
                                     >
                                         <FaGithub />
                                         GitHub
@@ -161,35 +176,38 @@ function ProjectDetail({ languaje }) {
                             </div>
                         </header>
 
-                        {/* La relación de aspecto es fija a propósito: sin ella
-                            el navegador no sabe cuánto alto reservar y todo lo
-                            que va debajo salta cuando la portada termina de
-                            decodificar. */}
-                        <img
-                            src={project.image}
-                            alt={localized.name}
-                            className="mb-8 aspect-[16/9] w-full rounded-3xl object-cover shadow-md"
-                        />
+                        {/* Mismo `view-transition-name` que la card de origen
+                            (landing o /all-projects): el navegador morphea el
+                            mockup de la card en esta portada cuando soporta
+                            la View Transitions API (ver viewTransition.js).
+                            `object-contain` sobre superficie propia, no
+                            `cover`: son mockups con su propio fondo, igual
+                            criterio que las cards. */}
+                        <div className={styles.cover}>
+                            <img
+                                src={project.image}
+                                alt={localized.name}
+                                className={styles.coverImage}
+                                style={transitionName ? { viewTransitionName: transitionName } : undefined}
+                            />
+                        </div>
 
                         {project.techIcons.length > 0 && (
-                            <ul className="mb-10 flex flex-wrap gap-2">
+                            <ul className={styles.techList}>
                                 {project.techIcons.map((tech) => (
-                                    <li
-                                        key={tech.name}
-                                        className="flex h-10 items-center gap-2 rounded-lg bg-[#6a4279] px-3 py-1 font-medium text-white shadow-md dark:bg-[#020617]"
-                                    >
+                                    <li key={tech.name} className={styles.techChip}>
                                         <img
                                             src={tech.icon}
                                             alt=""
-                                            className={`h-6 w-6 ${tech.className || ''}`}
+                                            className={`${styles.techIcon} ${tech.className || ''}`}
                                         />
-                                        <span className="text-sm font-bold">{tech.name}</span>
+                                        <span>{tech.name}</span>
                                     </li>
                                 ))}
                             </ul>
                         )}
 
-                        {content && <Markdown>{content}</Markdown>}
+                        {content && <Markdown className={styles.content}>{content}</Markdown>}
 
                         <ProjectGallery images={images} languaje={languaje} />
                     </article>

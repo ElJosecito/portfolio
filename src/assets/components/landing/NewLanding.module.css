@@ -1,0 +1,22 @@
+/* `overflow-x: clip` y no `overflow-x: hidden`: `position: sticky` (ver
+   ProjectsSection) deja de funcionar si CUALQUIER ancestro tiene
+   `overflow: hidden` — `clip` recorta igual que `hidden` pero no crea ese
+   scroll container implícito que rompe el sticky (ver revisión, "Rediseño
+   de Proyectos"). */
+.main {
+  position: relative;
+  /* z-index + fondo real (cada sección ya trae el suyo) por encima del
+     footer "telón" (ver layout/Footer.jsx, `curtain`): sin esto el footer
+     sticky, que queda clavado al fondo del viewport, se vería A TRAVÉS del
+     final de Contacto mientras se termina de scrollear. */
+  z-index: 1;
+  width: 100%;
+  overflow-x: clip;
+  /* `--footer-height` lo escribe Footer.jsx (medido, ver su comentario) solo
+     cuando `curtain` está activo; en cualquier otra ruta la variable no
+     existe y el fallback de 0px deja a este `<main>` sin ningún efecto —
+     por eso no hace falta gatear esta regla por nada más, ya es específica
+     de NewLanding.module.css. */
+  margin-bottom: calc(-1 * var(--footer-height, 0px));
+  padding-bottom: var(--footer-height, 0px);
+}

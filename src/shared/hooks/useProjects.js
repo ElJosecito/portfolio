@@ -27,6 +27,9 @@ function formatProject(project) {
     content: project.content,
     content_en: project.content_en,
     image: project.image_url,
+    // Solo el año se usa (detalle del proyecto, fila de meta editorial) —
+    // se guarda la fecha completa igual por si hace falta más precisión.
+    createdAt: project.created_at,
     urls: project.urls || [],
     size: project.featured_size,
     platforms: project.platforms || [],

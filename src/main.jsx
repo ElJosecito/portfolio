@@ -1,6 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "../src/assets/styles/style.css";
+// Tokens compartidos del landing nuevo (colores, fuentes, z-layers, easings
+// — ver el comentario del propio archivo). Se importa UNA sola vez acá, para
+// TODA la app: así /all-projects y /projects/:slug (páginas rediseñadas con
+// estos mismos tokens, ver ProjectsPage.module.css y ProjectDetail.module.css)
+// los tienen disponibles sin tener que volver a declarar el `:root` entero
+// en cada CSS Module (que los duplicaba por cada chunk que lo importaba).
+import "./assets/components/landing/styles/tokens.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { initTheme } from "./shared/theme";

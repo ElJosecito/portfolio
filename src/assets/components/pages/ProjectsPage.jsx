@@ -1,30 +1,29 @@
-import React, { useEffect, useState } from 'react'
-//import media query
-import { useMediaQuery } from "@uidotdev/usehooks";
+import React, { useState } from 'react'
+
 //projects
 import { useProjects } from '../../../shared/hooks/useProjects';
-//import cards
-import ProjectCard from '../cards/ProjectCard';
-//skeleton de carga
-import ProjectsGridSkeleton from '../skeletons/ProjectsGridSkeleton';
+//card editorial del grid (ver módulo: distinta de cards/ProjectCard, que sigue
+//en Tailwind y usa el Hero clásico)
+import ProjectEditorialCard from '../cards/ProjectEditorialCard';
 //seo
 import { useSeo } from '../../../shared/hooks/useSeo';
 import { isEnglish, localizeProject } from '../../../shared/utils/i18n';
 import { absoluteUrl } from '../../../shared/utils/seo';
+import styles from './ProjectsPage.module.css';
 
 
 const FILTERS = ['all', 'web', 'mobile'];
 
+/**
+ * Rediseño en el lenguaje visual del landing nuevo (ver docs/landing-redesign-
+ * review.md "Estado"), pero deliberadamente LIVIANO: esta página la ve todo
+ * visitante, incluido quien cae en la variante clásica por el gate de
+ * capacidad. Nada de three.js, nada de gsap — solo CSS Modules + tokens
+ * compartidos (`../landing/styles/tokens.css`, vía ProjectsPage.module.css).
+ */
 function ProjectsPage({ languaje }) {
-    const [isMobile, setIsMobile] = useState(false);
-    const mobile = useMediaQuery("only screen and (max-width : 768px)");
     const { projects, loading } = useProjects();
     const [filter, setFilter] = useState('all');
-
-    useEffect(() => {
-        // El scroll al tope lo maneja ScrollToTop en el Router, para todas las rutas.
-        setIsMobile(mobile);
-    }, []);
 
     const english = isEnglish(languaje);
 
@@ -67,57 +66,54 @@ function ProjectsPage({ languaje }) {
             : projects.filter((project) => project.platforms?.includes(filter));
 
     return (
-        <section className="w-full  p-5 pb-10 bg-noon dark:bg-slate-950 flex justify-center pt-32 sm:pt-36" >
-            <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
-            <div className="absolute inset-0 bg-fuchsia-300 bg-[size:20px_20px] opacity-20 blur-[100px]"></div>
-            <div className="w-full max-w-screen-xl z-10">
-                <div className="mb-10 text-center w-full pl-3 dark:text-moonlit">
+        <section className={styles.page}>
+            <div className={styles.inner}>
+                <div className={styles.header}>
+                    <p className={styles.kicker}>
+                        {english ? 'Work' : 'Trabajo'}
+                    </p>
                     {/* h1 y no h2: es el encabezado principal de esta página.
                         Arrancar en h2 deja la jerarquía sin raíz. */}
-                    <h1 className="text-5xl font-bold my-3">
-                        {languaje.projects.title}
-                    </h1>
-                    <p className="text-lg opacity-70">
-                        {languaje.projects.description}
-                    </p>
+                    <h1 className={styles.title}>{languaje.projects.title}</h1>
+                    <p className={styles.description}>{languaje.projects.description}</p>
                 </div>
 
-                <div
-                    role="tablist"
-                    aria-label={languaje.projects.title}
-                    className="mb-8 flex justify-center gap-2"
-                >
+                <div role="tablist" aria-label={languaje.projects.title} className={styles.filters}>
                     {FILTERS.map((option) => (
                         <button
                             key={option}
                             role="tab"
                             aria-selected={filter === option}
                             onClick={() => setFilter(option)}
-                            className={`rounded-lg px-4 py-2 text-sm font-medium shadow-md transition-transform duration-300 hover:scale-105 ${
-                                filter === option
-                                    ? 'bg-[#6a4279] text-white dark:bg-[#020617]'
-                                    : 'bg-[#EFE0F4] text-dark-grey dark:bg-[#372D48] dark:text-moonlit'
-                            }`}
+                            className={`${styles.filterPill} ${filter === option ? styles.filterPillActive : ''}`}
                         >
                             {languaje.projects.filters[option]}
                         </button>
                     ))}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className={styles.grid}>
                     {loading ? (
-                        <ProjectsGridSkeleton count={4} label={languaje.projects.loading} />
+                        <>
+                            {Array.from({ length: 6 }).map((_, index) => (
+                                <div
+                                    key={index}
+                                    className={styles.skeletonCard}
+                                    role="status"
+                                    aria-label={languaje.projects.loading}
+                                />
+                            ))}
+                        </>
                     ) : visible.length === 0 ? (
-                        <div className="col-span-full flex justify-center items-center h-96 dark:text-moonlit">
-                            <p className="text-xl">{languaje.projects.empty}</p>
+                        <div className={styles.empty}>
+                            <p>{languaje.projects.empty}</p>
                         </div>
                     ) : (
                         visible.map((project) => (
-                            <ProjectCard
+                            <ProjectEditorialCard
                                 key={project.id}
                                 project={project}
                                 languaje={languaje}
-                                delay={isMobile ? 0.2 : 0.35}
                             />
                         ))
                     )}

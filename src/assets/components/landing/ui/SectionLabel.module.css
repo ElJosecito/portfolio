@@ -1,0 +1,26 @@
+/*
+ * Etiqueta mono de sección: migrado de Tailwind, mismos valores literales.
+ * `tone` sigue resolviendo entre dos variantes de color, ahora como clases
+ * de módulo en vez de un string armado a mano.
+ */
+.label {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+}
+
+/* text-current opacity-50 */
+.toneDark {
+  color: currentColor;
+  opacity: 0.5;
+}
+
+/* text-white/60 */
+.toneLight {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.index {
+  font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,113 @@
+.section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--color-moonlit);
+  color: var(--color-midnight);
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 7rem;
+  padding-bottom: 7rem;
+}
+
+@media (min-width: 640px) {
+  .section {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    padding-top: 9rem;
+    padding-bottom: 9rem;
+  }
+}
+
+/* Difusor hacia el cobalto del hero: hero-blue/25 -> transparent */
+.gradientTop {
+  pointer-events: none;
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 8rem;
+  background: linear-gradient(to bottom, rgba(34, 51, 201, 0.25), transparent);
+}
+
+/* Difusor hacia el morado de experiencia: plum-800/15 -> transparent */
+.gradientBottom {
+  pointer-events: none;
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 8rem;
+  background: linear-gradient(to top, rgba(55, 45, 72, 0.15), transparent);
+}
+
+.container {
+  position: relative;
+  z-index: var(--z-section-content);
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 56rem;
+}
+
+/*
+ * Patrón estándar "visually hidden": el contenido sigue en el DOM y es
+ * accesible para lectores de pantalla, pero no ocupa espacio ni se ve —
+ * Tailwind lo da gratis con `sr-only`, en CSS puro hay que recrearlo a mano.
+ */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.kicker {
+  margin-top: 0.75rem;
+  font-family: var(--font-tech);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--color-plum-500);
+}
+
+.manifesto {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.manifestoLine {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 5.5vw, 3.25rem);
+  text-transform: uppercase;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.highlight {
+  color: var(--color-hero-blue);
+}
+
+.paragraphs {
+  margin-top: 4rem;
+  display: grid;
+  gap: 1.5rem;
+  border-top: 1px solid rgba(52, 52, 54, 0.1);
+  padding-top: 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .paragraphs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.paragraph {
+  font-size: 1rem;
+  line-height: 1.625;
+  opacity: 0.7;
+}

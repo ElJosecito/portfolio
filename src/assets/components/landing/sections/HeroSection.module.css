@@ -1,0 +1,109 @@
+/*
+ * HeroSection: cobalto plano + nombre gigante. Migrado de Tailwind a CSS
+ * puro (ver docs/landing-redesign-review.md) — mismos valores, sin cambios
+ * visuales.
+ */
+
+.heroSection {
+  position: relative;
+  display: flex;
+  min-height: 100vh;
+  /* Fallback arriba para navegadores sin soporte de unidades `sv*`, luego la
+     unidad real (evita el salto por la barra de direcciones en mobile). */
+  min-height: 100svh;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: var(--color-hero-blue);
+  padding-top: 6.5rem; /* pt-26 */
+}
+
+@media (min-width: 640px) {
+  .heroSection {
+    padding-top: 8rem; /* sm:pt-32 */
+  }
+}
+
+/* Nombre: z-10, por debajo de la capa compartida de la cabeza (z-20). */
+.nameWrap {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nameHeading {
+  user-select: none;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  color: var(--color-hero-ink);
+}
+
+.nameLine {
+  display: block;
+  /* Milker es muy ancha; el clamp evita que "MARTÍNEZ" se desborde en
+     anchos intermedios (ver hero3d/HeroName original). */
+  font-size: clamp(2.75rem, 14vw, 7.5rem);
+}
+
+.letter {
+  display: inline-block;
+}
+
+/* Mientras la intro no terminó (ver HeroSection.jsx, useHeroEntrance): las
+   letras arrancan ocultas por CSS, no por un estado de React — así nunca hay
+   un frame donde se ven "paradas" antes de que el overlay de la intro se
+   abra. `useHeroEntrance` las anima a su posición real apenas llega
+   INTRO_DONE_EVENT. */
+.nameWrap[data-awaiting-intro] .letter {
+  opacity: 0;
+}
+
+.scrollHint {
+  pointer-events: none;
+  position: absolute;
+  inset-inline: 0;
+  bottom: 1.5rem;
+  z-index: 30;
+  display: flex;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.scrollArrow {
+  font-family: var(--font-tech);
+  font-size: 0.875rem;
+}
+
+/* Titileo sutil de la pista de scroll (antes `animate-twinkle` de Tailwind,
+   keyframes definidos en tailwind.config.cjs). */
+.twinkle {
+  animation: twinkle 3.2s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .twinkle {
+    animation: none;
+  }
+}

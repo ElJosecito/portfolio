@@ -1,0 +1,110 @@
+/*
+ * Migración de Tailwind a CSS Modules — ver tokens.css para las variables
+ * compartidas. El movimiento horizontal del marquee es 100% JS (ver
+ * useMarqueeTicker, JSX): acá solo va layout estático, nunca se toca
+ * `transform` desde CSS.
+ */
+.section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--color-plum-950);
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+  color: white;
+}
+
+@media (min-width: 640px) {
+  .section {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+}
+
+.header {
+  position: relative;
+  z-index: var(--z-section-content);
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 3.5rem;
+  max-width: 72rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .header {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
+.title {
+  margin-top: 1rem;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5.5vw, 3.75rem);
+  text-transform: uppercase;
+  line-height: 0.95;
+}
+
+.rows {
+  position: relative;
+  z-index: var(--z-section-content);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rowOuter {
+  width: 100%;
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  width: max-content;
+}
+
+.copyList {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 2.5rem;
+  white-space: nowrap;
+  padding-right: 2.5rem;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.1);
+}
+
+/* Escala tipográfica equivalente a `text-5xl sm:text-7xl` de Tailwind, que
+   era el valor por defecto del prop `size` de MarqueeRow. */
+.sizeDefault {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+@media (min-width: 640px) {
+  .sizeDefault {
+    font-size: 4.5rem;
+  }
+}
+
+.techItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.icon {
+  height: 2rem;
+  width: 2rem;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+@media (min-width: 640px) {
+  .icon {
+    height: 3rem;
+    width: 3rem;
+  }
+}

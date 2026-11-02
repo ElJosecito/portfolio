@@ -1,0 +1,388 @@
+/*
+ * Pie global en CSS puro (migrado de Tailwind, ver Footer.jsx). Lee los
+ * tokens de landing/styles/tokens.css (colores, fuentes, easings) aunque
+ * este archivo vive fuera de landing/ — el Footer es global, igual que el
+ * Header, y comparte el mismo lenguaje visual.
+ *
+ * Fondo siempre oscuro (ink casi negro con un velo de plum-950 arriba, el
+ * mismo tono con el que Contacto "tapa" la sección anterior, ver
+ * useChapterWipe en ContactSection.jsx) a propósito, SIN leer el tema
+ * claro/oscuro del sitio (`:global(.dark)`): es la última impresión del
+ * sitio, pensada para verse igual —oscura, de poster— sin importar en qué
+ * tema esté el resto de la página.
+ */
+.footer {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--color-plum-950) 0%, #06060f 45%, #040308 100%);
+  color: var(--color-moonlit);
+  /* Vertical compacto a propósito (ver comentario de `.wordmark`): el
+     "telón" (curtain, ver Footer.jsx) solo tiene scroll-budget para revelar
+     hasta `--footer-height` px — si el footer mide más que el viewport, su
+     parte de arriba queda bajo el header fijo sin forma de scrollear más
+     allá (ya se está en el final real del documento). Se ajustó el ritmo
+     vertical entero (acá, `.topGrid`, `.wordmark`, `.bottomBar`) para que
+     entre completo en los altos de viewport más comunes de escritorio. */
+  padding: 2.5rem 1.5rem 1.5rem;
+}
+
+/* Telón (ver comentario de Footer.jsx): sticky al fondo del viewport,
+   detrás del `<main>` con `z-index: 1` del landing nuevo, que lo "revela"
+   con su propio padding/margin negativos (ver NewLanding.module.css). */
+.footerCurtain {
+  position: sticky;
+  bottom: 0;
+  /* OJO si se toca: este z-index TIENE que quedar por debajo de
+     `<main>` (ver NewLanding.module.css, z-index: 1). El footer está
+     `position: sticky; bottom: 0` durante TODO el scroll (no solo al
+     final) — lo que hace que solo se vea recién al final es que `<main>`
+     (con z-index más alto) lo tapa hasta que su propio contenido se
+     termina (el padding-bottom vacío que mide `--footer-height`, ver
+     Footer.jsx). Subir este z-index por encima de `<main>` (se probó con
+     `--z-section-content: 30`, mismo valor que usa ProjectsSection para
+     tapar la cabeza 3D) rompe ESE mecanismo: el footer se ve sticky desde
+     el principio del scroll, tapando contenido real de las secciones de
+     arriba. La cabeza flotando sobre el footer (ver revisión, rough edge)
+     se resuelve en `useHeadRig.js` en cambio — un tween de `rig.scale` a 0
+     con el footer como trigger, no tocando este stacking. */
+  z-index: 0;
+}
+
+@media (min-width: 768px) {
+  .footer {
+    padding: 3rem 2.5rem 2rem;
+  }
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  margin-inline: auto;
+  max-width: 1280px;
+}
+
+/* Grilla de etiquetas mono: una columna en mobile, cuatro desde `md`. */
+.topGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.75rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (min-width: 768px) {
+  .topGrid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.label {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  /* 0.62, no 0.55: contra el fondo casi negro de abajo (ver `.footer`),
+     0.55 queda justo debajo de 4.5:1 para texto chico (11px) — verificado
+     a mano, ver revisión de a11y en docs/landing-redesign-review.md. */
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* (1) email ------------------------------------------------------------ */
+
+.emailButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-moonlit);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 3vw, 1.35rem);
+  line-height: 1.2;
+  word-break: break-word;
+  transition: color 200ms var(--ease-standard);
+}
+
+.emailButton:hover,
+.emailButton:focus-visible {
+  color: var(--color-volt-400);
+}
+
+.emailButton:focus-visible {
+  outline: 2px solid var(--color-volt-400);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.emailIcon {
+  flex-shrink: 0;
+  height: 1.1rem;
+  width: 1.1rem;
+  opacity: 0.8;
+}
+
+.emailText {
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.25);
+  text-underline-offset: 4px;
+}
+
+.copyHint {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* (2) navegación --------------------------------------------------------- */
+
+.navList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navLink {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  transition: color 180ms var(--ease-standard);
+}
+
+.navLink:hover {
+  color: var(--color-moonlit);
+}
+
+.navLink:focus-visible {
+  outline: 2px solid var(--color-volt-400);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* (3) redes --------------------------------------------------------------- */
+
+.socialList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.socialLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  transition: color 180ms var(--ease-standard);
+}
+
+.socialLink:hover,
+.socialLink:focus-visible {
+  color: var(--color-moonlit);
+}
+
+.socialLink:hover .socialArrow,
+.socialLink:focus-visible .socialArrow {
+  transform: translateX(3px);
+  opacity: 1;
+}
+
+.socialLink:focus-visible {
+  outline: 2px solid var(--color-volt-400);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+.socialIcon {
+  height: 1rem;
+  width: 1rem;
+  opacity: 0.85;
+}
+
+.socialArrow {
+  opacity: 0;
+  transition: transform 180ms var(--ease-standard), opacity 180ms var(--ease-standard);
+}
+
+/* (4) hora local + disponibilidad --------------------------------------- */
+
+.clock {
+  font-family: var(--font-tech);
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+  color: var(--color-moonlit);
+}
+
+.availability {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.availabilityDot {
+  height: 0.5rem;
+  width: 0.5rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: #4ade80;
+  box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6);
+  animation: footer-pulse 2.4s ease-out infinite;
+}
+
+@keyframes footer-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(74, 222, 128, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .availabilityDot {
+    animation: none;
+  }
+}
+
+/* wordmark gigante -------------------------------------------------------- */
+
+.wordmark {
+  margin: 1rem 0 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5ch;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  line-height: 0.82;
+  letter-spacing: -0.01em;
+  /* Edge-to-edge: crece con el viewport hasta recortarse un poco contra el
+     borde del contenedor (look de poster), ver `overflow: hidden` en
+     `.footer`. `clamp` evita que en pantallas enormes el tamaño se dispare
+     sin límite — el techo (8.5rem, antes 13rem) se bajó además para que el
+     footer entero entre en el scroll-budget del telón (ver comentario de
+     `.footer`), no solo por estética. */
+  font-size: clamp(2.6rem, 12vw, 8.5rem);
+  color: var(--color-moonlit);
+  user-select: none;
+  text-align: center;
+}
+
+.wordmark span {
+  display: inline-block;
+  transition: transform 320ms var(--ease-standard), color 320ms var(--ease-standard);
+}
+
+/* Hover sutil: las palabras se "levantan" apenas, no toda la línea junta
+   (se nota más así que animando el bloque entero). Solo con puntero real
+   (`hover`) y respetando `prefers-reduced-motion`. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .wordmark:hover span:hover {
+    transform: translateY(-0.04em);
+    color: var(--color-volt-400);
+  }
+}
+
+@media (min-width: 768px) {
+  .wordmark {
+    margin: 1.5rem 0 1rem;
+  }
+}
+
+/* barra inferior ----------------------------------------------------------- */
+
+.bottomBar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .bottomBar {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+.rights,
+.builtWith {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.backToTop {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  color: var(--color-moonlit);
+  font-family: var(--font-tech);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: background-color 180ms var(--ease-standard), transform 180ms var(--ease-standard);
+}
+
+.backToTop:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.backToTop:active {
+  transform: translateY(1px);
+}
+
+.backToTop:focus-visible {
+  outline: 2px solid var(--color-volt-400);
+  outline-offset: 2px;
+}
+
+.backToTopIcon {
+  height: 0.75rem;
+  width: 0.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backToTop {
+    transition: none;
+  }
+}

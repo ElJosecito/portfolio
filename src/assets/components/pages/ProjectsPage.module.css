@@ -1,0 +1,156 @@
+/*
+ * Página /all-projects en CSS Modules puro (sin Tailwind, ver constraint de
+ * la tarea: esta ruta la ve TODO visitante, incluida la variante clásica sin
+ * three.js). Tokens compartidos con el landing nuevo vía `tokens.css`
+ * (colores, fuentes, easings) — ver el `@import` arriba.
+ */
+.page {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 8rem 1.25rem 4rem;
+  background: var(--color-noon);
+}
+
+:global(.dark) .page {
+  background: var(--color-plum-950);
+  color: var(--color-moonlit);
+}
+
+.inner {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.kicker {
+  font-family: var(--font-tech);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin: 0 0 0.75rem;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+  line-height: 1;
+  margin: 0 0 0.75rem;
+}
+
+.description {
+  font-size: 1.05rem;
+  opacity: 0.7;
+  max-width: 42ch;
+  margin: 0 auto;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.filterPill {
+  font-family: var(--font-tech);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-plum-500) 35%, transparent);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.25s var(--ease-standard), color 0.25s var(--ease-standard);
+}
+
+.filterPill:hover {
+  background: color-mix(in srgb, var(--color-plum-500) 12%, transparent);
+}
+
+.filterPillActive {
+  background: var(--color-hero-blue);
+  border-color: var(--color-hero-blue);
+  color: #fff;
+}
+
+.filterPillActive:hover {
+  background: var(--color-hero-blue-deep);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.empty {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 16rem;
+  font-size: 1.1rem;
+  opacity: 0.7;
+}
+
+.skeletonCard {
+  border-radius: 28px;
+  aspect-ratio: 3 / 4;
+  background: color-mix(in srgb, var(--color-plum-200) 50%, transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+:global(.dark) .skeletonCard {
+  background: color-mix(in srgb, var(--color-plum-800) 60%, transparent);
+}
+
+.skeletonCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 70%
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonCard::before {
+    animation: none;
+  }
+}

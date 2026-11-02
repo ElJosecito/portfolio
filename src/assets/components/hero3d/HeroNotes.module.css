@@ -1,0 +1,88 @@
+/*
+ * HeroNotes: anotaciones técnicas a los costados de la cabeza. Migrado de
+ * Tailwind a CSS puro (ver docs/landing-redesign-review.md) — mismos
+ * valores, sin cambios visuales.
+ */
+
+.notes {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: none;
+  user-select: none;
+  font-family: var(--font-tech);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Ocultas por debajo de `lg`: a ese ancho ya no queda margen a los costados
+   de la cabeza para que una nota de 4 líneas no la toque. */
+@media (min-width: 1024px) {
+  .notes {
+    display: block;
+  }
+}
+
+@media (min-width: 1280px) {
+  .notes {
+    font-size: 12px;
+  }
+}
+
+.noteBlock {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.topLeft {
+  left: 1.5rem;
+  top: 7rem;
+  max-width: 180px;
+}
+
+.midLeft {
+  left: 1.5rem;
+  top: 50%;
+  max-width: 170px;
+  transform: translateY(-50%);
+}
+
+.topRight {
+  right: 1.5rem;
+  top: 7rem;
+  max-width: 150px;
+  text-align: right;
+}
+
+.midRight {
+  right: 1.5rem;
+  top: 58%;
+  max-width: 160px;
+  transform: translateY(-50%);
+  text-align: right;
+}
+
+@media (min-width: 1280px) {
+  .topLeft {
+    left: 2.5rem;
+    top: 8rem;
+  }
+
+  .midLeft {
+    left: 2.5rem;
+  }
+
+  .topRight {
+    right: 2.5rem;
+    top: 8rem;
+  }
+
+  .midRight {
+    right: 2.5rem;
+  }
+}

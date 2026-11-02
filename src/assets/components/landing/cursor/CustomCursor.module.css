@@ -1,0 +1,44 @@
+/* Clase que este componente agrega a <body> mientras está montado (ver
+   CustomCursor.jsx) — compilada por CSS Modules a un nombre único, así que
+   no puede chocar con clases de otras rutas; se quita al desmontar. */
+.cursorHideNative,
+.cursorHideNative * {
+  cursor: none;
+}
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 300; /* por encima de la intro (200) y del header (50) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin: -1.125rem 0 0 -1.125rem; /* centrado sobre el punto x/y */
+  border-radius: 50%;
+  background: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  font-family: var(--font-tech);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: #fff;
+  white-space: nowrap;
+  transition: width 0.25s var(--ease-out-soft), height 0.25s var(--ease-out-soft),
+    margin 0.25s var(--ease-out-soft), border-radius 0.25s var(--ease-out-soft);
+}
+
+.cursor[data-state="interactive"] {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: -1.75rem 0 0 -1.75rem;
+}
+
+.cursor[data-state="project"] {
+  width: 5.5rem;
+  height: 5.5rem;
+  margin: -2.75rem 0 0 -2.75rem;
+  background: var(--color-plum-200);
+}

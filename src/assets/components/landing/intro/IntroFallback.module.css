@@ -1,0 +1,79 @@
+/*
+ * Mismo fondo/layout que `IntroLoader.module.css` (`.overlay`/`.counterRow`/
+ * `.counter`) a propósito — ver el comentario de IntroFallback.jsx: el punto
+ * es que esto y el primer frame del IntroLoader real sean indistinguibles.
+ * No se comparte el módulo CSS entre los dos (cada uno es su propio
+ * `.module.css`, nombres de clase distintos) porque este archivo vive en el
+ * chunk PRINCIPAL (Router.jsx lo importa sin `lazy()`) y el de IntroLoader
+ * vive en el chunk de NewLanding — importar el de IntroLoader acá metería
+ * ese CSS (y arrastraría su JS asociado si alguna vez dejan de ser CSS
+ * Modules puros) en el bundle equivocado.
+ */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, var(--color-hero-blue, #2233c9) 0%, var(--color-hero-blue-deep, #1b2aa8) 100%);
+}
+
+.counterRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--font-display, "Milker", "Arial Black", sans-serif);
+  color: var(--color-hero-ink, #dfe6ff);
+}
+
+/* Mismo tamaño/tracking que `IntroLoader.module.css` .counter. */
+.counter {
+  display: inline-block;
+  font-size: clamp(4rem, 18vw, 11rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Contador 000→100 en CSS puro, sin JS/gsap (ver comentario del .jsx): un
+   custom property tipado (`@property`) es lo único que permite animar un
+   ENTERO con keyframes — de ahí sale el valor que pinta `counter()`. Un
+   `@counter-style` con `pad` es lo que da el cero a la izquierda a tres
+   dígitos (`counter(..., decimal-leading-zero)` nativo solo rellena a 2).
+   Navegadores sin soporte de `@property` (Safari viejo) simplemente no
+   corren la animación: el contador queda quieto en "000", mismo fondo y
+   layout que el real — degrada bien, no rompe nada. */
+@property --intro-fallback-count {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@counter-style intro-fallback-three-digit {
+  system: numeric;
+  symbols: "0" "1" "2" "3" "4" "5" "6" "7" "8" "9";
+  pad: 3 "0";
+}
+
+.counter {
+  --intro-fallback-count: 0;
+  counter-reset: intro-fallback-progress var(--intro-fallback-count);
+  animation: intro-fallback-count 2.4s linear forwards;
+}
+
+.counter::before {
+  content: counter(intro-fallback-progress, intro-fallback-three-digit);
+}
+
+@keyframes intro-fallback-count {
+  to {
+    --intro-fallback-count: 99;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .counter {
+    animation: none;
+  }
+}

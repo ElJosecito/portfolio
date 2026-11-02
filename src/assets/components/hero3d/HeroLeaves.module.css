@@ -1,0 +1,100 @@
+/*
+ * HeroLeaves: hojas tropicales fuera de foco en las esquinas inferiores.
+ * Migrado de Tailwind a CSS puro — mismos valores, sin cambios visuales.
+ */
+
+.leaves {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  overflow: hidden;
+}
+
+/* Esquina inferior izquierda.
+   El parallax (ver FaceHeroSection, `useDomParallax`) mueve todo este
+   contenedor hasta `amplitude` px. Antes el cluster solo se corría
+   -56px/-48px del borde, bastante menos que eso + el radio del blur:
+   cuando el puntero empujaba el cluster hacia el centro, el filtro
+   `blur` dejaba de tener de dónde "difuminar" y se veía un corte duro
+   justo donde el borde del contenedor (no el de la hoja) topaba con el
+   `overflow: hidden` de la sección.
+   Ahora el offset (-6rem/-96px) más el tamaño más grande del cluster
+   dejan margen de sobra incluso en el peor caso (amplitude 10px +
+   blur-lg 16px ≈ 26px de "zona de riesgo"), así el borde recortado
+   siempre queda bien afuera de la pantalla. */
+.leafClusterLeft {
+  position: absolute;
+  bottom: -4rem;
+  left: -5rem;
+  height: 18rem;
+  width: 16rem;
+  color: #0b2a1f;
+  opacity: 0.8;
+  filter: blur(16px); /* blur-lg */
+}
+
+@media (min-width: 640px) {
+  .leafClusterLeft {
+    height: 24rem;
+    width: 20rem;
+    bottom: -5rem;
+    left: -6rem;
+  }
+}
+
+/* Esquina inferior derecha, espejada */
+.leafClusterRight {
+  position: absolute;
+  bottom: -4rem;
+  right: -5rem;
+  height: 18rem;
+  width: 16rem;
+  color: #0b2a1f;
+  opacity: 0.8;
+  filter: blur(16px); /* blur-lg */
+}
+
+@media (min-width: 640px) {
+  .leafClusterRight {
+    height: 24rem;
+    width: 20rem;
+    bottom: -5rem;
+    right: -6rem;
+  }
+}
+
+.leafFront {
+  position: absolute;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  transform: rotate(8deg);
+}
+
+.leafFrontLeft {
+  left: -1.5rem;
+}
+
+.leafFrontRight {
+  right: -1.5rem;
+  transform: rotate(8deg) scaleX(-1);
+}
+
+.leafBack {
+  position: absolute;
+  bottom: 1rem;
+  height: 83.333%; /* h-5/6 */
+  width: 83.333%; /* w-5/6 */
+  opacity: 0.7;
+  transform: rotate(-12deg);
+}
+
+.leafBackLeft {
+  left: -0.5rem;
+}
+
+.leafBackRight {
+  right: -0.5rem;
+  transform: rotate(-12deg) scaleX(-1);
+}

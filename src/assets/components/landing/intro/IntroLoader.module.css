@@ -1,0 +1,48 @@
+/*
+ * Overlay a pantalla completa: plano HTML/CSS, sin esperar a React para
+ * pintarse (ver IntroLoader.jsx) — el cobalto sale con el primer frame.
+ * `clip-path: circle(0% at 50% 50%)` arranca "cerrado" y la propia animación
+ * (gsap, ver IntroLoader) lo abre hacia 150% al terminar — 150 y no 100 para
+ * que la esquina más lejana del viewport (la que queda más lejos del centro
+ * en pantallas muy anchas) también quede cubierta por el círculo final.
+ */
+/*
+ * Corrección: antes el overlay arrancaba con `clip-path: circle(0%)`, o sea
+ * TOTALMENTE recortado (invisible). Al reemplazar al fallback de Suspense se
+ * veía la página de golpe, y el "reveal" agrandaba el círculo de 0% a 150%:
+ * el overlay CRECÍA tapando la página con el "100" y recién ahí desaparecía.
+ * Era el efecto al revés.
+ *
+ * Ahora el overlay arranca cubriendo todo y el reveal abre un AGUJERO desde
+ * el centro con una máscara radial: `--hole` es el radio transparente, que
+ * gsap anima de 0 a 150vmax (150 para cubrir hasta la esquina más lejana en
+ * pantallas muy anchas). `clip-path` no sirve para esto: recorta lo de
+ * AFUERA del círculo, y lo que hace falta es recortar lo de ADENTRO.
+ */
+.overlay {
+  --hole: 0vmax;
+  position: fixed;
+  inset: 0;
+  z-index: 200; /* por encima del header (ver tokens.css, --z-header: 50) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, var(--color-hero-blue) 0%, var(--color-hero-blue-deep) 100%);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent var(--hole), #000 calc(var(--hole) + 1px));
+  mask-image: radial-gradient(circle at 50% 50%, transparent var(--hole), #000 calc(var(--hole) + 1px));
+}
+
+.counterRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  color: var(--color-hero-ink);
+}
+
+.counter {
+  font-size: clamp(4rem, 18vw, 11rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}

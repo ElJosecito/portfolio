@@ -93,6 +93,39 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Fuente puntual del mono de las notas/nav/CTA del hero 3D. Solo 400
+         (texto normal) y 700 (font-bold): 500/600 se pidieron en algún
+         momento pero nunca se usaron — ningún className combina `font-tech`
+         con `font-medium`/`font-semibold` en todo el código (ver revisión,
+         punto 17) — así que eran dos variantes de más que Google Fonts
+         mandaba igual. Va en el mismo preconnect de arriba, no cambia el
+         body (Inter sigue siendo la fuente global). -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Milker (ver @font-face en style.css) se precarga SOLO si hace falta:
+         la landing clásica, el panel de admin y el detalle de proyecto no la
+         usan en absoluto, pero este `<link>` vivía en el `<head>` global, así
+         que pagaba esa descarga igual en TODAS las rutas (ver revisión,
+         punto 17). `font-display: swap` (ya puesto en el @font-face) ya
+         evita que el texto quede invisible mientras carga — el peor caso sin
+         preload es un salto del fallback del sistema a Milker una vez que
+         termine de bajar, no texto en blanco, así que no vale la pena
+         forzar la descarga temprano en rutas que ni siquiera la pintan. -->
+    <script>
+      if (window.location.pathname === "/") {
+        var milkerPreload = document.createElement("link");
+        milkerPreload.rel = "preload";
+        milkerPreload.href = "/fonts/Milker.woff2";
+        milkerPreload.as = "font";
+        milkerPreload.type = "font/woff2";
+        milkerPreload.crossOrigin = "anonymous";
+        document.head.appendChild(milkerPreload);
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
