@@ -349,10 +349,6 @@ function Header({ onDatos, languaje, transparentHero = false }) {
             ))}
           </div>
 
-          <Link to="/all-projects" className={cx(styles.githubLink, navStateClass)}>
-            {languaje.header.allProjects}
-          </Link>
-
           <a
             href={SOCIAL_LINKS[0]}
             target="_blank"
