@@ -155,7 +155,7 @@ function ProjectsSection({ languaje }) {
   const titleRef = useRef(null);
 
   useStackedCards(sectionRef, cardRefs, projects.length);
-  useSplitReveal(titleRef, { start: "top 90%", end: "top 60%" });
+  useSplitReveal(titleRef, { start: "top 90%", end: "top 60%", deps: [languaje.projects.title] });
 
   return (
     <section
@@ -171,7 +171,7 @@ function ProjectsSection({ languaje }) {
           {languaje.landing.sectionLabels.projects}
         </SectionLabel>
         <p className={styles.kicker}>{languaje.landing.projects.kicker}</p>
-        <h2 ref={titleRef} className={styles.title}>{languaje.projects.title}</h2>
+        <h2 key={languaje.projects.title} ref={titleRef} className={styles.title}>{languaje.projects.title}</h2>
       </div>
 
       <div className={styles.list}>

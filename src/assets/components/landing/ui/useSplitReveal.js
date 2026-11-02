@@ -14,11 +14,17 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
  * sección antes.
  *
  * `autoSplit: true` deja que SplitText mismo vuelva a partir el texto si el
- * elemento cambia de tamaño (resize, cambio de idioma que remonta la
- * sección) — por eso `onSplit` no es un callback de una sola vez: SplitText
- * lo vuelve a llamar cada vez que re-parte, y lo que devuelva (acá, el
- * tween) se revierte solo antes de la siguiente partición. No hace falta
- * un `ResizeObserver` ni un listener de idioma a mano en este hook.
+ * elemento cambia de tamaño (resize) — por eso `onSplit` no es un callback
+ * de una sola vez: SplitText lo vuelve a llamar cada vez que re-parte, y lo
+ * que devuelva (acá, el tween) se revierte solo antes de la siguiente
+ * partición. No hace falta un `ResizeObserver` en este hook.
+ *
+ * El cambio de idioma NO lo cubre `autoSplit`: SplitText reescribe el DOM
+ * del elemento (spans por palabra + `aria-label` con el texto original) y
+ * cambiar `languaje` no lo remonta — React escribía el texto nuevo sobre
+ * nodos que SplitText ya había reemplazado, y quedaba en el idioma viejo o
+ * mezclado. Quien llama tiene que darle al elemento `key={texto}` (React lo
+ * recrea limpio) y pasar ese mismo texto en `deps` para volver a partirlo.
  */
 export function useSplitReveal(ref, { start = "top 85%", end = "top 55%", deps = [] } = {}) {
   useEffect(() => {

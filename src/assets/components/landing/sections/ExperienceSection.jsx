@@ -98,7 +98,7 @@ function ExperienceSection({ languaje }) {
   useTimelineAnimation(listRef, lineRef, itemRefs, !loading && experiences.length > 0);
   // Título palabra por palabra con máscara (ver useSplitReveal) en vez del
   // simple render estático que tenía antes.
-  useSplitReveal(titleRef, { start: "top 90%", end: "top 60%" });
+  useSplitReveal(titleRef, { start: "top 90%", end: "top 60%", deps: [languaje.experience.title] });
 
   const english = isEnglish(languaje);
 
@@ -112,7 +112,7 @@ function ExperienceSection({ languaje }) {
         </SectionLabel>
         <p className={styles.kicker}>{languaje.landing.experience.kicker}</p>
 
-        <h2 ref={titleRef} className={styles.title}>{languaje.experience.title}</h2>
+        <h2 key={languaje.experience.title} ref={titleRef} className={styles.title}>{languaje.experience.title}</h2>
         <p className={styles.description}>{languaje.experience.description}</p>
 
         <div ref={listRef} className={styles.listWrap}>

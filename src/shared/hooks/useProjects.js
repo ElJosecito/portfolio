@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { getCurrentLanguage } from "../utils/language";
 import { supabase } from "../supabaseClient";
 
 const PROJECT_SELECT = `
@@ -67,7 +68,7 @@ export function useProjects({ featuredOnly = false } = {}) {
         setProjects((data || []).map(formatProject));
       } catch (error) {
         console.error("Error fetching projects:", error);
-        if (active) toast.error("Error al cargar proyectos");
+        if (active) toast.error(getCurrentLanguage().errors.loadProjects);
       } finally {
         if (active) setLoading(false);
       }
@@ -122,7 +123,7 @@ export function useProject(slug) {
         setProject(formatProject(data));
       } catch (error) {
         console.error("Error fetching project:", error);
-        if (active) toast.error("Error al cargar el proyecto");
+        if (active) toast.error(getCurrentLanguage().errors.loadProject);
       } finally {
         if (active) setLoading(false);
       }

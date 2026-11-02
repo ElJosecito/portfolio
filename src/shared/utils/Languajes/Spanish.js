@@ -17,6 +17,9 @@ export const Spanish = {
       "Front-End",
       "Aprendiendo iOS nativo",
     ],
+    emailCopied: "Email copiado",
+    emailAlreadyCopied: "Email ya copiado",
+    downloadCv: "Descargar CV",
   },
   // Copy de la sección 3D: el nombre gigante detrás de la cabeza y las notas
   // técnicas a los costados (ver landing/sections/HeroSection, el hero del
@@ -162,5 +165,14 @@ export const Spanish = {
       description:
         "Proyectos web y mobile de Jose Martinez, construidos con React Native, React, Next.js y TypeScript.",
     },
+  },
+  common: {
+    loading: "Cargando",
+  },
+  errors: {
+    loadProjects: "Error al cargar proyectos",
+    loadProject: "Error al cargar el proyecto",
+    loadExperience: "Error al cargar la experiencia",
+    loadGallery: "Error al cargar la galería",
   },
 };

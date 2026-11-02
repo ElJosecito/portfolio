@@ -77,12 +77,14 @@ function renderHighlighted(line) {
  * de la pantalla, pero ahora con el texto subiendo desde una máscara en vez
  * de aparecer en el lugar.
  *
- * `autoSplit` de SplitText (ver useSplitReveal) ya cubre el re-split al
- * cambiar de idioma: cambiar `languaje` remonta esta sección entera (nueva
- * key implícita en el árbol de React), así que no hace falta nada extra
- * acá para eso.
+ * Cambio de idioma: SplitText reescribe el DOM de cada línea (spans por
+ * palabra + `aria-label` con el texto original), y cambiar `languaje` NO
+ * remonta la sección — React terminaba escribiendo sobre nodos de texto que
+ * SplitText ya había movido, y el manifiesto quedaba mezclado ES/EN. Por eso
+ * el contenedor lleva `key={languageKey}` (React lo recrea con texto limpio)
+ * y este efecto depende de `languageKey` para volver a partir el nodo nuevo.
  */
-function useManifestoReveal(containerRef) {
+function useManifestoReveal(containerRef, languageKey) {
   useEffect(() => {
     if (prefersReducedMotion()) return undefined;
 
@@ -111,7 +113,7 @@ function useManifestoReveal(containerRef) {
     );
 
     return () => splits.forEach((split) => split.revert());
-  }, [containerRef]);
+  }, [containerRef, languageKey]);
 }
 
 /**
@@ -139,7 +141,7 @@ function useManifestoReveal(containerRef) {
 function AboutSection({ languaje, heroRef }) {
   const containerRef = useRef(null);
   const sectionRef = useRef(null);
-  useManifestoReveal(containerRef);
+  useManifestoReveal(containerRef, languaje.languaje);
   useDoorReveal(sectionRef, heroRef);
 
   const { manifesto, kicker } = languaje.landing.intro;
@@ -164,7 +166,7 @@ function AboutSection({ languaje, heroRef }) {
 
         <p className={styles.kicker}>{kicker}</p>
 
-        <div ref={containerRef} className={styles.manifesto}>
+        <div key={languaje.languaje} ref={containerRef} className={styles.manifesto}>
           {manifesto.map((line, index) => (
             <p key={index} data-line className={styles.manifestoLine}>
               {renderHighlighted(line)}

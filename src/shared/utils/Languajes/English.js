@@ -17,6 +17,9 @@ export const English = {
       "Front-End",
       "Learning native iOS",
     ],
+    emailCopied: "Email copied",
+    emailAlreadyCopied: "Email already copied",
+    downloadCv: "Download CV",
   },
   // Copy for the 3D section: the giant name behind the head and the
   // technical side notes (see landing/sections/HeroSection, the new
@@ -161,5 +164,14 @@ export const English = {
       description:
         "Web and mobile projects by Jose Martinez, built with React Native, React, Next.js and TypeScript.",
     },
+  },
+  common: {
+    loading: "Loading",
+  },
+  errors: {
+    loadProjects: "Couldn't load projects",
+    loadProject: "Couldn't load the project",
+    loadExperience: "Couldn't load experience",
+    loadGallery: "Couldn't load the gallery",
   },
 };

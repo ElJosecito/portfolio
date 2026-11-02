@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./IntroFallback.module.css";
+import { getCurrentLanguage } from "../../../../shared/utils/language";
 
 // Duración y tope de la animación CSS del contador (ver
 // IntroFallback.module.css, `intro-fallback-count`: 2.4s lineal hasta 99).
@@ -69,7 +70,7 @@ function IntroFallback({ withCounter = true }) {
           <span className={styles.counter} />
         </div>
       )}
-      <span className="sr-only">Cargando</span>
+      <span className="sr-only">{getCurrentLanguage().common.loading}</span>
     </div>
   );
 }

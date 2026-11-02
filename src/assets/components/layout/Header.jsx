@@ -302,7 +302,11 @@ function Header({ onDatos, languaje, transparentHero = false }) {
           <button
             type="button"
             onClick={toggleTheme}
-            aria-label={theme === "light" ? "Activar modo oscuro" : "Activar modo claro"}
+            aria-label={
+              theme === "light"
+                ? isSpanish ? "Activar modo oscuro" : "Switch to dark mode"
+                : isSpanish ? "Activar modo claro" : "Switch to light mode"
+            }
             className={cx(styles.iconButton, iconStateClass)}
           >
             {theme === "light" ? (
@@ -325,7 +329,7 @@ function Header({ onDatos, languaje, transparentHero = false }) {
           {/* Selector de idioma: control segmentado en vez de desplegable. Con
               dos opciones, un menú obliga a dos interacciones para algo que se
               resuelve en una, y además esconde cuál está activo. */}
-          <div role="group" aria-label="Idioma" className={cx(styles.langGroup, langGroupStateClass)}>
+          <div role="group" aria-label={isSpanish ? "Idioma" : "Language"} className={cx(styles.langGroup, langGroupStateClass)}>
             {[
               { code: "es", label: "ES", active: isSpanish },
               { code: "en", label: "EN", active: !isSpanish },
@@ -368,7 +372,11 @@ function Header({ onDatos, languaje, transparentHero = false }) {
           <button
             type="button"
             onClick={toggleTheme}
-            aria-label={theme === "light" ? "Activar modo oscuro" : "Activar modo claro"}
+            aria-label={
+              theme === "light"
+                ? isSpanish ? "Activar modo oscuro" : "Switch to dark mode"
+                : isSpanish ? "Activar modo claro" : "Switch to light mode"
+            }
             className={cx(styles.iconButton, iconStateClass)}
           >
             {theme === "light" ? (
@@ -392,7 +400,7 @@ function Header({ onDatos, languaje, transparentHero = false }) {
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
             aria-expanded={menuOpen}
-            aria-label="Menú"
+            aria-label={isSpanish ? "Menú" : "Menu"}
             className={cx(styles.iconButton, iconStateClass)}
           >
             {menuOpen ? <FaTimes className={styles.sunIcon} /> : <FaBars className={styles.sunIcon} />}
@@ -438,7 +446,7 @@ function Header({ onDatos, languaje, transparentHero = false }) {
                     GitHub
                   </a>
 
-                  <div role="group" aria-label="Idioma" className={styles.menuLangGroup}>
+                  <div role="group" aria-label={isSpanish ? "Idioma" : "Language"} className={styles.menuLangGroup}>
                     {[
                       { code: "es", label: "ES", active: isSpanish },
                       { code: "en", label: "EN", active: !isSpanish },

@@ -72,7 +72,7 @@ const ContactSection = forwardRef(function ContactSection({ languaje, email }, r
   const titleRef = useRef(null);
   const sectionRef = useRef(null);
   useMagnetic(buttonRef, 0.3);
-  useSplitReveal(titleRef, { start: "top 90%", end: "top 60%" });
+  useSplitReveal(titleRef, { start: "top 90%", end: "top 60%", deps: [languaje.landing.contact.ctaTitle] });
   useChapterWipe(sectionRef);
 
   const setRefs = (node) => {
@@ -106,7 +106,7 @@ const ContactSection = forwardRef(function ContactSection({ languaje, email }, r
           {languaje.landing.sectionLabels.contact}
         </SectionLabel>
 
-        <h2 ref={titleRef} className={styles.title}>{ctaTitle}</h2>
+        <h2 key={ctaTitle} ref={titleRef} className={styles.title}>{ctaTitle}</h2>
         <p className={styles.subtitle}>{ctaSubtitle}</p>
 
         <div className={styles.ctaWrapper}>

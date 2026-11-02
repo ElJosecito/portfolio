@@ -259,7 +259,7 @@ function StackSection({ languaje }) {
     { containerRef: rowARef, reverse: false },
     { containerRef: rowBRef, reverse: true },
   ]);
-  useSplitReveal(titleRef, { start: "top 90%", end: "top 60%" });
+  useSplitReveal(titleRef, { start: "top 90%", end: "top 60%", deps: [languaje.landing.stack.title] });
 
   return (
     <section
@@ -271,7 +271,7 @@ function StackSection({ languaje }) {
         <SectionLabel index={4} tone="light">
           {languaje.landing.sectionLabels.stack}
         </SectionLabel>
-        <h2 ref={titleRef} className={styles.title}>{languaje.landing.stack.title}</h2>
+        <h2 key={languaje.landing.stack.title} ref={titleRef} className={styles.title}>{languaje.landing.stack.title}</h2>
       </div>
 
       <div className={styles.rows}>

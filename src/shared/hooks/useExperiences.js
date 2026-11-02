@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { getCurrentLanguage } from "../utils/language";
 import { supabase } from "../supabaseClient";
 
 /**
@@ -24,7 +25,7 @@ export function useExperiences() {
       setExperiences(data || []);
     } catch (error) {
       console.error("Error fetching experiences:", error);
-      toast.error("Error al cargar la experiencia");
+      toast.error(getCurrentLanguage().errors.loadExperience);
     } finally {
       setLoading(false);
     }

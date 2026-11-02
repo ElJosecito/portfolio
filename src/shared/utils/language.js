@@ -33,3 +33,13 @@ export function storeLanguage(code) {
   localStorage.setItem(STORAGE_KEY, code);
   return getLanguage(code);
 }
+
+/**
+ * Textos del idioma activo para código que no recibe `languaje` por props
+ * (hooks de datos con sus toasts de error, el fallback de Suspense). Lee lo
+ * guardado en cada llamada, así que sigue al selector del Header sin
+ * suscribirse a nada.
+ */
+export function getCurrentLanguage() {
+  return getLanguage(getStoredLanguageCode());
+}

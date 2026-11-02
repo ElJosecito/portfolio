@@ -153,12 +153,12 @@ function Hero({ languaje }) {
       document.execCommand("copy");
       document.body.removeChild(el);
       setCopied(true);
-      toast.success("Email Copiado", {
+      toast.success(languaje.hero.emailCopied, {
         duration: 3000,
         position: "bottom-right",
       });
     } else {
-      toast.error("Email ya copiado", {
+      toast.error(languaje.hero.emailAlreadyCopied, {
         duration: 3000,
         position: "bottom-right",
       });
@@ -521,7 +521,7 @@ function Hero({ languaje }) {
                   className="w-fit   flex items-center font-medium bg-moonlit text-dark-grey px-4 py-2 rounded-lg  gap-2 active:scale-[1.1] transition-transform duration-300"
                 >
                   <IoMdDownload />
-                  <span className="">Download CV</span>
+                  <span className="">{languaje.hero.downloadCv}</span>
                 </a>
 
               </div>

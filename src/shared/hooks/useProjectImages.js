@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { getCurrentLanguage } from "../utils/language";
 import { supabase } from "../supabaseClient";
 
 /**
@@ -30,7 +31,7 @@ export function useProjectImages(projectId) {
       setImages(data || []);
     } catch (error) {
       console.error("Error fetching project images:", error);
-      toast.error("Error al cargar la galería");
+      toast.error(getCurrentLanguage().errors.loadGallery);
     } finally {
       setLoading(false);
     }
