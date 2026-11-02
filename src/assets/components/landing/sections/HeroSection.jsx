@@ -67,12 +67,19 @@ function useHeroExit(sectionRef, nameRef) {
       });
     };
 
-    const tween = gsap.to(letters, {
+    // `fromTo` con `opacity: 1` explícito + `immediateRender: false`: este
+    // tween se crea mientras la intro todavía tiene las letras ocultas por
+    // CSS (`data-awaiting-intro`). Con un `to`, GSAP leía la opacidad inicial
+    // la primera vez que renderizaba cada letra — y las del centro (stagger
+    // 0, renderizadas al crear el ScrollTrigger) quedaban grabadas en 0: al
+    // scrollear iban de 0 a 0 y "MARTÍNEZ" perdía la A y la R de golpe.
+    const tween = gsap.fromTo(letters, { opacity: 1 }, {
       y: (i) => (i % 2 === 0 ? -70 : 70),
       x: (i, target, targets) => (i - (targets.length - 1) / 2) * 16,
       scale: 1.25,
       opacity: 0,
       ease: "none",
+      immediateRender: false,
       stagger: { each: 0.012, from: "center" },
       scrollTrigger: {
         trigger: section,
