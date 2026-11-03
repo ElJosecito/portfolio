@@ -38,6 +38,14 @@ export function useSplitReveal(ref, { start = "top 85%", end = "top 55%", deps =
       mask: "lines",
       autoSplit: true,
       onSplit(self) {
+        // La máscara de cada línea (`mask: "lines"`, overflow: clip) mide justo
+        // el line-height: con títulos de interlineado apretado recortaba las
+        // tildes de las mayúsculas ("QUÉ" se veía "QUE"). Aire arriba y el
+        // mismo margen negativo para que el layout no se mueva.
+        self.masks.forEach((mask) => {
+          mask.style.paddingTop = "0.25em";
+          mask.style.marginTop = "-0.25em";
+        });
         return gsap.fromTo(
           self.words,
           { yPercent: 100 },

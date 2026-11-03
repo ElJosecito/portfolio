@@ -94,6 +94,13 @@ function Header({ onDatos, languaje, transparentHero = false }) {
   // reintentos una vez que la sección aparece en el DOM.
   const isHome = location.pathname === "/";
 
+  // La portada nueva no tiene modo claro/oscuro: cada sección trae su propio
+  // color por diseño (cobalto, claro, morado, casi negro — el "storytelling
+  // de color"), así que el botón de tema no cambiaba nada visible ahí y
+  // confundía. Se oculta solo en ese caso; en el resto de las rutas y en la
+  // landing clásica el tema sí aplica.
+  const showThemeToggle = !(isHome && transparentHero);
+
   const [transparent, setTransparent] = useState(
     location.pathname === "/" && transparentHero
   );
@@ -248,6 +255,31 @@ function Header({ onDatos, languaje, transparentHero = false }) {
   const Menu = glassOk ? GlassMenu : motion.div;
   const menuProps = glassOk ? { refraction: menuRefraction } : {};
 
+  // Mismo botón en el cluster de escritorio y en el móvil (antes eran dos
+  // copias idénticas); ver `showThemeToggle` arriba sobre cuándo se oculta.
+  const themeToggle = (
+    <button
+      type="button"
+      onClick={toggleTheme}
+      aria-label={
+        theme === "light"
+          ? isSpanish ? "Activar modo oscuro" : "Switch to dark mode"
+          : isSpanish ? "Activar modo claro" : "Switch to light mode"
+      }
+      className={cx(styles.iconButton, iconStateClass)}
+    >
+      {theme === "light" ? (
+        <FaSun
+          className={cx(styles.sunIcon, transparent ? styles.sunIconTransparent : styles.sunIconSolid)}
+        />
+      ) : (
+        <FaMoon
+          className={cx(styles.sunIcon, transparent ? styles.moonIconTransparent : styles.moonIconSolid)}
+        />
+      )}
+    </button>
+  );
+
   return (
     <header className={styles.header}>
       <Bar
@@ -299,32 +331,7 @@ function Header({ onDatos, languaje, transparentHero = false }) {
 
         {/* cluster derecho de escritorio */}
         <div className={styles.rightCluster}>
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label={
-              theme === "light"
-                ? isSpanish ? "Activar modo oscuro" : "Switch to dark mode"
-                : isSpanish ? "Activar modo claro" : "Switch to light mode"
-            }
-            className={cx(styles.iconButton, iconStateClass)}
-          >
-            {theme === "light" ? (
-              <FaSun
-                className={cx(
-                  styles.sunIcon,
-                  transparent ? styles.sunIconTransparent : styles.sunIconSolid
-                )}
-              />
-            ) : (
-              <FaMoon
-                className={cx(
-                  styles.sunIcon,
-                  transparent ? styles.moonIconTransparent : styles.moonIconSolid
-                )}
-              />
-            )}
-          </button>
+          {showThemeToggle && themeToggle}
 
           {/* Selector de idioma: control segmentado en vez de desplegable. Con
               dos opciones, un menú obliga a dos interacciones para algo que se
@@ -369,32 +376,7 @@ function Header({ onDatos, languaje, transparentHero = false }) {
 
         {/* menú móvil */}
         <div className={styles.mobileCluster} ref={menuRef}>
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label={
-              theme === "light"
-                ? isSpanish ? "Activar modo oscuro" : "Switch to dark mode"
-                : isSpanish ? "Activar modo claro" : "Switch to light mode"
-            }
-            className={cx(styles.iconButton, iconStateClass)}
-          >
-            {theme === "light" ? (
-              <FaSun
-                className={cx(
-                  styles.sunIcon,
-                  transparent ? styles.sunIconTransparent : styles.sunIconSolid
-                )}
-              />
-            ) : (
-              <FaMoon
-                className={cx(
-                  styles.sunIcon,
-                  transparent ? styles.moonIconTransparent : styles.moonIconSolid
-                )}
-              />
-            )}
-          </button>
+          {showThemeToggle && themeToggle}
 
           <button
             type="button"

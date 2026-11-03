@@ -3,13 +3,13 @@ import toast from "react-hot-toast";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReducedMotion } from "../../hero3d/motionPreferences";
-import { FaCopy, FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaCopy, FaGithub, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import { MdAlternateEmail } from "react-icons/md";
 import SectionLabel from "../ui/SectionLabel";
 import GrainOverlay from "../ui/GrainOverlay";
 import { useMagnetic } from "../ui/useMagnetic";
 import { useSplitReveal } from "../ui/useSplitReveal";
-import { SOCIAL_LINKS } from "../../../../shared/utils/seo";
+import { SOCIAL_LINKS, whatsappUrl } from "../../../../shared/utils/seo";
 import { copyToClipboard } from "../../../../shared/utils/clipboard";
 import styles from "./ContactSection.module.css";
 
@@ -136,6 +136,15 @@ const ContactSection = forwardRef(function ContactSection({ languaje, email }, r
             aria-label="LinkedIn"
           >
             <FaLinkedin className={styles.socialIcon} />
+          </a>
+          <a
+            href={whatsappUrl(languaje.landing.contact.whatsappMessage)}
+            target="_blank"
+            rel="noreferrer"
+            className={styles.socialLink}
+            aria-label={languaje.landing.contact.whatsapp}
+          >
+            <FaWhatsapp className={styles.socialIcon} />
           </a>
         </div>
       </div>

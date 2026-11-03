@@ -8,6 +8,7 @@ import { useDomParallax } from "../../hero3d/useDomParallax";
 import { hasHoverPointer, prefersReducedMotion } from "../../hero3d/motionPreferences";
 import { INTRO_DONE_EVENT } from "../intro/introState";
 import GrainOverlay from "../ui/GrainOverlay";
+import HeroStackStrip from "./HeroStackStrip";
 import styles from "./HeroSection.module.css";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -201,6 +202,11 @@ const HeroSection = forwardRef(function HeroSection({ languaje, awaitIntro = fal
       <HeroSparkles />
       <HeroNotes notes={notes} />
       <HeroLeaves ref={leavesRef} />
+
+      {/* Franja de stack al pie del hero (ver HeroStackStrip.jsx): z-22,
+          por debajo de sparkles/notas/hojas (25/30/40) y del propio scroll
+          hint (30) para que ninguno de esos elementos quede tapado. */}
+      <HeroStackStrip awaitIntro={awaitIntro} />
 
       {/* Pista de scroll, puramente decorativa (aria-hidden): una flechita
           que titila despacio, nada de texto que traducir para algo tan

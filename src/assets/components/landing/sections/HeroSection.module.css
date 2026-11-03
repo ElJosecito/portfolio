@@ -72,7 +72,10 @@
   pointer-events: none;
   position: absolute;
   inset-inline: 0;
-  bottom: 1.5rem;
+  /* Subida de 1.5rem a 3.25rem: deja lugar debajo para la franja de stack
+     (ver HeroStackStrip.module.css, z-22) sin que la flecha quede pegada o
+     superpuesta a ese texto. */
+  bottom: 3.25rem;
   z-index: 30;
   display: flex;
   justify-content: center;

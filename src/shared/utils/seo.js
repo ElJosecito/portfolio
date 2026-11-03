@@ -7,6 +7,17 @@ export const SOCIAL_LINKS = [
   "https://www.linkedin.com/in/jose-martinez-dev/",
 ];
 
+// WhatsApp va aparte de SOCIAL_LINKS: esa lista también se usa como `sameAs`
+// en el structured data (perfiles públicos), y un número de teléfono no es
+// un perfil. Formato internacional sin "+" ni guiones (wa.me lo exige):
+// 1 (República Dominicana) + 829-465-8484.
+const WHATSAPP_NUMBER = "18294658484";
+
+export function whatsappUrl(message) {
+  const base = `https://wa.me/${WHATSAPP_NUMBER}`;
+  return message ? `${base}?text=${encodeURIComponent(message)}` : base;
+}
+
 /**
  * Arma una URL absoluta del sitio.
  *

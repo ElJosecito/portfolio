@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
-import { FaArrowUp, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FaArrowUp, FaGithub, FaInstagram, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import { MdAlternateEmail } from "react-icons/md";
 
 // Puente a Lenis: el Footer se monta en todas las rutas, igual que el Header
@@ -9,7 +9,7 @@ import { MdAlternateEmail } from "react-icons/md";
 // nativo y un `scrollIntoView` directo no alcanza. Módulo liviano, no mete
 // Lenis/gsap en el chunk principal.
 import { resetScrollPosition, scrollToSection } from "../landing/scroll/lenisBridge";
-import { SOCIAL_LINKS } from "../../../shared/utils/seo";
+import { SOCIAL_LINKS, whatsappUrl } from "../../../shared/utils/seo";
 import { copyToClipboard } from "../../../shared/utils/clipboard";
 import styles from "./Footer.module.css";
 
@@ -242,6 +242,20 @@ function Footer({ languaje, curtain = false, contactSectionId = "about" }) {
                 >
                   <FaLinkedin className={styles.socialIcon} aria-hidden="true" />
                   <span>LinkedIn</span>
+                  <span className={styles.socialArrow} aria-hidden="true">
+                    →
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href={whatsappUrl(languaje?.landing?.contact?.whatsappMessage)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.socialLink}
+                >
+                  <FaWhatsapp className={styles.socialIcon} aria-hidden="true" />
+                  <span>WhatsApp</span>
                   <span className={styles.socialArrow} aria-hidden="true">
                     →
                   </span>

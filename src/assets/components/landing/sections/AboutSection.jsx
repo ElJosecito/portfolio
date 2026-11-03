@@ -98,6 +98,12 @@ function useManifestoReveal(containerRef, languageKey) {
         mask: "lines",
         autoSplit: true,
         onSplit(self) {
+          // Mismo aire que en useSplitReveal: sin esto la máscara de línea
+          // recorta las tildes de las mayúsculas.
+          self.masks.forEach((mask) => {
+            mask.style.paddingTop = "0.25em";
+            mask.style.marginTop = "-0.25em";
+          });
           return gsap.fromTo(
             self.words,
             { yPercent: 100 },

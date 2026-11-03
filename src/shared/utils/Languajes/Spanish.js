@@ -124,12 +124,22 @@ export const Spanish = {
     },
     stack: {
       title: "Con qué trabajo",
+      subtitle: "Lo que uso a diario para llevar apps de la idea a la tienda.",
+      areas: {
+        ios: "iOS nativo",
+        crossPlatform: "Multiplataforma",
+        frontend: "Frontend",
+        aiTools: "IA y herramientas",
+      },
+      nativeModules: "Módulos nativos (Swift/Kotlin)",
     },
     contact: {
       ctaTitle: "¿Hablamos?",
       ctaSubtitle: "Escríbeme y vemos qué construimos.",
       copyEmail: "Copiar email",
       emailCopied: "Email copiado",
+      whatsapp: "WhatsApp",
+      whatsappMessage: "Hola José, vi tu portafolio y me gustaría hablar contigo.",
     },
   },
 
