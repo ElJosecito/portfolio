@@ -2,7 +2,7 @@
  * Tokens compartidos del landing nuevo (migración de Tailwind a CSS puro).
  * Se importa UNA sola vez desde NewLanding.jsx — todo lo que vive bajo
  * landing/** y los componentes de hero3d que solo usa esta rama (HeroNotes,
- * HeroSparkles, HeroLeaves, HeaderFaceBadge) los consume vía `var(--token)`.
+ * HeroSparkles, HeroLeaves) los consume vía `var(--token)`.
  * El Header global también los importa (vive fuera de landing/, pero
  * necesita el mismo cobalto/mono/z-layers para la variante transparente).
  *

@@ -106,24 +106,40 @@
       rel="stylesheet"
     />
 
-    <!-- Milker (ver @font-face en style.css) se precarga SOLO si hace falta:
-         la landing clásica, el panel de admin y el detalle de proyecto no la
-         usan en absoluto, pero este `<link>` vivía en el `<head>` global, así
-         que pagaba esa descarga igual en TODAS las rutas (ver revisión,
-         punto 17). `font-display: swap` (ya puesto en el @font-face) ya
-         evita que el texto quede invisible mientras carga — el peor caso sin
-         preload es un salto del fallback del sistema a Milker una vez que
-         termine de bajar, no texto en blanco, así que no vale la pena
-         forzar la descarga temprano en rutas que ni siquiera la pintan. -->
+    <!-- Milker (ver @font-face en style.css) se precarga en TODAS las rutas:
+         el nombre del header (wordmark) la usa en cada página. Pesa 14 kB;
+         sin preload el nombre aparecería primero con la fuente del sistema y
+         saltaría a Milker al terminar de bajar. -->
+    <link rel="preload" href="/fonts/Milker.woff2" as="font" type="font/woff2" crossorigin />
+
     <script>
       if (window.location.pathname === "/") {
-        var milkerPreload = document.createElement("link");
-        milkerPreload.rel = "preload";
-        milkerPreload.href = "/fonts/Milker.woff2";
-        milkerPreload.as = "font";
-        milkerPreload.type = "font/woff2";
-        milkerPreload.crossOrigin = "anonymous";
-        document.head.appendChild(milkerPreload);
+        // El modelo 3D de la cabeza (~400 kB, el archivo más pesado de la
+        // portada) se pedía recién cuando ya habían bajado el JS principal,
+        // el chunk del landing nuevo y el de three.js. Pedirlo desde acá lo
+        // baja en paralelo con todo eso. Mismos chequeos baratos que
+        // `resolveLandingVariant` (deviceCapability.js) — todos menos WebGL,
+        // que es caro de probar acá — para no bajarlo en equipos que van a
+        // ver la landing clásica. `as="fetch"` + `crossorigin` coinciden con
+        // el `fetch()` de IntroLoader y el de GLTFLoader, así reusan esta
+        // misma descarga en vez de repetirla.
+        var variant = new URLSearchParams(window.location.search).get("landing");
+        var nav = window.navigator;
+        var capable =
+          variant === "new" ||
+          (variant !== "classic" &&
+            !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+            !(nav.connection && nav.connection.saveData) &&
+            !(typeof nav.deviceMemory === "number" && nav.deviceMemory < 4) &&
+            !(typeof nav.hardwareConcurrency === "number" && nav.hardwareConcurrency < 4));
+        if (capable) {
+          var modelPreload = document.createElement("link");
+          modelPreload.rel = "preload";
+          modelPreload.href = "/models/face.glb";
+          modelPreload.as = "fetch";
+          modelPreload.crossOrigin = "anonymous";
+          document.head.appendChild(modelPreload);
+        }
       }
     </script>
   </head>

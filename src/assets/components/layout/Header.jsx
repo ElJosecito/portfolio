@@ -24,9 +24,6 @@ import { SOCIAL_LINKS } from "../../../shared/utils/seo";
 //detección de motor de render para el fallback de vidrio (Safari/Firefox)
 import { supportsSvgBackdropFilter } from "../../../shared/utils/browserSupport";
 
-//vitrina 3D del header (cabeza girando) en vez del wordmark de texto
-import HeaderFaceBadge from "../hero3d/HeaderFaceBadge";
-
 // Puente a Lenis: ver el comentario en scrollToSection. Módulo liviano (no
 // importa Lenis ni gsap), así que no mete esos paquetes en el chunk
 // principal solo por el nav, que el Header monta en TODAS las rutas.
@@ -46,9 +43,8 @@ function cx(...classes) {
 }
 
 /**
- * Header global: la cabeza 3D girando (o la foto estática, ver
- * HeaderFaceBadge) a la izquierda en vez del wordmark de texto que tenía
- * antes, nav mono en el centro, y a la derecha un link mono + la pill
+ * Header global: el nombre en Milker (la tipografía del título del hero) a
+ * la izquierda, nav mono en el centro, y a la derecha un link mono + la pill
  * blanca de contacto. Transparente sobre la sección 3D de la portada
  * (texto blanco) y con fondo sólido/blur en cualquier otro momento, para
  * seguir siendo legible sobre el resto del sitio.
@@ -292,17 +288,20 @@ function Header({ onDatos, languaje, transparentHero = false }) {
         {...barProps}
         className={cx(styles.bar, barStateClass, !glassOk && styles.barFallback)}
       >
-        {/* vitrina: la cabeza 3D girando en vez del wordmark de texto. El
-            `aria-label` lleva el nombre porque el badge en sí es
-            `aria-hidden` (es decorativo/redundante con el nombre gigante del
-            hero, no hace falta que un lector de pantalla lo describa). */}
+        {/* Wordmark con el nombre en Milker. Antes era la cabeza 3D en
+            miniatura girando, que hacía bajar three.js y el modelo (~650 kB)
+            en TODAS las rutas solo por el logo. El `aria-label` del link ya
+            dice el nombre + "Inicio", así que el texto visible va
+            `aria-hidden` para no leerlo dos veces. */}
         <Link
           to="/#home"
           onClick={(event) => handleNavClick(event, "home")}
           aria-label={`${languaje.hero3d.firstName} ${languaje.hero3d.lastName} — ${languaje.header.home}`}
-          className={styles.brandButton}
+          className={cx(styles.brandButton, navStateClass)}
         >
-          <HeaderFaceBadge />
+          <span aria-hidden="true" className={styles.wordmark}>
+            {languaje.hero3d.firstName} {languaje.hero3d.lastName}
+          </span>
         </Link>
 
         {/* nav de escritorio */}

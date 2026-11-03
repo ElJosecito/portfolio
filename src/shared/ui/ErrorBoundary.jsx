@@ -2,7 +2,7 @@ import React from "react";
 
 /**
  * Error boundary genérico y chico, pensado puntualmente para envolver el 3D
- * (ver HeaderFaceBadge y landing/head/HeadLayer).
+ * (ver landing/head/HeadLayer).
  *
  * El motivo (ver revisión, punto 6): el `<Canvas>` de r3f relanza en el
  * componente padre los errores del renderer y de la escena, y `React.lazy`

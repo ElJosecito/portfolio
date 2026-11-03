@@ -18,10 +18,6 @@ const DAMPING = 6;
 const IDLE_SPEED = 0.4;
 const IDLE_YAW = THREE.MathUtils.degToRad(8);
 
-// Vitrina del header (ver HeaderFaceScene): una vuelta completa cada ~7s,
-// constante, sin target que perseguir ni damping — es rotación, no reacción.
-const SPIN_SPEED = (2 * Math.PI) / 7;
-
 // Cuánto pesa el puntero sobre la rotación "rig" (landing nuevo): la cabeza
 // ya trae una rotación base que viene del scroll (ver useHeadRig), así que el
 // aporte del mouse se reduce a propósito — sumar el rango completo de
@@ -59,8 +55,6 @@ const ENTRANCE_SCALE = 0;
  * no conviene mezclar ambos transforms.
  *
  * `mode`:
- *  - "spin": vitrina del header — gira sola sobre Y a velocidad constante,
- *    sin pitch y sin leer `targetRef` (no sigue al puntero a propósito).
  *  - "rig": landing nuevo — posición, escala y rotación base vienen de
  *    `rigRef` (ver useHeadRig, que las escribe desde el progreso de scroll
  *    con gsap/ScrollTrigger, no desde React state). El seguimiento al
@@ -129,29 +123,16 @@ function FaceModel({ targetRef, mode, rigRef }) {
     if (!group) return;
 
     // Entrada: la primera vez que este group tiene un frame para animar,
-    // arranca en escala 0 — el damp de abajo (modo "rig") o la interpolación
-    // de acá mismo (modo "spin") lo va a crecer hacia su pose real, en vez
-    // de aparecer de golpe apenas termina de descargarse el modelo (ver
-    // revisión, punto 17, y la idea de pulido de "entrada de la cabeza").
+    // arranca en escala 0 — el damp de abajo (modo "rig") lo va a crecer
+    // hacia su pose real, en vez de aparecer de golpe apenas termina de
+    // descargarse el modelo (ver revisión, punto 17, y la idea de pulido de
+    // "entrada de la cabeza").
     // `prefersReducedMotion` ya filtró este componente entero fuera del
     // landing nuevo (ver deviceCapability.js), así que no hace falta
     // revisarlo de nuevo acá: si este useFrame corre, es seguro animar.
     if (!enteredRef.current) {
       group.scale.setScalar(ENTRANCE_SCALE);
       enteredRef.current = true;
-    }
-
-    if (mode === "spin") {
-      // Turntable: incremento continuo, no un target que el damp "alcanza".
-      // Por eso sale temprano, antes del damp de yaw/pitch de abajo.
-      group.rotation.y += delta * SPIN_SPEED;
-      group.rotation.x = 0;
-      // La vitrina del header no vive en `frameloop="demand"` (ver
-      // HeaderFaceScene: se pausa entera con "never" en vez de pedir frames
-      // sueltos), así que el `damp` de la escala de entrada alcanza su
-      // objetivo solo, sin que nadie tenga que invalidar nada.
-      group.scale.setScalar(THREE.MathUtils.damp(group.scale.x, 1, DAMPING, delta));
-      return;
     }
 
     if (mode === "rig") {

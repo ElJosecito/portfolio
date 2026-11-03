@@ -1,7 +1,4 @@
 import React, { Suspense, lazy, useEffect, useState } from "react";
-import Hero from "../assets/components/Hero";
-import ProtectedRoute from "../assets/components/ProtectedRoute";
-import ProjectsPage from "../assets/components/pages/ProjectsPage";
 
 // Gate de capacidad: decide, antes del primer render, si el visitante ve el
 // landing nuevo (3D + scroll animado) o el clásico. Ver deviceCapability.js.
@@ -12,10 +9,32 @@ import { resolveLandingVariant } from "../shared/utils/deviceCapability";
 // clásico tiene que pagar ese peso.
 const NewLanding = lazy(() => import("../assets/components/landing/NewLanding"));
 
+// La landing clásica y /all-projects también van aparte: antes se importaban
+// directo y TODO visitante los descargaba en el chunk principal, aunque
+// viera la portada nueva (la mayoría). Cada uno se baja solo si se usa.
+const Hero = lazy(() => import("../assets/components/Hero"));
+const ProjectsPage = lazy(() => import("../assets/components/pages/ProjectsPage"));
+
+// Precarga del 3D en paralelo: la capa de la cabeza (three + fiber + el
+// modelo) se pedía recién cuando NewLanding ya había cargado y montado
+// HeadLayer — una cadena index → NewLanding → HeadScene. Pedirla apenas se
+// sabe la variante la baja en paralelo con NewLanding; el `lazy()` de
+// HeadLayer reusa la misma promesa del módulo (mismo specifier), no lo
+// descarga dos veces.
+function preloadNewLanding() {
+  import("../assets/components/landing/NewLanding");
+  import("../assets/components/landing/head/HeadScene");
+}
+
 // El panel se carga aparte: nadie que entre a ver el portfolio necesita
 // descargar el dashboard, los formularios ni el kit de componentes del admin.
 const AdminLogin = lazy(() => import("../assets/components/AdminLogin"));
 const AdminDashboard = lazy(() => import("../assets/components/AdminDashboard"));
+// El guard del panel también: era el único import directo de Supabase en el
+// chunk principal, así que todo visitante bajaba el cliente (auth, realtime,
+// storage) antes del primer pintado. Ahora llega en paralelo, con la sección
+// que de verdad lo usa.
+const ProtectedRoute = lazy(() => import("../assets/components/ProtectedRoute"));
 
 // El detalle también, porque arrastra el renderer de markdown y la portada no
 // lo necesita.
@@ -148,7 +167,11 @@ function Router() {
   // Mismo patrón para la variante del landing: se resuelve de una sola vez,
   // antes de pintar nada, para que no haya un flash del landing nuevo (o del
   // clásico) corrigiéndose después del primer render. Ver deviceCapability.js.
-  const [landingVariant] = useState(resolveLandingVariant);
+  const [landingVariant] = useState(() => {
+    const variant = resolveLandingVariant();
+    if (variant === "new" && window.location.pathname === "/") preloadNewLanding();
+    return variant;
+  });
 
   // Mismo criterio una sola vez por montaje (ver comentario de arriba): si
   // la intro no va a mostrarse esta sesión, el fallback de "/" no debería
@@ -184,11 +207,20 @@ function Router() {
                 <NewLanding languaje={languaje} />
               </Suspense>
             ) : (
-              <Hero languaje={languaje} />
+              <Suspense fallback={<FullPageLoader label={languaje.common.loading} />}>
+                <Hero languaje={languaje} />
+              </Suspense>
             )
           }
         ></Route>
-        <Route path="/all-projects" element={<ProjectsPage languaje={languaje} />}></Route>
+        <Route
+          path="/all-projects"
+          element={
+            <Suspense fallback={<FullPageLoader label={languaje.common.loading} />}>
+              <ProjectsPage languaje={languaje} />
+            </Suspense>
+          }
+        ></Route>
         <Route
           path="/projects/:slug"
           element={
@@ -208,11 +240,11 @@ function Router() {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute>
-              <Suspense fallback={<FullPageLoader label="Cargando panel" />}>
+            <Suspense fallback={<FullPageLoader label="Cargando panel" />}>
+              <ProtectedRoute>
                 <AdminDashboard />
-              </Suspense>
-            </ProtectedRoute>
+              </ProtectedRoute>
+            </Suspense>
           }
         ></Route>
         <Route path="*" element={<h1>404</h1>}></Route>

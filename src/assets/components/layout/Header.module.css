@@ -123,6 +123,31 @@
   outline-offset: 2px;
 }
 
+/* Nombre en Milker, la misma tipografía del título gigante del hero. El
+   color lo da `navTransparent`/`navSolid` sobre el link (blanco sobre el
+   hero, tinta según el tema en el resto). `nowrap`: el nombre nunca se
+   parte en dos líneas dentro de la barra. */
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .wordmark {
+    font-size: 1.2rem;
+  }
+}
+
+@media (hover: hover) {
+  .brandButton:hover {
+    transform: translateY(-1px);
+  }
+}
+
 /* --- Nav de escritorio --- */
 .nav {
   position: relative;
