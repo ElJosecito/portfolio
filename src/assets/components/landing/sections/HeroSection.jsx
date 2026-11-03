@@ -7,6 +7,8 @@ import HeroLeaves from "../../hero3d/HeroLeaves";
 import { useDomParallax } from "../../hero3d/useDomParallax";
 import { hasHoverPointer, prefersReducedMotion } from "../../hero3d/motionPreferences";
 import { INTRO_DONE_EVENT } from "../intro/introState";
+import { Doodle } from "../ui/doodles/Doodle";
+import { useDoodles } from "../ui/doodles/useDoodles";
 import GrainOverlay from "../ui/GrainOverlay";
 import HeroStackStrip from "./HeroStackStrip";
 import styles from "./HeroSection.module.css";
@@ -100,6 +102,38 @@ function useHeroExit(sectionRef, nameRef) {
 }
 
 /**
+ * Los trazos del nombre se van con el primer tramo del scroll, antes de que
+ * las letras terminen de dispersarse (ver useHeroExit): si se quedaran,
+ * flotarían solos sobre un hero vacío. `fromTo` + `immediateRender: false`
+ * por la misma razón que el resto del hero: nada de leer valores iniciales
+ * mientras la intro todavía tiene cosas ocultas.
+ */
+function useHeroDoodlesExit(sectionRef, doodlesRef) {
+  useEffect(() => {
+    if (prefersReducedMotion()) return undefined;
+    const section = sectionRef.current;
+    const doodles = doodlesRef.current;
+    if (!section || !doodles) return undefined;
+
+    const tween = gsap.fromTo(
+      doodles,
+      { opacity: 1 },
+      {
+        opacity: 0,
+        ease: "none",
+        immediateRender: false,
+        scrollTrigger: { trigger: section, start: "top top", end: "25% top", scrub: true },
+      }
+    );
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, [sectionRef, doodlesRef]);
+}
+
+/**
  * Caída de las letras del nombre: con overshoot (`back.out`), igual sentido
  * de "entrada con peso" que la cabeza (ver useHeadRig, el giro de perfil a
  * frente). Si la intro está activa (ver `awaitIntro`), las letras arrancan
@@ -152,6 +186,7 @@ const HeroSection = forwardRef(function HeroSection({ languaje, awaitIntro = fal
   const sectionRef = useRef(null);
   const nameRef = useRef(null);
   const leavesRef = useRef(null);
+  const doodlesRef = useRef(null);
 
   const setRefs = (node) => {
     sectionRef.current = node;
@@ -161,6 +196,11 @@ const HeroSection = forwardRef(function HeroSection({ languaje, awaitIntro = fal
 
   useHeroExit(sectionRef, nameRef);
   useHeroEntrance(nameRef, awaitIntro);
+  // Trazos del nombre: se dibujan por tiempo (el hero no se scrollea para
+  // entrar), recién cuando termina la intro si la hay — igual que la caída
+  // de las letras.
+  useDoodles(doodlesRef, { play: true, awaitEvent: awaitIntro ? INTRO_DONE_EVENT : null, delay: awaitIntro ? 0.5 : 0.4 });
+  useHeroDoodlesExit(sectionRef, doodlesRef);
 
   const parallaxEnabled = hasHoverPointer() && !prefersReducedMotion();
   useDomParallax(
@@ -188,6 +228,14 @@ const HeroSection = forwardRef(function HeroSection({ languaje, awaitIntro = fal
         <h1 aria-label={`${firstName} ${lastName}`} className={styles.nameHeading}>
           <span className={styles.nameLine}>{splitLetters(firstName, "f")}</span>
           <span className={styles.nameLine}>{splitLetters(lastName, "l")}</span>
+          {/* Trazos dentro del `<h1>` (que se ajusta al ancho del nombre) para
+              anclarlos a las letras y no a toda la pantalla. `<span>`, no
+              `<div>`: un `<h1>` solo admite contenido de línea. */}
+          <span ref={doodlesRef} aria-hidden="true" className={styles.nameDoodles}>
+            <Doodle shape="rays" order={1} className={styles.nameRays} />
+            <Doodle shape="underlineWave" order={2} className={styles.nameUnderline} />
+            <Doodle shape="sparkle" order={3} className={styles.nameSparkle} />
+          </span>
         </h1>
       </div>
 

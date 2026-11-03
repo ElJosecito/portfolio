@@ -40,9 +40,43 @@ const CORNER = { nx: 0.74, ny: 0.68, scale: 0.22, yaw: deg(-65), pitch: 0.04 };
 // contenido de abajo.
 const CORNER_MOBILE = { nx: 0.82, ny: 0.82, scale: 0.15, yaw: deg(-70), pitch: 0.04 };
 
-// Al llegar al contacto, la cabeza vuelve al centro y de frente — el cierre
-// simétrico del viaje que empezó en el hero.
-const CONTACT_CENTER = { nx: 0, ny: -0.12, scale: 0.62, yaw: 0, pitch: 0 };
+// Al llegar al contacto, la cabeza vuelve de frente — el cierre simétrico del
+// viaje que empezó en el hero. En escritorio se para en la mitad derecha,
+// debajo del título: el texto de ContactSection va alineado a la izquierda
+// (ver su CSS) y esa mitad es espacio libre real. Antes iba centrada
+// (nx 0) y tapaba el botón del email y las redes.
+// De frente (yaw 0) y centrada en vertical — la flecha "ese soy yo" de
+// ContactSection la sigue hasta acá (ver useFollowArrow). `scale` no es fijo: ver
+// contactSideScale.
+const CONTACT_SIDE = { nx: 0.6, ny: 0, scale: 1, yaw: 0, pitch: 0 };
+
+// "De frente" fuera del centro: la cámara de HeadScene está en el eje (z 5.6,
+// fov 35°), así que una cabeza corrida a la derecha con yaw 0 se ve en
+// diagonal (~18° en 16:9) por pura perspectiva — en el hero no pasa porque
+// está centrada. Se gira lo justo para que mire a la cámara: el ángulo entre
+// el eje de la cámara y la posición de la cabeza en el mundo (mismo cálculo
+// que hace FaceModel para ubicarla, ver `worldX`).
+const CAMERA_DISTANCE = 5.6;
+const CAMERA_FOV_DEG = 35;
+const FACE_CAMERA_SIGN = -1;
+function contactSideYaw() {
+  const halfHeight = Math.tan(deg(CAMERA_FOV_DEG) / 2) * CAMERA_DISTANCE;
+  const halfWidth = halfHeight * (window.innerWidth / window.innerHeight);
+  const worldX = CONTACT_SIDE.nx * halfWidth;
+  return FACE_CAMERA_SIGN * Math.atan2(worldX, CAMERA_DISTANCE);
+}
+
+// La cabeza en pantalla mide ≈ 0.5 · scale · min(ancho, alto) (ver
+// useHeadClickReaction) — o sea que escala con el ALTO en escritorio. Para
+// que ocupe ~24% del ANCHO en cualquier proporción de pantalla se calcula
+// en cada refresh, con un tope para monitores ultra anchos o ventanas muy
+// bajitas.
+const CONTACT_WIDTH_SHARE = 0.24;
+function contactSideScale() {
+  const shortSide = Math.min(window.innerWidth, window.innerHeight);
+  const scale = (CONTACT_WIDTH_SHARE * window.innerWidth) / (0.5 * shortSide);
+  return Math.min(Math.max(scale, 0.6), 1.15);
+}
 
 /**
  * Controlador de la cabeza compartida del landing nuevo.
@@ -55,7 +89,7 @@ const CONTACT_CENTER = { nx: 0, ny: -0.12, scale: 0.62, yaw: 0, pitch: 0 };
  *      trigger/rango que usa `HeroSection` (ver `useHeroExit` ahí: "top top"
  *      → "bottom top" sobre la propia sección) para que la cabeza y la
  *      salida de las letras del nombre se sientan como un solo gesto.
- *   2. Esquina → centro de frente: al entrar al contacto (`contactRef`),
+ *   2. Esquina → contacto (de frente a la derecha en escritorio, ver CONTACT_SIDE): al entrar al contacto (`contactRef`),
  *      con `refreshPriority: -1` porque es la ÚLTIMA sección de la página —
  *      tiene que medirse después de cualquier otra cosa que pueda cambiar el
  *      alto del documento antes de ella (ver revisión, punto 13).
@@ -101,11 +135,25 @@ export function useHeadRig({ heroRef, contactRef }) {
     // escritorio (donde esa media query nunca matchea) el callback no corre
     // NUNCA. Con las dos acá, gsap llama al callback con la que esté activa,
     // y además revierte y reconstruye solo si se cruza el breakpoint (ej.
-    // girar el celular).
+    // girar el celular). `isTablet` existe solo por el contacto: la pose de
+    // costado (CONTACT_SIDE) necesita el layout de dos columnas de
+    // ContactSection, que recién aparece en 1024px.
     mm.add(
-      { isMobile: "(max-width: 639px)", isDesktop: "(min-width: 640px)" },
+      {
+        isMobile: "(max-width: 639px)",
+        isTablet: "(min-width: 640px) and (max-width: 1023px)",
+        isDesktop: "(min-width: 1024px)",
+      },
       (context) => {
         const corner = context.conditions.isMobile ? CORNER_MOBILE : CORNER;
+        // Sin espacio para dos columnas, la cabeza se queda chica en su
+        // esquina y solo gira de frente: nunca encima del email ni las redes.
+        const contact = context.conditions.isDesktop
+          ? { ...CONTACT_SIDE, scale: contactSideScale, yaw: contactSideYaw }
+          : { ...corner, yaw: 0, pitch: 0 };
+        // Escala final real del contacto (número), para que `footerHide` la
+        // componga; se actualiza en cada refresh junto con el tween.
+        const contactScale = () => (typeof contact.scale === "function" ? contact.scale() : contact.scale);
 
         // `immediateRender: false`: por defecto gsap renderiza el estado
         // FINAL de un tween apenas se crea, salvo que se le pida lo
@@ -133,9 +181,12 @@ export function useHeadRig({ heroRef, contactRef }) {
           values,
           { ...corner },
           {
-            ...CONTACT_CENTER,
+            ...contact,
             ease: "power2.inOut",
             immediateRender: false,
+            // `scale` del contacto depende del tamaño de la ventana (ver
+            // contactSideScale): re-medir en cada refresh/resize.
+            invalidateOnRefresh: true,
             onUpdate: () => invalidate(),
             scrollTrigger: {
               trigger: contactEl,
@@ -188,7 +239,7 @@ export function useHeadRig({ heroRef, contactRef }) {
                   // que aprender a leer): multiplica el valor que le haya
                   // dejado `contactEntry` por `(1 - footerHide)`, así nunca
                   // pelea con ese otro tween — composición, no override.
-                  values.scale = CONTACT_CENTER.scale * (1 - values.footerHide);
+                  values.scale = contactScale() * (1 - values.footerHide);
                   invalidate();
                 },
                 scrollTrigger: {

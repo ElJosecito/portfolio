@@ -194,3 +194,79 @@
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.4);
 }
+
+/* Trazos a mano (ver ui/doodles), en el tono claro del texto sobre el casi
+   negro de la sección. */
+.titleWrap {
+  position: relative;
+  width: fit-content;
+  margin-bottom: 0.75rem;
+}
+
+.doodleCheck,
+.doodleRays,
+.doodleCircle,
+.doodleNote {
+  color: var(--color-hero-ink);
+}
+
+/* Check a mano después del título, como quien tilda una lista. */
+.doodleCheck {
+  right: -3.5rem;
+  top: 0.25rem;
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.doodleRays {
+  left: -3rem;
+  top: 0.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+/* Círculo alrededor de la tecnología destacada de la card "IA y
+   herramientas" + nota al costado. */
+.featured {
+  position: relative;
+  width: fit-content;
+}
+.doodleCircle {
+  left: -1.5rem;
+  top: -1.1rem;
+  width: calc(100% + 3rem);
+  height: calc(100% + 2.2rem);
+}
+.doodleNote {
+  left: calc(100% + 1.25rem);
+  top: -1.25rem;
+}
+
+/* En móvil los adornos laterales del título saldrían por el borde de la
+   pantalla: quedan solo los subrayados y círculos. */
+@media (max-width: 639px) {
+  .doodleCheck,
+  .doodleRays {
+    display: none;
+  }
+}
+
+/* Escritorio: espaciados verticales un poco más apretados para que título +
+   grilla entren completos en una pantalla bajo el header flotante (~94px).
+   El snap de la sección centra justo ese bloque (ver useLenisScroll,
+   `align: "content"`); con los valores de móvil sobraban ~20px y se cortaba
+   la última fila de cards. */
+@media (min-width: 1024px) {
+  .header {
+    margin-bottom: 2.5rem;
+  }
+
+  .card {
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+
+  .grid {
+    gap: 1.25rem;
+  }
+}

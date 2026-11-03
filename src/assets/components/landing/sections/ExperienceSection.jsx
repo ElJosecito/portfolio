@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SectionLabel from "../ui/SectionLabel";
+import { Doodle, DoodleNote } from "../ui/doodles/Doodle";
+import { useDoodles } from "../ui/doodles/useDoodles";
 import { useSplitReveal } from "../ui/useSplitReveal";
 import { prefersReducedMotion } from "../../hero3d/motionPreferences";
 import { useExperiences } from "../../../../shared/hooks/useExperiences";
@@ -94,16 +96,22 @@ function ExperienceSection({ languaje }) {
   const lineRef = useRef(null);
   const itemRefs = useRef([]);
   const titleRef = useRef(null);
+  const sectionRef = useRef(null);
 
   useTimelineAnimation(listRef, lineRef, itemRefs, !loading && experiences.length > 0);
   // Título palabra por palabra con máscara (ver useSplitReveal) en vez del
   // simple render estático que tenía antes.
   useSplitReveal(titleRef, { start: "top 90%", end: "top 60%", deps: [languaje.experience.title] });
 
+  // `hasItems` en deps: la flecha a la experiencia actual recién existe
+  // cuando llegan los datos, y el hook tiene que volver a buscar sus trazos.
+  const hasItems = !loading && experiences.length > 0;
+  useDoodles(sectionRef, { start: "top 70%", end: "top 10%", deps: [languaje.languaje, hasItems] });
+
   const english = isEnglish(languaje);
 
   return (
-    <section id="experience" className={styles.section}>
+    <section id="experience" ref={sectionRef} className={styles.section}>
       <div aria-hidden="true" className={styles.gradientTop} />
 
       <div className={styles.container}>
@@ -112,7 +120,13 @@ function ExperienceSection({ languaje }) {
         </SectionLabel>
         <p className={styles.kicker}>{languaje.landing.experience.kicker}</p>
 
-        <h2 key={languaje.experience.title} ref={titleRef} className={styles.title}>{languaje.experience.title}</h2>
+        {/* Wrapper para los trazos: el `<h2>` lo parte SplitText y se recrea
+            por idioma (`key`), así que no pueden vivir adentro. */}
+        <div className={styles.titleWrap}>
+          <h2 key={languaje.experience.title} ref={titleRef} className={styles.title}>{languaje.experience.title}</h2>
+          <Doodle shape="underlineWave" order={1} className={styles.doodleUnderline} />
+          <Doodle shape="star" order={2} className={styles.doodleStar} />
+        </div>
         <p className={styles.description}>{languaje.experience.description}</p>
 
         <div ref={listRef} className={styles.listWrap}>
@@ -126,6 +140,12 @@ function ExperienceSection({ languaje }) {
                   lineRef) se dibuja encima. */}
               <div className={styles.railBase} aria-hidden="true" />
               <div ref={lineRef} aria-hidden="true" className={styles.railLine} />
+
+              {/* Flecha con rulo hacia la experiencia actual (la primera). */}
+              <Doodle shape="arrowLoop" order={3} className={styles.doodleArrow} />
+              <DoodleNote order={4} className={styles.doodleNote}>
+                {languaje.landing.doodles.experienceNote}
+              </DoodleNote>
 
               <ul className={styles.list}>
                 {experiences.map((experience, index) => {

@@ -324,3 +324,53 @@
     padding: 2rem;
   }
 }
+
+/* Trazos a mano (ver ui/doodles), en el azul claro del acento. El wrapper
+   del título se ajusta a su ancho para que el zigzag no cruce todo el
+   contenedor. */
+.titleWrap {
+  position: relative;
+  width: fit-content;
+  margin-bottom: 0.75rem;
+}
+
+.doodleUnderline,
+.doodleSparkle,
+.doodleCircle {
+  color: var(--color-volt-300);
+}
+
+.doodleUnderline {
+  left: 0;
+  bottom: -0.9rem;
+  width: 100%;
+  height: 1.25rem;
+}
+
+.doodleSparkle {
+  right: -2.75rem;
+  top: -0.75rem;
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+/* Círculo a mano alrededor del link "ver todos": más grande que el botón
+   para que se lea como "marcado con marcador", no como un borde. */
+.seeAllAnchor {
+  position: relative;
+  display: inline-flex;
+}
+.doodleCircle {
+  left: -1.25rem;
+  top: -0.9rem;
+  width: calc(100% + 2.5rem);
+  height: calc(100% + 1.8rem);
+}
+
+/* En móvil los adornos laterales del título saldrían por el borde de la
+   pantalla: quedan solo los subrayados y círculos. */
+@media (max-width: 639px) {
+  .doodleSparkle {
+    display: none;
+  }
+}

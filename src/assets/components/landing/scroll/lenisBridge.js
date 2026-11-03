@@ -19,7 +19,7 @@ let activeLenis = null;
 // mide 80px) se nota mucho menos que quedar debajo del header en mobile
 // (donde mide 64px) — más offset de lo necesario nunca tapa el inicio de la
 // sección, menos sí.
-const HEADER_HEIGHT = 80;
+export const HEADER_HEIGHT = 80;
 
 export function setActiveLenis(instance) {
   activeLenis = instance;

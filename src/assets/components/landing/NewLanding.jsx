@@ -107,7 +107,7 @@ function NewLanding({ languaje }) {
         <ExperienceSection languaje={languaje} />
         <ProjectsSection languaje={languaje} />
         <StackSection languaje={languaje} />
-        <ContactSection ref={contactRef} languaje={languaje} email={EMAIL} />
+        <ContactSection ref={contactRef} rig={rig} languaje={languaje} email={EMAIL} />
       </main>
     </>
   );

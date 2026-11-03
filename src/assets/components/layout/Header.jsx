@@ -281,7 +281,13 @@ function Header({ onDatos, languaje, transparentHero = false }) {
   );
 
   return (
-    <header className={styles.header}>
+    // En la portada nueva (sin botón de tema, ver `showThemeToggle`) el
+    // header va SIEMPRE en su variante oscura: con el tema claro guardado, la
+    // barra sólida salía blanca opaca sobre secciones moradas/negras en vez
+    // del vidrio. La clase `dark` en el propio `<header>` activa las mismas
+    // reglas `:global(.dark) .x` del CSS module sin tocar el tema del resto
+    // de la página.
+    <header className={cx(styles.header, !showThemeToggle && "dark")}>
       <Bar
         {...barProps}
         className={cx(styles.bar, barStateClass, !glassOk && styles.barFallback)}

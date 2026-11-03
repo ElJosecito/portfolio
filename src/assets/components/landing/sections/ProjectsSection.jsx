@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SectionLabel from "../ui/SectionLabel";
+import { Doodle } from "../ui/doodles/Doodle";
+import { useDoodles } from "../ui/doodles/useDoodles";
 import { useSplitReveal } from "../ui/useSplitReveal";
 import { hasHoverPointer, prefersReducedMotion } from "../../hero3d/motionPreferences";
 import { useProjects } from "../../../../shared/hooks/useProjects";
@@ -153,9 +155,16 @@ function ProjectsSection({ languaje }) {
   const sectionRef = useRef(null);
   const cardRefs = useRef([]);
   const titleRef = useRef(null);
+  const headerRef = useRef(null);
+  const seeAllRef = useRef(null);
 
   useStackedCards(sectionRef, cardRefs, projects.length);
   useSplitReveal(titleRef, { start: "top 90%", end: "top 60%", deps: [languaje.projects.title] });
+  // Dos tramos separados: la sección es larga (cards apiladas), así que los
+  // trazos de la cabecera y el círculo del link final se dibujan cada uno al
+  // llegar a SU parte, no repartidos sobre toda la sección.
+  useDoodles(headerRef, { start: "top 80%", end: "top 35%", deps: [languaje.languaje] });
+  useDoodles(seeAllRef, { start: "top 90%", end: "top 55%", deps: [languaje.languaje, projects.length] });
 
   return (
     <section
@@ -166,12 +175,18 @@ function ProjectsSection({ languaje }) {
       // que este componente tenga que saber nada de ella (ver useHeadRig).
       className={styles.section}
     >
-      <div className={styles.header}>
+      <div ref={headerRef} className={styles.header}>
         <SectionLabel index={3} tone="light">
           {languaje.landing.sectionLabels.projects}
         </SectionLabel>
         <p className={styles.kicker}>{languaje.landing.projects.kicker}</p>
-        <h2 key={languaje.projects.title} ref={titleRef} className={styles.title}>{languaje.projects.title}</h2>
+        {/* Wrapper para los trazos: el `<h2>` lo parte SplitText y se recrea
+            por idioma (`key`), así que no pueden vivir adentro. */}
+        <div className={styles.titleWrap}>
+          <h2 key={languaje.projects.title} ref={titleRef} className={styles.title}>{languaje.projects.title}</h2>
+          <Doodle shape="underlineZigzag" order={1} className={styles.doodleUnderline} />
+          <Doodle shape="sparkle" order={2} className={styles.doodleSparkle} />
+        </div>
       </div>
 
       <div className={styles.list}>
@@ -267,15 +282,18 @@ function ProjectsSection({ languaje }) {
           `projectsBtn`), acá solo destacan los proyectos "featured" (ver
           `useProjects({ featuredOnly: true })` arriba) — sin este link no
           hay forma de llegar al resto desde la landing nueva. */}
-      <div className={styles.seeAllWrap}>
-        <Link
-          to="/all-projects"
-          data-cursor="view"
-          className={styles.seeAllLink}
-          {...viewTransitionLinkProps()}
-        >
-          {languaje.landing.projects.seeAll} →
-        </Link>
+      <div ref={seeAllRef} className={styles.seeAllWrap}>
+        <span className={styles.seeAllAnchor}>
+          <Doodle shape="circle" order={1} className={styles.doodleCircle} />
+          <Link
+            to="/all-projects"
+            data-cursor="view"
+            className={styles.seeAllLink}
+            {...viewTransitionLinkProps()}
+          >
+            {languaje.landing.projects.seeAll} →
+          </Link>
+        </span>
       </div>
     </section>
   );

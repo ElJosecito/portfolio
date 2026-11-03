@@ -1,0 +1,96 @@
+/* Posición de los trazos del contacto (cómo se ven: ui/doodles/Doodle.module.css).
+   Color hero-ink, el mismo del título, para que se lean como anotaciones
+   sobre el cobalto y no como un elemento de interfaz más. */
+
+.scribble,
+.titleSparkle,
+.titleRays,
+.followWrap,
+.socialsStar {
+  color: var(--color-hero-ink);
+}
+
+/* Debajo del título, de su mismo ancho. */
+.scribble {
+  left: 0;
+  bottom: -0.6rem;
+  width: 100%;
+  height: 1.4rem;
+}
+
+/* Destello pegado al final del título y rayitas de "énfasis" antes de la
+   primera letra — como quien remarca una palabra con marcador. */
+.titleSparkle {
+  right: -2.75rem;
+  top: -0.75rem;
+  width: 2.25rem;
+  height: 2.25rem;
+}
+.titleRays {
+  left: -3rem;
+  top: 0.75rem;
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+/* Flecha texto → cabeza que sigue al rig (ver useFollowArrow): una capa del
+   tamaño de la sección, solo escritorio — igual que la pose de costado de la
+   cabeza (ver useHeadRig, `isDesktop`). */
+.followWrap {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .followWrap {
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-section-content);
+    display: block;
+    pointer-events: none;
+    color: var(--color-hero-ink);
+  }
+}
+
+.followSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.9;
+}
+
+/* Arranca invisible: useFollowArrow la posiciona y le sube la opacidad al
+   final del tramo. */
+.followNote {
+  position: absolute;
+  opacity: 0;
+  white-space: nowrap;
+  transform: rotate(-6deg);
+  font-family: var(--font-tech);
+  font-size: 0.9375rem;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+}
+
+/* Estrellita al costado de las redes, chiquita: punto final. */
+.socialsStar {
+  right: -2.5rem;
+  top: -0.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* En móvil los adornos laterales del título saldrían por el borde de la
+   pantalla: quedan solo los subrayados y círculos. */
+@media (max-width: 639px) {
+  .titleSparkle,
+  .titleRays {
+    display: none;
+  }
+}

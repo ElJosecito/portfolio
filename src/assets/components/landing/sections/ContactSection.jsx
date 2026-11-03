@@ -9,6 +9,8 @@ import SectionLabel from "../ui/SectionLabel";
 import GrainOverlay from "../ui/GrainOverlay";
 import { useMagnetic } from "../ui/useMagnetic";
 import { useSplitReveal } from "../ui/useSplitReveal";
+import { HeadArrow, SocialsStar, TitleDoodles } from "./ContactDoodles";
+import { useDoodles } from "../ui/doodles/useDoodles";
 import { SOCIAL_LINKS, whatsappUrl } from "../../../../shared/utils/seo";
 import { copyToClipboard } from "../../../../shared/utils/clipboard";
 import styles from "./ContactSection.module.css";
@@ -55,8 +57,9 @@ function useChapterWipe(sectionRef) {
 /**
  * Cierre del landing: CTA gigante, botón magnético y el email a copiar.
  * Vuelve al cobalto del hero (ver storytelling de color en el resto de las
- * secciones) — el viaje de la cabeza también cierra acá, volviendo al
- * centro y de frente (ver useHeadRig, anchor "contacto").
+ * secciones) — el viaje de la cabeza también cierra acá: en escritorio
+ * se para de frente en el ~24% derecho (ver useHeadRig,
+ * CONTACT_SIDE): por eso el texto va alineado a la izquierda ahí.
  *
  * `id="contact"` (ver revisión, lista de a11y): antes era `id="about"`, el
  * mismo que usa el Hero clásico para su bloque combinado de about+contacto.
@@ -66,7 +69,7 @@ function useChapterWipe(sectionRef) {
  * acá desde el botón dedicado "Hablemos" del Header (ver handleScroll en
  * Header.jsx), no desde el link de nav "Acerca de".
  */
-const ContactSection = forwardRef(function ContactSection({ languaje, email }, ref) {
+const ContactSection = forwardRef(function ContactSection({ languaje, email, rig }, ref) {
   const [copied, setCopied] = useState(false);
   const buttonRef = useRef(null);
   const titleRef = useRef(null);
@@ -74,6 +77,9 @@ const ContactSection = forwardRef(function ContactSection({ languaje, email }, r
   useMagnetic(buttonRef, 0.3);
   useSplitReveal(titleRef, { start: "top 90%", end: "top 60%", deps: [languaje.landing.contact.ctaTitle] });
   useChapterWipe(sectionRef);
+  // Termina cuando la sección queda centrada: el mismo momento en que la
+  // cabeza llega a su pose (ver useHeadRig, `end: "center center"`).
+  useDoodles(sectionRef, { start: "top 55%", end: "center center", deps: [languaje.languaje] });
 
   const setRefs = (node) => {
     sectionRef.current = node;
@@ -101,12 +107,19 @@ const ContactSection = forwardRef(function ContactSection({ languaje, email }, r
       <div aria-hidden="true" className={styles.topGradient} />
       <GrainOverlay />
 
+      <HeadArrow note={languaje.landing.contact.headNote} rig={rig} sectionRef={sectionRef} />
+
       <div className={styles.inner}>
         <SectionLabel index={5} tone="light">
           {languaje.landing.sectionLabels.contact}
         </SectionLabel>
 
-        <h2 key={ctaTitle} ref={titleRef} className={styles.title}>{ctaTitle}</h2>
+        {/* Wrapper aparte para el garabato: el `<h2>` lo parte SplitText y se
+            recrea por idioma (`key`), así que el SVG no puede vivir adentro. */}
+        <div className={styles.titleWrap}>
+          <h2 key={ctaTitle} ref={titleRef} className={styles.title}>{ctaTitle}</h2>
+          <TitleDoodles />
+        </div>
         <p className={styles.subtitle}>{ctaSubtitle}</p>
 
         <div className={styles.ctaWrapper}>
@@ -119,6 +132,7 @@ const ContactSection = forwardRef(function ContactSection({ languaje, email }, r
         </div>
 
         <div className={styles.socials}>
+          <SocialsStar />
           <a
             href={SOCIAL_LINKS[0]}
             target="_blank"

@@ -38,6 +38,7 @@
 }
 
 .nameHeading {
+  position: relative;
   user-select: none;
   text-align: center;
   font-family: var(--font-display);
@@ -108,5 +109,50 @@
 @media (prefers-reduced-motion: reduce) {
   .twinkle {
     animation: none;
+  }
+}
+
+/* Trazos a mano alrededor del nombre (ver HeroSection.jsx y ui/doodles).
+   Viven dentro de `.nameWrap`, así que se mueven con su parallax; color
+   hero-ink, el del nombre. Rayitas y destello solo desde 640px: en móvil el
+   nombre ocupa casi todo el ancho y quedarían cortados por el borde. */
+.nameDoodles {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  color: var(--color-hero-ink);
+}
+
+.nameUnderline {
+  left: 18%;
+  bottom: -1.25rem;
+  width: 64%;
+  height: 1.5rem;
+}
+
+.nameRays,
+.nameSparkle {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .nameRays,
+  .nameSparkle {
+    display: block;
+  }
+
+  .nameRays {
+    left: -3.75rem;
+    top: -1.5rem;
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .nameSparkle {
+    right: -3rem;
+    top: 30%;
+    width: 2.75rem;
+    height: 2.75rem;
   }
 }

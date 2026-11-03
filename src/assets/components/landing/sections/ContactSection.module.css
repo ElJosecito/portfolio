@@ -130,6 +130,7 @@
 }
 
 .socials {
+  position: relative;
   margin-top: 2.5rem;
   display: flex;
   align-items: center;
@@ -154,4 +155,41 @@
 .socialIcon {
   height: 1.25rem;
   width: 1.25rem;
+}
+
+/* Escritorio: dos columnas "implícitas". El texto se alinea a la izquierda
+   y la mitad derecha queda libre para la cabeza 3D, que al llegar al
+   contacto se para ahí (ver useHeadRig, CONTACT_SIDE). Antes todo iba
+   centrado con la cabeza encima, tapando el email y las redes; un hueco
+   reservado en el medio tampoco servía: la cabeza es fija en pantalla y el
+   hueco se mueve con el scroll, así que se veía vacío casi todo el tramo. */
+@media (min-width: 1024px) {
+  .section {
+    align-items: stretch;
+    text-align: left;
+  }
+
+  .inner {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    align-items: flex-start;
+  }
+
+  /* El título cabe en la columna izquierda (~60%) en ES y EN: "¿HABLAMOS?"
+     mide ≈ 7.5em de ancho en Milker, así que 7vw lo deja en ~52% del
+     viewport y nunca toca la cabeza, que ocupa el ~24% derecho. */
+  .title {
+    font-size: clamp(3rem, 7vw, 7.5rem);
+  }
+
+  .ctaWrapper {
+    align-items: flex-start;
+  }
+}
+
+/* Ancla del garabato bajo el título (ver ContactDoodles.jsx, TitleScribble). */
+.titleWrap {
+  position: relative;
+  margin-bottom: 0.75rem;
 }

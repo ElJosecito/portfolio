@@ -1,0 +1,36 @@
+/* Trazos a mano del landing (ver Doodle.jsx). Posicionados por quien los usa
+   (cada sección, en su propio CSS module); acá solo vive cómo se ven. */
+
+.doodle {
+  position: absolute;
+  overflow: visible;
+  pointer-events: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.9;
+}
+
+/* Subrayados/círculos/llaves que se estiran al tamaño del texto: sin
+   `non-scaling-stroke` el trazo engordaría en el eje que más se estira. */
+.stretch path {
+  stroke-width: 3.5;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Mono rotado: el sitio no carga una tipografía manuscrita; la inclinación es
+   lo que la hace sentir "escrita al costado" y no una etiqueta. */
+.note {
+  position: absolute;
+  pointer-events: none;
+  white-space: nowrap;
+  transform: rotate(-6deg);
+  font-family: var(--font-tech);
+  font-size: 0.9375rem;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  color: currentColor;
+  opacity: 0.85;
+}

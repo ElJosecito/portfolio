@@ -95,6 +95,13 @@ export const Spanish = {
   // editorial puntual de las secciones nuevas (manifiesto, CTA de contacto),
   // no datos que haya que mantener en dos lugares.
   landing: {
+    // Notas cortas "escritas a mano" junto a los trazos del landing (ver
+    // landing/ui/doodles). En minúscula a propósito: se leen como anotación.
+    doodles: {
+      aboutNote: "en corto",
+      experienceNote: "ahora",
+      stackNote: "mi copiloto",
+    },
     sectionLabels: {
       intro: "Cómo trabajo",
       experience: "Experiencia",
@@ -140,6 +147,7 @@ export const Spanish = {
       emailCopied: "Email copiado",
       whatsapp: "WhatsApp",
       whatsappMessage: "Hola José, vi tu portafolio y me gustaría hablar contigo.",
+      headNote: "ese soy yo",
     },
   },
 

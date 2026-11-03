@@ -3,6 +3,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import SectionLabel from "../ui/SectionLabel";
+import { Doodle, DoodleNote } from "../ui/doodles/Doodle";
+import { useDoodles } from "../ui/doodles/useDoodles";
 import { prefersReducedMotion } from "../../hero3d/motionPreferences";
 import styles from "./AboutSection.module.css";
 
@@ -149,6 +151,7 @@ function AboutSection({ languaje, heroRef }) {
   const sectionRef = useRef(null);
   useManifestoReveal(containerRef, languaje.languaje);
   useDoorReveal(sectionRef, heroRef);
+  useDoodles(sectionRef, { start: "top 45%", end: "bottom bottom", deps: [languaje.languaje] });
 
   const { manifesto, kicker } = languaje.landing.intro;
 
@@ -161,6 +164,8 @@ function AboutSection({ languaje, heroRef }) {
       <div aria-hidden="true" className={styles.gradientBottom} />
 
       <div className={styles.container}>
+        <Doodle shape="spiral" order={1} className={styles.doodleSpiral} />
+
         <SectionLabel index={1}>{languaje.landing.sectionLabels.intro}</SectionLabel>
 
         {/* `<h2>` real, visualmente oculto (ver revisión, lista de a11y):
@@ -178,9 +183,14 @@ function AboutSection({ languaje, heroRef }) {
               {renderHighlighted(line)}
             </p>
           ))}
+          <Doodle shape="sparkle" order={2} className={styles.doodleSparkle} />
         </div>
 
         <div className={styles.paragraphs}>
+          <Doodle shape="bracket" order={3} className={styles.doodleBracket} />
+          <DoodleNote order={4} className={styles.doodleNote}>
+            {languaje.landing.doodles.aboutNote}
+          </DoodleNote>
           {languaje.about.paragraphs.slice(0, 2).map((paragraph, index) => (
             <p key={index} className={styles.paragraph}>
               {paragraph}

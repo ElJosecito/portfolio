@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SectionLabel from "../ui/SectionLabel";
+import { Doodle, DoodleNote } from "../ui/doodles/Doodle";
+import { useDoodles } from "../ui/doodles/useDoodles";
 import { useSplitReveal } from "../ui/useSplitReveal";
 import { prefersReducedMotion } from "../../hero3d/motionPreferences";
 import { STACK_AREAS } from "./stackData";
@@ -87,6 +89,16 @@ function StackCard({ area, languaje, cardRef }) {
       <div className={styles.featured}>
         {FeaturedIcon ? <FeaturedIcon aria-hidden="true" className={styles.featuredIcon} /> : null}
         <span className={styles.featuredLabel}>{area.featured.label}</span>
+        {/* Claude Code marcado a mano: es la herramienta del día a día (ver CV,
+            desarrollo asistido por IA). Solo en esta card. */}
+        {area.id === "aiTools" ? (
+          <>
+            <Doodle shape="circle" order={3} className={styles.doodleCircle} />
+            <DoodleNote order={4} className={styles.doodleNote}>
+              {languaje.landing.doodles.stackNote}
+            </DoodleNote>
+          </>
+        ) : null}
       </div>
 
       <ul className={styles.techList}>
@@ -130,6 +142,7 @@ function StackSection({ languaje }) {
 
   useSplitReveal(titleRef, { start: "top 90%", end: "top 60%", deps: [languaje.landing.stack.title] });
   useStackCardsReveal(sectionRef, cardsRef);
+  useDoodles(sectionRef, { start: "top 70%", end: "top 15%", deps: [languaje.languaje] });
 
   return (
     <section id="stack" ref={sectionRef} className={styles.section}>
@@ -137,9 +150,15 @@ function StackSection({ languaje }) {
         <SectionLabel index={4} tone="light">
           {languaje.landing.sectionLabels.stack}
         </SectionLabel>
-        <h2 key={languaje.landing.stack.title} ref={titleRef} className={styles.title}>
-          {languaje.landing.stack.title}
-        </h2>
+        {/* Wrapper para los trazos: el `<h2>` lo parte SplitText y se recrea
+            por idioma (`key`), así que no pueden vivir adentro. */}
+        <div className={styles.titleWrap}>
+          <h2 key={languaje.landing.stack.title} ref={titleRef} className={styles.title}>
+            {languaje.landing.stack.title}
+          </h2>
+          <Doodle shape="check" order={1} className={styles.doodleCheck} />
+          <Doodle shape="rays" order={2} className={styles.doodleRays} />
+        </div>
         <p className={styles.subtitle}>{languaje.landing.stack.subtitle}</p>
       </div>
 

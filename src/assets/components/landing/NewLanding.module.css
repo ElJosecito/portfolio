@@ -24,6 +24,15 @@
      clics del footer revelado. El `<main>` deja pasar los clics y cada
      sección los vuelve a tomar para su propio contenido. */
   pointer-events: none;
+  /* Fondo cobalto (el del hero) solo en la caja de contenido: AboutSection
+     entra con un `clip-path: circle()` que crece desde la cabeza ("puerta",
+     ver su useDoorReveal), y fuera de ese círculo la sección es
+     transparente — sin fondo acá se veía el footer sticky de atrás durante
+     toda la transición hero → Sobre mí. `content-box` deja afuera el
+     padding-bottom de arriba, que TIENE que seguir transparente para que el
+     footer se revele al final. */
+  background-color: var(--color-hero-blue);
+  background-clip: content-box;
 }
 
 .main > * {

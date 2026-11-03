@@ -94,6 +94,13 @@ export const English = {
   // voice of the new sections (manifesto, contact CTA), not data that needs
   // to be kept in two places.
   landing: {
+    // Short "handwritten" notes next to the landing doodles (see
+    // landing/ui/doodles). Lowercase on purpose: they read as annotations.
+    doodles: {
+      aboutNote: "in short",
+      experienceNote: "now",
+      stackNote: "my copilot",
+    },
     sectionLabels: {
       intro: "How I work",
       experience: "Experience",
@@ -139,6 +146,7 @@ export const English = {
       emailCopied: "Email copied",
       whatsapp: "WhatsApp",
       whatsappMessage: "Hi José, I saw your portfolio and I'd like to talk.",
+      headNote: "that's me",
     },
   },
 
