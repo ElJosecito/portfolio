@@ -123,7 +123,14 @@ const ContactSection = forwardRef(function ContactSection({ languaje, email, rig
         <p className={styles.subtitle}>{ctaSubtitle}</p>
 
         <div className={styles.ctaWrapper}>
-          <button ref={buttonRef} type="button" onClick={handleCopy} className={styles.copyButton}>
+          <button
+            ref={buttonRef}
+            type="button"
+            onClick={handleCopy}
+            className={styles.copyButton}
+            data-umami-event="email-copy"
+            data-umami-event-location="contact"
+          >
             <MdAlternateEmail className={styles.emailIcon} />
             {email}
             <FaCopy className={`${styles.copyIcon} ${copied ? styles.copyIconCopied : ""}`} />
@@ -135,6 +142,8 @@ const ContactSection = forwardRef(function ContactSection({ languaje, email, rig
           <SocialsStar />
           <a
             href={SOCIAL_LINKS[0]}
+            data-umami-event="github"
+            data-umami-event-location="contact"
             target="_blank"
             rel="noreferrer"
             className={styles.socialLink}
@@ -144,6 +153,8 @@ const ContactSection = forwardRef(function ContactSection({ languaje, email, rig
           </a>
           <a
             href={SOCIAL_LINKS[1]}
+            data-umami-event="linkedin"
+            data-umami-event-location="contact"
             target="_blank"
             rel="noreferrer"
             className={styles.socialLink}
@@ -153,6 +164,8 @@ const ContactSection = forwardRef(function ContactSection({ languaje, email, rig
           </a>
           <a
             href={whatsappUrl(languaje.landing.contact.whatsappMessage)}
+            data-umami-event="whatsapp"
+            data-umami-event-location="contact"
             target="_blank"
             rel="noreferrer"
             className={styles.socialLink}

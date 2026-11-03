@@ -502,6 +502,8 @@ function Hero({ languaje }) {
                     </p>
                   </div>
                   <button
+                    data-umami-event="email-copy"
+                    data-umami-event-location="classic"
                     onClick={() => {
                       copyToClipboard();
                     }}
@@ -512,6 +514,8 @@ function Hero({ languaje }) {
                 </div>
                 {/* cv button download */}
                 <a
+                  data-umami-event="cv-download"
+                  data-umami-event-location="classic"
                   href={
                     languaje.languaje === "Español"
                       ? "https://drive.google.com/file/d/13RE8zqcHDTbQdHVaYjD4yAi87AqwZjNO/view?usp=sharing"

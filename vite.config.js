@@ -108,13 +108,60 @@ function sitemapPlugin(env) {
   };
 }
 
+/**
+ * Analítica y verificación de buscadores, solo en el build y solo si están
+ * configuradas (secrets del repo, ver .github/workflows): sin las variables
+ * no se inyecta nada y el sitio queda igual.
+ *
+ *  - VITE_UMAMI_WEBSITE_ID: Umami Cloud — visitas y clics (los elementos con
+ *    `data-umami-event`), sin cookies, así que no hace falta banner de
+ *    consentimiento. Sigue solo los cambios de ruta del SPA (history API).
+ *    `data-domains` limita el conteo a josecito.dev: un `vite preview` local
+ *    o un fork publicado en otro lado no ensucian las estadísticas.
+ *  - VITE_GSC_VERIFICATION: el `content` de la meta de verificación de
+ *    Google Search Console (método "etiqueta HTML").
+ */
+function analyticsPlugin(env) {
+  return {
+    name: "inject-analytics",
+    apply: "build",
+
+    transformIndexHtml() {
+      const tags = [];
+
+      if (env.VITE_GSC_VERIFICATION) {
+        tags.push({
+          tag: "meta",
+          attrs: { name: "google-site-verification", content: env.VITE_GSC_VERIFICATION },
+          injectTo: "head",
+        });
+      }
+
+      if (env.VITE_UMAMI_WEBSITE_ID) {
+        tags.push({
+          tag: "script",
+          attrs: {
+            defer: true,
+            src: "https://cloud.umami.is/script.js",
+            "data-website-id": env.VITE_UMAMI_WEBSITE_ID,
+            "data-domains": "josecito.dev",
+          },
+          injectTo: "head",
+        });
+      }
+
+      return tags;
+    },
+  };
+}
+
 // https://vitejs.dev/config/
 // Configuración de Vite para el portafolio
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), "VITE_");
 
   return {
-    plugins: [react(), sitemapPlugin(env)],
+    plugins: [react(), sitemapPlugin(env), analyticsPlugin(env)],
     base: command === "build" ? base : "/",
     resolve: {
       alias: {

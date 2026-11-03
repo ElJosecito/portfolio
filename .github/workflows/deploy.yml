@@ -47,6 +47,10 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          # Opcionales: si no existen, el build no inyecta analítica ni la meta
+          # de Search Console (ver analyticsPlugin en vite.config.js).
+          VITE_UMAMI_WEBSITE_ID: ${{ secrets.VITE_UMAMI_WEBSITE_ID }}
+          VITE_GSC_VERIFICATION: ${{ secrets.VITE_GSC_VERIFICATION }}
 
       - uses: actions/upload-pages-artifact@v3
         with:

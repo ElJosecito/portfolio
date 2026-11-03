@@ -370,11 +370,19 @@ function Header({ onDatos, languaje, transparentHero = false }) {
             target="_blank"
             rel="noreferrer"
             className={cx(styles.githubLink, navStateClass)}
+            data-umami-event="github"
+            data-umami-event-location="header"
           >
             GitHub
           </a>
 
-          <Link to={`/#${contactSectionId}`} onClick={(event) => handleNavClick(event, contactSectionId)} className={styles.contactCta}>
+          <Link
+            to={`/#${contactSectionId}`}
+            onClick={(event) => handleNavClick(event, contactSectionId)}
+            className={styles.contactCta}
+            data-umami-event="contact-cta"
+            data-umami-event-location="header"
+          >
             {labelFor("contact")}
           </Link>
         </div>
@@ -429,7 +437,14 @@ function Header({ onDatos, languaje, transparentHero = false }) {
                 <div className={styles.menuDivider} />
 
                 <div className={styles.menuRow}>
-                  <a href={SOCIAL_LINKS[0]} target="_blank" rel="noreferrer" className={styles.menuGithubLink}>
+                  <a
+                    href={SOCIAL_LINKS[0]}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={styles.menuGithubLink}
+                    data-umami-event="github"
+                    data-umami-event-location="header-menu"
+                  >
                     GitHub
                   </a>
 

@@ -181,6 +181,8 @@ function Footer({ languaje, curtain = false, contactSectionId = "about" }) {
             <p className={styles.label}>{languaje?.footer?.cta}</p>
             <a
               href={`mailto:${EMAIL}`}
+              data-umami-event="email-copy"
+              data-umami-event-location="footer"
               onClick={handleCopyEmail}
               className={styles.emailButton}
             >
@@ -222,6 +224,8 @@ function Footer({ languaje, curtain = false, contactSectionId = "about" }) {
               <li>
                 <a
                   href={SOCIAL_LINKS[0]}
+                  data-umami-event="github"
+                  data-umami-event-location="footer"
                   target="_blank"
                   rel="noreferrer"
                   className={styles.socialLink}
@@ -236,6 +240,8 @@ function Footer({ languaje, curtain = false, contactSectionId = "about" }) {
               <li>
                 <a
                   href={SOCIAL_LINKS[1]}
+                  data-umami-event="linkedin"
+                  data-umami-event-location="footer"
                   target="_blank"
                   rel="noreferrer"
                   className={styles.socialLink}
@@ -250,6 +256,8 @@ function Footer({ languaje, curtain = false, contactSectionId = "about" }) {
               <li>
                 <a
                   href={whatsappUrl(languaje?.landing?.contact?.whatsappMessage)}
+                  data-umami-event="whatsapp"
+                  data-umami-event-location="footer"
                   target="_blank"
                   rel="noreferrer"
                   className={styles.socialLink}
@@ -264,6 +272,8 @@ function Footer({ languaje, curtain = false, contactSectionId = "about" }) {
               <li>
                 <a
                   href={INSTAGRAM_URL}
+                  data-umami-event="instagram"
+                  data-umami-event-location="footer"
                   target="_blank"
                   rel="noreferrer"
                   className={styles.socialLink}

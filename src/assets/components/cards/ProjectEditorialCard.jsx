@@ -24,6 +24,9 @@ function ProjectEditorialCard({ project, languaje }) {
   return (
     <Link
       to={`/projects/${project.slug}`}
+      data-umami-event="project-open"
+      data-umami-event-project={project.slug}
+      data-umami-event-location="all-projects"
       className={styles.card}
       {...viewTransitionLinkProps()}
     >

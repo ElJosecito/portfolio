@@ -204,6 +204,9 @@ function ProjectsSection({ languaje }) {
                   cardRefs.current[index] = node;
                 }}
                 to={`/projects/${project.slug}`}
+                data-umami-event="project-open"
+                data-umami-event-project={project.slug}
+                data-umami-event-location="landing"
                 data-cursor="view"
                 style={{
                   top: `calc(var(--header-offset) + ${index} * var(--card-step))`,
@@ -287,6 +290,8 @@ function ProjectsSection({ languaje }) {
           <Doodle shape="circle" order={1} className={styles.doodleCircle} />
           <Link
             to="/all-projects"
+            data-umami-event="all-projects"
+            data-umami-event-location="landing"
             data-cursor="view"
             className={styles.seeAllLink}
             {...viewTransitionLinkProps()}
