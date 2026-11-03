@@ -98,6 +98,12 @@ function useManifestoReveal(containerRef, languageKey) {
       SplitText.create(line, {
         type: "words,lines",
         mask: "lines",
+        // `aria: "none"`: por defecto ("auto") SplitText le pone `aria-label`
+        // con el texto original al elemento partido, y un `<p>` no admite
+        // `aria-label` (Lighthouse: "prohibited ARIA attributes" + árbol de
+        // accesibilidad mal formado). Las palabras siguen siendo texto real,
+        // así que un lector de pantalla las lee igual.
+        aria: "none",
         autoSplit: true,
         onSplit(self) {
           // Mismo aire que en useSplitReveal: sin esto la máscara de línea

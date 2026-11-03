@@ -217,8 +217,10 @@ function Footer({ languaje, curtain = false, contactSectionId = "about" }) {
             </ul>
           </nav>
 
-          {/* (3) redes */}
-          <div className={styles.cell} aria-label={languaje?.footer?.socialsAriaLabel}>
+          {/* (3) redes. Sin `aria-label` en el div: un `<div>` sin rol no lo
+              admite (Lighthouse, "prohibited ARIA") y la etiqueta visible de
+              abajo ya nombra la lista. */}
+          <div className={styles.cell}>
             <p className={styles.label}>{languaje?.footer?.socialsAriaLabel}</p>
             <ul className={styles.socialList}>
               <li>

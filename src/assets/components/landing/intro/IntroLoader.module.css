@@ -27,7 +27,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, var(--color-hero-blue) 0%, var(--color-hero-blue-deep) 100%);
+  /* Translúcido: el nombre del hero se ve DETRÁS del contador (ver
+     HeroSection.module.css). Así el elemento más grande de la pantalla está
+     pintado desde que carga la landing y no recién al terminar la intro — era
+     lo que dejaba el LCP en 4.1s en móvil. */
+  background: linear-gradient(160deg, rgba(34, 51, 201, 0.72) 0%, rgba(27, 42, 168, 0.8) 100%);
   -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent var(--hole), #000 calc(var(--hole) + 1px));
   mask-image: radial-gradient(circle at 50% 50%, transparent var(--hole), #000 calc(var(--hole) + 1px));
 }
@@ -45,4 +49,31 @@
   line-height: 1;
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
+}
+
+/* Capa opaca que se desvanece: el fallback de Suspense (IntroFallback) es
+   cobalto OPACO porque detrás todavía no hay nada; si este overlay
+   arrancara ya translúcido se vería un salto al reemplazarlo. Arranca igual
+   de opaco y se aclara en medio segundo hasta dejar ver el nombre. Vive
+   dentro del overlay, así que la máscara del reveal también la recorta. */
+.overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(160deg, var(--color-hero-blue) 0%, var(--color-hero-blue-deep) 100%);
+  animation: introUnveil 0.5s var(--ease-standard, ease) 0.15s forwards;
+}
+
+@keyframes introUnveil {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay::before {
+    animation: none;
+    opacity: 0;
+  }
 }

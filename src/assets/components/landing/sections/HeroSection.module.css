@@ -60,14 +60,12 @@
   display: inline-block;
 }
 
-/* Mientras la intro no terminó (ver HeroSection.jsx, useHeroEntrance): las
-   letras arrancan ocultas por CSS, no por un estado de React — así nunca hay
-   un frame donde se ven "paradas" antes de que el overlay de la intro se
-   abra. `useHeroEntrance` las anima a su posición real apenas llega
-   INTRO_DONE_EVENT. */
-.nameWrap[data-awaiting-intro] .letter {
-  opacity: 0;
-}
+/* Las letras ya NO se ocultan durante la intro: el overlay del contador es
+   translúcido (ver intro/IntroLoader.module.css) y el nombre se ve detrás.
+   Antes arrancaban en opacity 0 hasta el fin de la intro, y para Lighthouse
+   el elemento más grande de la pantalla (el nombre) recién "aparecía" a los
+   ~2.5s: el LCP quedaba en 4.1s en móvil. `data-awaiting-intro` se mantiene
+   como marca para useHeroEntrance (el saltito al abrirse el telón). */
 
 .scrollHint {
   pointer-events: none;

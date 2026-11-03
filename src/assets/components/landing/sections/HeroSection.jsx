@@ -70,12 +70,11 @@ function useHeroExit(sectionRef, nameRef) {
       });
     };
 
-    // `fromTo` con `opacity: 1` explícito + `immediateRender: false`: este
-    // tween se crea mientras la intro todavía tiene las letras ocultas por
-    // CSS (`data-awaiting-intro`). Con un `to`, GSAP leía la opacidad inicial
-    // la primera vez que renderizaba cada letra — y las del centro (stagger
-    // 0, renderizadas al crear el ScrollTrigger) quedaban grabadas en 0: al
-    // scrollear iban de 0 a 0 y "MARTÍNEZ" perdía la A y la R de golpe.
+    // `fromTo` con `opacity: 1` explícito + `immediateRender: false`: cuando
+    // las letras arrancaban ocultas durante la intro, un `to` grababa la
+    // opacidad 0 como inicial en las del centro (stagger 0) y al scrollear
+    // "MARTÍNEZ" perdía la A y la R. Hoy ya no se ocultan, pero el valor
+    // inicial explícito evita que vuelva a pasar si alguien las oculta otra vez.
     const tween = gsap.fromTo(letters, { opacity: 1 }, {
       y: (i) => (i % 2 === 0 ? -70 : 70),
       x: (i, target, targets) => (i - (targets.length - 1) / 2) * 16,
@@ -134,14 +133,12 @@ function useHeroDoodlesExit(sectionRef, doodlesRef) {
 }
 
 /**
- * Caída de las letras del nombre: con overshoot (`back.out`), igual sentido
- * de "entrada con peso" que la cabeza (ver useHeadRig, el giro de perfil a
- * frente). Si la intro está activa (ver `awaitIntro`), las letras arrancan
- * ocultas por CSS (`data-awaiting-intro`, ver HeroSection.module.css) y esta
- * animación espera el evento de fin de intro antes de mostrarlas — así no
- * aparecen un instante antes de que el overlay termine de abrirse. Si la
- * intro no se muestra (ya se vio esta sesión, o reduced-motion), las letras
- * ya están visibles por CSS y esta animación no hace falta.
+ * Saltito de las letras del nombre cuando se abre el telón de la intro: suben
+ * un poco y caen con overshoot (`back.out`), el mismo "peso" que la entrada de
+ * la cabeza (ver useHeadRig). Las letras ya están visibles detrás del
+ * contador (ver HeroSection.module.css), así que esto no las MUESTRA: solo
+ * marca el momento del reveal. Sin intro (ya vista esta sesión, o movimiento
+ * reducido) no corre.
  */
 function useHeroEntrance(nameRef, awaitIntro) {
   useEffect(() => {
@@ -152,17 +149,13 @@ function useHeroEntrance(nameRef, awaitIntro) {
     if (!letters?.length) return undefined;
 
     const play = () => {
-      gsap.fromTo(
-        letters,
-        { yPercent: -120, opacity: 0 },
-        {
-          yPercent: 0,
-          opacity: 1,
-          duration: 0.8,
-          ease: "back.out(1.7)",
-          stagger: { each: 0.025, from: "center" },
-        }
-      );
+      gsap.to(letters, {
+        keyframes: [
+          { yPercent: -14, duration: 0.22, ease: "power2.out" },
+          { yPercent: 0, duration: 0.55, ease: "back.out(2.2)" },
+        ],
+        stagger: { each: 0.025, from: "center" },
+      });
     };
 
     window.addEventListener(INTRO_DONE_EVENT, play, { once: true });

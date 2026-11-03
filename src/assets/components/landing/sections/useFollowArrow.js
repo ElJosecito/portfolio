@@ -55,16 +55,24 @@ export function useFollowArrow(sectionRef, rig, { curveRef, headRef, noteRef }) 
       ? null
       : ScrollTrigger.create({ trigger: section, start: "top 55%", end: "center center" });
 
+    // Solo se mide mientras el contacto está en pantalla: antes el tick leía
+    // `getBoundingClientRect()` en CADA frame de toda la página, y como gsap
+    // ya había escrito estilos en ese mismo frame, el navegador tenía que
+    // recalcular el layout a la fuerza (Lighthouse: "forced reflow").
+    let visible = false;
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+    });
+    observer.observe(section);
+
     // Ángulos suavizados: arrancan en `null` y toman la dirección real en el
     // primer frame visible (sin "barrido" inicial desde 0).
     let tipAngle = null;
     let midAngle = null;
 
     const update = (_time, deltaMs) => {
-      if (!desktop.matches) return;
+      if (!desktop.matches || !visible) return;
       const rect = section.getBoundingClientRect();
-      // Fuera de pantalla no hay nada que dibujar.
-      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
 
       const values = rig.current;
       const size = HEAD_SIZE_FACTOR * values.scale * Math.min(window.innerWidth, window.innerHeight);
@@ -146,6 +154,7 @@ export function useFollowArrow(sectionRef, rig, { curveRef, headRef, noteRef }) 
 
     return () => {
       gsap.ticker.remove(update);
+      observer.disconnect();
       trigger?.kill();
     };
   }, [sectionRef, rig, curveRef, headRef, noteRef]);
