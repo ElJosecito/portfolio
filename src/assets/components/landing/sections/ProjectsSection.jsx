@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SectionLabel from "../ui/SectionLabel";
+import ProjectCoverFallback from "../../../../shared/ui/ProjectCoverFallback";
 import { Doodle } from "../ui/doodles/Doodle";
 import { useDoodles } from "../ui/doodles/useDoodles";
 import { useSplitReveal } from "../ui/useSplitReveal";
@@ -130,16 +131,25 @@ function ProjectImage({ src, alt, transitionName }) {
       className={styles.imageWrapper}
     >
       <div aria-hidden="true" className={styles.imageOverlay} />
-      <img
-        ref={imgRef}
-        src={src}
-        alt={alt}
-        title={alt}
-        loading="lazy"
-        decoding="async"
-        className={styles.image}
-        style={transitionName ? { viewTransitionName: transitionName } : undefined}
-      />
+      {src ? (
+        <img
+          ref={imgRef}
+          src={src}
+          alt={alt}
+          title={alt}
+          loading="lazy"
+          decoding="async"
+          className={styles.image}
+          style={transitionName ? { viewTransitionName: transitionName } : undefined}
+        />
+      ) : (
+        // Sin imagen (proyecto de cliente confidencial, o recién creado sin
+        // capturas): portada tipográfica en vez de un <img> roto.
+        <ProjectCoverFallback
+          name={alt}
+          style={transitionName ? { viewTransitionName: transitionName } : undefined}
+        />
+      )}
     </div>
   );
 }

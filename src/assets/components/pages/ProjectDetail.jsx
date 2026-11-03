@@ -13,6 +13,7 @@ import { projectTransitionName } from '../../../shared/utils/viewTransition'
 // Directo y no desde el barrel: importar el índice del kit haría que la página
 // pública se lleve también los componentes que solo usa el panel.
 import Markdown from '../../../shared/ui/Markdown'
+import ProjectCoverFallback from '../../../shared/ui/ProjectCoverFallback'
 import styles from './ProjectDetail.module.css'
 
 /**
@@ -56,7 +57,8 @@ function ProjectDetail({ languaje }) {
                       name: localized.name,
                       description: localized.description,
                       url: absoluteUrl(`/projects/${slug}`),
-                      image: project.image,
+                      // Sin imagen (portada tipográfica) no se manda un "image": "" vacío.
+                      image: project.image || undefined,
                       inLanguage: english ? 'en' : 'es',
                       keywords: project.techIcons.map((tech) => tech.name).join(', '),
                       author: {
@@ -184,12 +186,19 @@ function ProjectDetail({ languaje }) {
                             `cover`: son mockups con su propio fondo, igual
                             criterio que las cards. */}
                         <div className={styles.cover}>
-                            <img
-                                src={project.image}
-                                alt={localized.name}
-                                className={styles.coverImage}
-                                style={transitionName ? { viewTransitionName: transitionName } : undefined}
-                            />
+                            {project.image ? (
+                                <img
+                                    src={project.image}
+                                    alt={localized.name}
+                                    className={styles.coverImage}
+                                    style={transitionName ? { viewTransitionName: transitionName } : undefined}
+                                />
+                            ) : (
+                                <ProjectCoverFallback
+                                    name={localized.name}
+                                    style={transitionName ? { viewTransitionName: transitionName } : undefined}
+                                />
+                            )}
                         </div>
 
                         {project.techIcons.length > 0 && (

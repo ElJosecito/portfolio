@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { refractive } from "@hashintel/refractive";
 
 import { localizeProject } from "../../../shared/utils/i18n";
+import ProjectCoverFallback from "../../../shared/ui/ProjectCoverFallback";
 
 // Fuera del componente: si se creara en cada render, el HOC devolvería un tipo
 // nuevo cada vez y React desmontaría y volvería a montar la card entera.
@@ -69,14 +70,18 @@ function ProjectCard({ project, languaje, variant = "small", className = "", del
           {/* Relación de aspecto fija: las capturas de los proyectos vienen con
               proporciones distintas, así que sin esto cada card mide lo que mida
               su imagen y la grilla se reacomoda a medida que van cargando. */}
-          <img
-            className={`w-full aspect-[16/10] rounded-2xl object-cover hover:cursor-pointer hover:scale-105 transition-transform duration-300 lg:mr-5`}
-            src={project.image}
-            alt={name}
-            title={name}
-            loading="lazy"
-            decoding="async"
-          />
+          {project.image ? (
+            <img
+              className={`w-full aspect-[16/10] rounded-2xl object-cover hover:cursor-pointer hover:scale-105 transition-transform duration-300 lg:mr-5`}
+              src={project.image}
+              alt={name}
+              title={name}
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <ProjectCoverFallback name={name} className="rounded-2xl" />
+          )}
         </Link>
 
         <div className="pl-5 lg:pt-8 dark:text-moonlit flex flex-col">

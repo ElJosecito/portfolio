@@ -1,0 +1,36 @@
+/* Portada tipográfica de respaldo (ver ProjectCoverFallback.jsx). Colores
+   del landing (tokens.css) con fallback por si se usa fuera de él. */
+.cover {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: inherit;
+  padding: 1.5rem;
+  background:
+    radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.12), transparent 55%),
+    linear-gradient(140deg, var(--color-hero-blue, #2233c9) 0%, var(--color-plum-800, #372d48) 100%);
+  color: var(--color-hero-ink, #dfe6ff);
+  text-align: center;
+}
+
+.name {
+  font-family: var(--font-display, "Arial Black", sans-serif);
+  font-size: clamp(1.75rem, 6vw, 3.75rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.label {
+  font-family: var(--font-tech, monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}

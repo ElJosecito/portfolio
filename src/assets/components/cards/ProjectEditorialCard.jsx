@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { localizeProject } from "../../../shared/utils/i18n";
+import ProjectCoverFallback from "../../../shared/ui/ProjectCoverFallback";
 import { projectTransitionName, viewTransitionLinkProps } from "../../../shared/utils/viewTransition";
 import styles from "./ProjectEditorialCard.module.css";
 
@@ -31,14 +32,21 @@ function ProjectEditorialCard({ project, languaje }) {
       {...viewTransitionLinkProps()}
     >
       <div className={styles.imageWrap}>
-        <img
-          src={project.image}
-          alt={name}
-          loading="lazy"
-          decoding="async"
-          className={styles.image}
-          style={transitionName ? { viewTransitionName: transitionName } : undefined}
-        />
+        {project.image ? (
+          <img
+            src={project.image}
+            alt={name}
+            loading="lazy"
+            decoding="async"
+            className={styles.image}
+            style={transitionName ? { viewTransitionName: transitionName } : undefined}
+          />
+        ) : (
+          <ProjectCoverFallback
+            name={name}
+            style={transitionName ? { viewTransitionName: transitionName } : undefined}
+          />
+        )}
       </div>
 
       <div className={styles.body}>

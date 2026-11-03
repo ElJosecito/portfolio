@@ -1,92 +1,47 @@
 import React from "react";
 import { cn } from "./cn";
+import { Skeleton } from "./Skeleton";
 import styles from "./Loader.module.css";
 
-// El viewBox va ajustado al trazo más la mitad del grosor de línea que sobresale
-// a cada lado, para que el monograma no venga con aire de más y quede
-// descentrado respecto del riel de abajo.
-export const GLYPH_VIEW_BOX = "6 10 72 44";
-
 /**
- * Monograma "JM" trazado a mano.
+ * Espera de página completa: skeleton con la silueta de una página del sitio
+ * (etiqueta, título, bajada y una grilla de cards) más una barra de progreso
+ * fina arriba. Reemplaza al monograma "JM" que se escribía en bucle en el
+ * centro de la pantalla: un logo animado se siente como "pantalla de carga";
+ * la silueta de lo que viene se siente como que la página ya está llegando, y
+ * ocupa más o menos el mismo lugar que el contenido real, así el cambio no
+ * salta.
  *
- * `pathLength="100"` normaliza el largo de cada trazo: sin eso habría que medir
- * las curvas con JavaScript para saber qué `stroke-dasharray` ponerle a cada
- * una. Con esto, los dos trazos valen 100 y la animación es la misma para ambos.
+ * Se usa en los `Suspense` de las rutas con carga diferida (landing clásica,
+ * /all-projects, panel, verificación de sesión). NO en "/" con el landing
+ * nuevo: ese usa IntroFallback, continuo con la intro real.
+ *
+ * El texto solo existe para el lector de pantalla (`role="status"`).
  */
-export const GLYPH_STROKES = [
-  // J: baja recta y engancha con un medio arco hacia la izquierda.
-  { d: "M30 14 V40 a10 10 0 0 1 -20 0", delay: "0s" },
-  // M: sube, baja al vértice, vuelve a subir y baja.
-  { d: "M46 50 V16 L60 34 L74 16 V50", delay: "0.2s" },
-];
-
-const SIZES = {
-  sm: styles.glyphSm,
-  md: styles.glyphMd,
-  lg: styles.glyphLg,
-};
-
-/**
- * Indicador de carga del portfolio: el monograma se escribe y se borra en bucle
- * sobre un riel con un destello que lo recorre.
- *
- * Migrado de utilidades de Tailwind a CSS Modules (ver Loader.module.css) —
- * mismo look, mismo comportamiento, nada nuevo.
- *
- * No hay texto "Cargando" en pantalla a propósito. La palabra no aporta nada que
- * la animación no diga ya, y en cambio hay que traducirla y se ve pobre. El
- * texto existe igual, pero solo para el lector de pantalla.
- */
-export function Loader({ label = "Cargando", size = "md", className = "" }) {
+export function FullPageLoader({ label = "Cargando", className = "" }) {
   return (
-    <div role="status" aria-live="polite" className={cn(styles.wrap, className)}>
-      <svg
-        viewBox={GLYPH_VIEW_BOX}
-        fill="none"
-        aria-hidden="true"
-        className={cn(styles.glyph, SIZES[size] || SIZES.md)}
-      >
-        {GLYPH_STROKES.map(({ d, delay }) => (
-          <path
-            key={d}
-            d={d}
-            pathLength="100"
-            stroke="currentColor"
-            strokeWidth="4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={styles.stroke}
-            style={{ animationDelay: delay }}
-          />
-        ))}
-      </svg>
+    <div role="status" aria-live="polite" className={cn(styles.page, className)}>
+      <span aria-hidden="true" className={styles.progress} />
 
-      <span aria-hidden="true" className={styles.rail}>
-        <span className={styles.railGlint} />
-      </span>
+      <div aria-hidden="true" className={styles.content}>
+        <Skeleton className={styles.kicker} />
+        <Skeleton className={styles.title} />
+        <Skeleton className={styles.lead} />
+
+        <div className={styles.grid}>
+          {[0, 1, 2].map((index) => (
+            <div key={index} className={styles.card}>
+              <Skeleton className={styles.cardImage} />
+              <Skeleton className={styles.cardLine} />
+              <Skeleton className={styles.cardLineShort} />
+            </div>
+          ))}
+        </div>
+      </div>
 
       <span className={styles.srOnly}>{label}</span>
     </div>
   );
 }
 
-/**
- * El mismo loader ocupando la pantalla. Para los `Suspense` de las rutas
- * secundarias (admin, login, verificación de sesión) donde todavía no hay
- * layout que preservar y un skeleton no tendría qué imitar.
- *
- * NO es el fallback de "/" con el landing nuevo (ver Router.jsx): ese usa
- * `IntroFallback` para que la espera del chunk se sienta continua con la
- * intro real (mismo cobalto + contador) en vez de con este monograma
- * genérico — ver landing/intro/IntroFallback.jsx.
- */
-export function FullPageLoader({ label, className = "" }) {
-  return (
-    <div className={cn(styles.fullPage, className)}>
-      <Loader label={label} size="lg" />
-    </div>
-  );
-}
-
-export default Loader;
+export default FullPageLoader;
